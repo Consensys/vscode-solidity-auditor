@@ -1,0 +1,50 @@
+{
+    "name": "solidity-visual-auditor",
+    "description": "Ethereum Solidity Language customized for auditors using Visual Studio Code",
+    "keywords": [
+      "solidity",
+      "ethereum",
+      "blockchain",
+      "compiler",
+      "security"
+    ],
+    "version": "0.0.3",
+    "publisher": "tintinweb",
+    "engines": {
+        "vscode": "^1.20.2"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "bugs": {
+        "url": "https://github.com/tintinweb/vscode-solidity-auditor/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tintinweb/vscode-solidity-auditor"
+    },
+    "contributes": {
+        "languages": [{
+            "id": "solidity",
+            "aliases": ["solidity", "solidity"],
+            "extensions": [".sol"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "solidity",
+            "scopeName": "source.solidity.security",
+            "path": "./syntaxes/solidity.tmLanguage.json",
+            "injectTo": [
+                "source.solidity"
+              ]
+            
+        }],
+        "themes": [
+            {
+                "label": "Solidity Visual Auditor Dark",
+                "uiTheme": "vs-dark",
+                "path": "./themes/OneDark.json"
+            }
+        ]
+    }
+}
