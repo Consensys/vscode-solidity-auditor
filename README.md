@@ -2,7 +2,7 @@
 
 This extension provides **security conscious** syntax highlighting support for Visual Studio Code.
 
-<img width="1005" alt="screenshot 2019-02-08 at 20 57 53" src="https://user-images.githubusercontent.com/2865694/52502917-49128880-2be4-11e9-8516-ab910ec70770.png">
+<img width="796" alt="screenshot 2019-02-09 at 00 30 20" src="https://user-images.githubusercontent.com/2865694/52511785-f8118d00-2c01-11e9-8b23-f94542ef4a80.png">
 
 
 ## Features
