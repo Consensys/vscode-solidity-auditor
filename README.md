@@ -9,10 +9,22 @@ This extension provides **security conscious** syntax highlighting support for V
 
 Syntax highlighting for security auditors.
 
+Highlights:
+
+* constructor and fallback function
+* insecure visibility modifiers (public, payable, ...)
+* insecure built-ins, globals, methods and user/miner-tainted information (`address.call()`,`tx.origin`,`msg.data`, `block.*`, `now`) 
+* storage modifiers (`memory`, `storage`)
+* hacky notes in comments (`TODO`,`FIXME`,`HACK`, ...)
+* arithmetics vs. logical operations
+* events
+
+secure and 'insecure' code fragments are either highlighted red or green. 
+
+
 ## Requirements
 
-* install language extension `vscode-solidity`
-* install this extension (extends `vscode-solidity`)
+* this extension can be used together with `vscode-solidity`
 * code --> preferences --> color scheme --> Solidity Visual Auditor Dark
 
 ## Extension Settings
