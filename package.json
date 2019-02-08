@@ -43,7 +43,13 @@
             {
                 "label": "Solidity Visual Auditor Dark",
                 "uiTheme": "vs-dark",
-                "path": "./themes/OneDark.json"
+                "path": "./themes/OneDarkAuditor.json"
+            }
+        ],
+        "keybindings":[
+            {
+                "key": "cmd+alt+shift+i",
+                "command": "editor.action.inspectTMScopes"
             }
         ]
     }

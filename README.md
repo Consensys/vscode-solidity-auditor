@@ -35,3 +35,8 @@ None
 ### 0.0.3
 
 first alpha
+
+<!-- 
+vsce package
+vsce publish
+ -->

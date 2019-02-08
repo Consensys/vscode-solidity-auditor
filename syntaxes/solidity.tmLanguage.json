@@ -260,6 +260,9 @@
                 },
                 {
                     "include": "#constant-currency"
+                },
+                {
+                    "include": "#constant-ucase"
                 }
             ]
         },
@@ -274,6 +277,10 @@
         "constant-currency": {
             "match": "\\b(ether|wei|finney|szabo)\\b",
             "name": "constant.language.currency.solidity"
+        },
+        "constant-ucase": {
+            "match": "\\b([A-Z09_]+)\\b",
+            "name": "constant.language.ucase.solidity"
         },
         "number": {
             "patterns": [
@@ -328,10 +335,7 @@
         },
         "global-variables": {
             "patterns": [
-                {
-                    "match": "\\b(msg|block|tx|now)\\b",
-                    "name": "variable.language.transaction.solidity"
-                },
+                
                 {
                     "match": "\\b(this)\\b",
                     "name": "variable.language.this.solidity"
@@ -343,6 +347,14 @@
                 {
                     "match": "\\b(abi)\\b",
                     "name": "variable.language.builtin.abi.solidity"
+                },
+                {
+                    "match": "\\b(tx\\.origin|tx\\.gasprice|msg\\.data|msg\\.sig|msg\\.value)\\b",
+                    "name": "variable.language.transaction.security.solidity"
+                },
+                {
+                    "match": "\\b(msg\\.sender|msg|block|tx|now)\\b",
+                    "name": "variable.language.transaction.solidity"
                 }
             ]
         },
@@ -363,6 +375,18 @@
                 {
                     "match": "\\b(blockhash|gasleft)\\b",
                     "name": "variable.language.transaction.solidity"
+                },
+                {
+                    "match": "\\b(type)\\b",
+                    "name": "variable.language.type.solidity"
+                },
+                {
+                    "match": "\\b\\.(send|call|delegatecall|staticcall|callcode|creationCode|runtimeCode)\\b",
+                    "name": "support.function.transaction.security.solidity"
+                },
+                {
+                    "match": "\\b\\.(transfer)\\b",
+                    "name": "support.function.transaction.solidity"
                 }
             ]
         },

@@ -26,16 +26,42 @@
              "name":"function contract",
              "scope":"entity.name.function.solidity",
              "settings":{
+               "foreground":"#fae674d7",
                 "fontStyle":"bold"
              }
           },
           {
-             "name":"transaction vars",
+             "name":"transaction vars (inconclusive)",
              "scope":"variable.language.transaction.solidity",
              "settings":{
+               "foreground":"#ffc570",
                 "fontStyle":"bold underline"
              }
           },
+          {
+            "name":"transaction vars (sec)",
+            "scope":"variable.language.transaction.security.solidity",
+            "settings":{
+               "foreground":"#f56262",
+               "fontStyle":"bold underline"
+            }
+         },
+         {
+            "name":"transaction function (sec)",
+            "scope":"support.function.transaction.security.solidity",
+            "settings":{
+               "foreground":"#f56262",
+               "fontStyle":"bold underline"
+            }
+         },
+         {
+            "name":"transaction function (safe)",
+            "scope":"support.function.transaction.solidity",
+            "settings":{
+               "foreground":"#ffc570",
+               "fontStyle":"bold"
+            }
+         },
           {
              "name":"assembly",
              "scope":"keyword.control.assembly.solidity",
@@ -220,6 +246,7 @@
              "name":"constructor",
              "scope":"storage.type.constructor.solidity",
              "settings":{
+                "foreground":"#fae674d7",
                 "fontStyle":"bold underline"
              }
           },
@@ -227,6 +254,7 @@
              "name":"fallback",
              "scope":"storage.type.function.fallback.solidity",
              "settings":{
+                "foreground":"#fae674d7",
                 "fontStyle":"underline bold"
              }
           },
@@ -243,6 +271,14 @@
              "settings":{
                 "fontStyle":"italic"
              }
+          },
+          {
+            "name":"visibility: public, memory, ..",
+            "scope":"constant.language.ucase.solidity",
+            "settings":{
+               "foreground":"#9db4c2",
+               "fontStyle":"italic"
+            }
           },
           {
              "name":"modifier",
