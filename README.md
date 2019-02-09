@@ -44,6 +44,10 @@ None
 
 None
 
+### 0.0.5
+
+minor style fixes
+
 ### 0.0.4
 
 first alpha

@@ -27,7 +27,7 @@
              "scope":"entity.name.function.solidity",
              "settings":{
                "foreground":"#fae674d7",
-                "fontStyle":"bold"
+               "fontStyle":""
              }
           },
           {
