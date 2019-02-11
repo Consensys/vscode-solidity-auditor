@@ -28,7 +28,7 @@ secure and 'insecure' code fragments are either highlighted red or green.
 
 ## Installation
 
-1. download the [lasted compiled extesion as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
+1. download the [latest compiled extesion as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
 2. install the extension `#> code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
 3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
 
