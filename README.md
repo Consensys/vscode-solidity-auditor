@@ -53,12 +53,16 @@ None
 
 ## Acknowledgements
 
-* Theme: `Atom One Dark Theme`
-* Base Grammar for Solidity: `vscode-solidity`
+* Themes: [Atom One Dark Theme](https://github.com/akamud/vscode-theme-onedark) and an adapted version of built-in `Solarized Light`
+* Base Grammar for Solidity: [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity)
 
 ## Release Notes
 
 None
+
+### 0.0.7
+
+added light theme
 
 ### 0.0.6
 
