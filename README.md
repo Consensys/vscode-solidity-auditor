@@ -1,6 +1,6 @@
 # Solidity language support for Visual Studio Code - Auditors Edition
 
-This extension provides **security conscious** syntax highlighting support for Visual Studio Code.
+This extension provides advanced **security conscious** syntax highlighting and code insights support for Visual Studio Code.
 
 **Simple DAO**
 <img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
@@ -12,17 +12,32 @@ This extension provides **security conscious** syntax highlighting support for V
 
 ## Features
 
-Syntax highlighting for security auditors.
+Advanced syntax highlighting and solidity insights for security auditors.
 
-Highlights:
+Themes:
 
-* constructor and fallback function
-* insecure visibility modifiers (public, payable, ...)
+* Dark - based on Atom One
+* Light - based on Solarized Light
+
+Insights:
+
+* onHover ASM instruction signatures
+* onHover Security Notes for certain keywords
+* onHover StateVar declaration information, including line of declaration
+
+Visually highlights:
+
+* **StateVars** (constant, inherited)
+  * Detects StateVar shadowing
+* **Constructor** and **Fallback** function
+* insecure **access modifiers** (`external`, `public`, `payable`, ...)
 * insecure built-ins, globals, methods and user/miner-tainted information (`address.call()`,`tx.origin`,`msg.data`, `block.*`, `now`) 
-* storage modifiers (`memory`, `storage`)
-* hacky notes in comments (`TODO`,`FIXME`,`HACK`, ...)
+* storage access modifiers (`memory`, `storage`)
+* development notes in comments (`TODO`,`FIXME`,`HACK`, ...)
+* custom function modifiers
 * arithmetics vs. logical operations
-* events
+* event invocations
+* contract creation
 
 secure and 'insecure' code fragments are either highlighted red or green. 
 
@@ -38,14 +53,10 @@ secure and 'insecure' code fragments are either highlighted red or green.
 
 * this extension can be used together with `vscode-solidity`
 
-## Limitations
-
-* We can only highlight what is there. There's no way to highlight the absence of certain language constructs.
-* This is a regex based based approach (not even a real lexer). We do not know anything about the semantics of the code. 
-
 ## Extension Settings
 
-None
+* `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
+* 
 
 ## Known Issues
 
@@ -58,21 +69,18 @@ None
 
 ## Release Notes
 
-None
+### v0.0.9
 
-### 0.0.7
+* added solidity parser
+* added support for stateVar tracking
 
-added light theme
+### v0.0.4 - 0.0.8
 
-### 0.0.6
+* minor style fixes
+* added support for inline comments in method heads (e.g. modifier calls). for all the crazy devs out there.
+* added light theme
 
-added support for inline comments in method heads (e.g. modifier calls). for all the crazy devs out there.
-
-### 0.0.5
-
-minor style fixes
-
-### 0.0.1 - 0.0.4
+### v0.0.1 - 0.0.4
 
 first alpha
 
