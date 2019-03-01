@@ -2,12 +2,21 @@
 
 This extension provides advanced **security conscious** syntax highlighting and code insights support for Visual Studio Code.
 
+## Theme: Solidity Visual Auditor Dark
+
 **Simple DAO**
 <img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
 
 **Vulnerable Contract**
 
 ![highlight](https://user-images.githubusercontent.com/2865694/52523502-4bcbb700-2c92-11e9-9ef1-085e3a244cda.png)
+
+
+## Theme: Solidity Visual Auditor Solarized Light
+
+**Simple DAO**
+
+<img width="970" alt="screenshot 2019-02-11 at 21 52 11" src="https://user-images.githubusercontent.com/2865694/52592696-5c715e00-2e47-11e9-99f4-32332e308ec3.png">
 
 
 ## Features
