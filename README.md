@@ -2,7 +2,8 @@
 
 This extension provides advanced **security conscious** syntax highlighting and code insights support for Visual Studio Code.
 
-![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627375-9775de80-3c08-11e9-8741-29f2a2159b16.png)
+![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
+
 
 
 ## Theme: Solidity Visual Auditor Dark
