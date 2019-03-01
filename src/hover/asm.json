@@ -1,0 +1,2166 @@
+{
+    "add": {
+        "description": "Addition operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 1,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "add"
+    },
+    "addmod": {
+        "description": "Modulo addition operation",
+        "instr_args": [
+            "a",
+            "b",
+            "mod"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 8,
+        "instr_opcode": 8,
+        "instr_pops": 3,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "addmod"
+    },
+    "address": {
+        "description": "Get address of currently executing account.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 48,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "this.address"
+        ],
+        "instr_size": 1,
+        "prefix": "address"
+    },
+    "and": {
+        "description": "Bitwise AND operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 22,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "and"
+    },
+    "balance": {
+        "description": "Get balance of the given account.",
+        "instr_args": [
+            "address"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 20,
+        "instr_opcode": 49,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "this.balance"
+        ],
+        "instr_size": 1,
+        "prefix": "balance"
+    },
+    "blockhash": {
+        "description": "Get the hash of one of the 256 most recent complete blocks.",
+        "instr_args": [
+            "num"
+        ],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 20,
+        "instr_opcode": 64,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.blockhash"
+        ],
+        "instr_size": 1,
+        "prefix": "blockhash"
+    },
+    "byte": {
+        "description": "Retrieve single byte from word",
+        "instr_args": [
+            "th",
+            "value"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 26,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "byte"
+        ],
+        "instr_size": 1,
+        "prefix": "byte"
+    },
+    "call": {
+        "description": "Message-call into an account.",
+        "instr_args": [
+            "gas",
+            "address",
+            "value",
+            "inOffset",
+            "inSize",
+            "retOffset",
+            "retSize"
+        ],
+        "instr_category": "system",
+        "instr_fork": "",
+        "instr_gas": 40,
+        "instr_opcode": 241,
+        "instr_pops": 7,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "call"
+    },
+    "callcode": {
+        "description": "Message-call into this account with alternative account's code.",
+        "instr_args": [
+            "gas",
+            "address",
+            "value",
+            "inOffset",
+            "inSize",
+            "retOffset",
+            "retSize"
+        ],
+        "instr_category": "system",
+        "instr_fork": "",
+        "instr_gas": 40,
+        "instr_opcode": 242,
+        "instr_pops": 7,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "callcode"
+    },
+    "calldatacopy": {
+        "description": "Copy input data in current environment to memory. This pertains to the input data passed with the message call instruction or transaction.",
+        "instr_args": [
+            "memOffset",
+            "dataOffset",
+            "length"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 55,
+        "instr_pops": 3,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "calldatacopy"
+    },
+    "calldataload": {
+        "description": "Get input data of current environment.",
+        "instr_args": [
+            "dataOffset"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 53,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "msg.data"
+        ],
+        "instr_size": 1,
+        "prefix": "calldataload"
+    },
+    "calldatasize": {
+        "description": "Get size of input data in current environment.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 54,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "msg.data.length"
+        ],
+        "instr_size": 1,
+        "prefix": "calldatasize"
+    },
+    "caller": {
+        "description": "Get caller address.This is the address of the account that is directly responsible for this execution.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 51,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "msg.sender"
+        ],
+        "instr_size": 1,
+        "prefix": "caller"
+    },
+    "callvalue": {
+        "description": "Get deposited value by the instruction/transaction responsible for this execution.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 52,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "msg.value"
+        ],
+        "instr_size": 1,
+        "prefix": "callvalue"
+    },
+    "codecopy": {
+        "description": "Copy code running in current environment to memory.",
+        "instr_args": [
+            "memOffset",
+            "codeOffset",
+            "length"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 57,
+        "instr_pops": 3,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "codecopy"
+    },
+    "codesize": {
+        "description": "Get size of code running in current environment.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 56,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "codesize"
+        ],
+        "instr_size": 1,
+        "prefix": "codesize"
+    },
+    "coinbase": {
+        "description": "Get the block's beneficiary address.",
+        "instr_args": [],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 65,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.coinbase"
+        ],
+        "instr_size": 1,
+        "prefix": "coinbase"
+    },
+    "create": {
+        "description": "Create a new account with associated code.",
+        "instr_args": [
+            "value",
+            "offset",
+            "size"
+        ],
+        "instr_category": "system",
+        "instr_fork": "",
+        "instr_gas": 32000,
+        "instr_opcode": 240,
+        "instr_pops": 3,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "create"
+    },
+    "create2": {
+        "description": "Create a new account with associated code. (Constantinople)",
+        "instr_args": [
+            "endowment",
+            "offset",
+            "size",
+            "salt"
+        ],
+        "instr_category": "system",
+        "instr_fork": "constantinople",
+        "instr_gas": 32000,
+        "instr_opcode": 245,
+        "instr_pops": 4,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "create2"
+    },
+    "delegatecall": {
+        "description": "Similar to CALLCODE except that it propagates the sender and value from the parent scope to the child scope",
+        "instr_args": [
+            "gas",
+            "address",
+            "inOffset",
+            "inSize",
+            "retOffset",
+            "retSize"
+        ],
+        "instr_category": "system",
+        "instr_fork": "",
+        "instr_gas": 40,
+        "instr_opcode": 244,
+        "instr_pops": 6,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "delegatecall"
+    },
+    "difficulty": {
+        "description": "Get the block's difficulty.",
+        "instr_args": [],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 68,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.difficulty"
+        ],
+        "instr_size": 1,
+        "prefix": "difficulty"
+    },
+    "div": {
+        "description": "Integer division operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 4,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "div"
+    },
+    "dup1": {
+        "description": "Duplicate 1st stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 128,
+        "instr_pops": 1,
+        "instr_pushes": 2,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup1"
+    },
+    "dup10": {
+        "description": "Duplicate 10th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 137,
+        "instr_pops": 10,
+        "instr_pushes": 11,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup10"
+    },
+    "dup11": {
+        "description": "Duplicate 11th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 138,
+        "instr_pops": 11,
+        "instr_pushes": 12,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup11"
+    },
+    "dup12": {
+        "description": "Duplicate 12th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 139,
+        "instr_pops": 12,
+        "instr_pushes": 13,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup12"
+    },
+    "dup13": {
+        "description": "Duplicate 13th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 140,
+        "instr_pops": 13,
+        "instr_pushes": 14,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup13"
+    },
+    "dup14": {
+        "description": "Duplicate 14th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 141,
+        "instr_pops": 14,
+        "instr_pushes": 15,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup14"
+    },
+    "dup15": {
+        "description": "Duplicate 15th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 142,
+        "instr_pops": 15,
+        "instr_pushes": 16,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup15"
+    },
+    "dup16": {
+        "description": "Duplicate 16th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 143,
+        "instr_pops": 16,
+        "instr_pushes": 17,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup16"
+    },
+    "dup2": {
+        "description": "Duplicate 2nd stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 129,
+        "instr_pops": 2,
+        "instr_pushes": 3,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup2"
+    },
+    "dup3": {
+        "description": "Duplicate 3rd stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 130,
+        "instr_pops": 3,
+        "instr_pushes": 4,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup3"
+    },
+    "dup4": {
+        "description": "Duplicate 4th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 131,
+        "instr_pops": 4,
+        "instr_pushes": 5,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup4"
+    },
+    "dup5": {
+        "description": "Duplicate 5th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 132,
+        "instr_pops": 5,
+        "instr_pushes": 6,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup5"
+    },
+    "dup6": {
+        "description": "Duplicate 6th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 133,
+        "instr_pops": 6,
+        "instr_pushes": 7,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup6"
+    },
+    "dup7": {
+        "description": "Duplicate 7th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 134,
+        "instr_pops": 7,
+        "instr_pushes": 8,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup7"
+    },
+    "dup8": {
+        "description": "Duplicate 8th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 135,
+        "instr_pops": 8,
+        "instr_pushes": 9,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup8"
+    },
+    "dup9": {
+        "description": "Duplicate 9th stack item.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 136,
+        "instr_pops": 9,
+        "instr_pushes": 10,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "dup9"
+    },
+    "eq": {
+        "description": "Equality  comparison",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 20,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "eq"
+    },
+    "exp": {
+        "description": "Exponential operation.",
+        "instr_args": [
+            "base",
+            "exponent"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 10,
+        "instr_opcode": 10,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "exp"
+    },
+    "extcodecopy": {
+        "description": "Copy an account's code to memory.",
+        "instr_args": [
+            "address",
+            "memOffset",
+            "codeOffset",
+            "length"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 20,
+        "instr_opcode": 60,
+        "instr_pops": 4,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "extcodecopy"
+    },
+    "extcodehash": {
+        "description": "<TBD> - Constantinople",
+        "instr_args": [
+            "address"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "constantinople",
+        "instr_gas": 400,
+        "instr_opcode": 63,
+        "instr_pops": 1,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "extcodehash"
+    },
+    "extcodesize": {
+        "description": "Get size of an account's code.",
+        "instr_args": [
+            "address"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 20,
+        "instr_opcode": 59,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "extcodesize"
+        ],
+        "instr_size": 1,
+        "prefix": "extcodesize"
+    },
+    "gas": {
+        "description": "Get the amount of available gas, including the corresponding reduction",
+        "instr_args": [],
+        "instr_category": "info",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 90,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "gasleft"
+        ],
+        "instr_size": 1,
+        "prefix": "gas"
+    },
+    "gaslimit": {
+        "description": "Get the block's gas limit.",
+        "instr_args": [],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 69,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.gaslimit"
+        ],
+        "instr_size": 1,
+        "prefix": "gaslimit",
+        "reference": "https://solidity.readthedocs.io/en/latest/units-and-global-variables.html"
+    },
+    "gasprice": {
+        "description": "Get price of gas in current environment.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 58,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "tx.gasprice"
+        ],
+        "instr_size": 1,
+        "prefix": "gasprice"
+    },
+    "gt": {
+        "description": "Greater-than comparison",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 17,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "gt"
+    },
+    "iszero": {
+        "description": "Simple not operator",
+        "instr_args": [
+            "a"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 21,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "iszero"
+    },
+    "jump": {
+        "description": "Alter the program counter.",
+        "instr_args": [
+            "evm.pc"
+        ],
+        "instr_category": "controlflow",
+        "instr_fork": "",
+        "instr_gas": 8,
+        "instr_opcode": 86,
+        "instr_pops": 1,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "jump"
+    },
+    "jumpdest": {
+        "description": "Mark a valid destination for jumps.",
+        "instr_args": [],
+        "instr_category": "label",
+        "instr_fork": "",
+        "instr_gas": 1,
+        "instr_opcode": 91,
+        "instr_pops": 0,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "jumpdest"
+    },
+    "jumpi": {
+        "description": "Conditionally alter the program counter.",
+        "instr_args": [
+            "evm.pc",
+            "condition"
+        ],
+        "instr_category": "controlflow",
+        "instr_fork": "",
+        "instr_gas": 10,
+        "instr_opcode": 87,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "jumpi"
+    },
+    "log0": {
+        "description": "Append log record with no topics.",
+        "instr_args": [
+            "start",
+            "size"
+        ],
+        "instr_category": "event",
+        "instr_fork": "",
+        "instr_gas": 375,
+        "instr_opcode": 160,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "log0"
+    },
+    "log1": {
+        "description": "Append log record with one topic.",
+        "instr_args": [
+            "start",
+            "size",
+            "topic1"
+        ],
+        "instr_category": "event",
+        "instr_fork": "",
+        "instr_gas": 750,
+        "instr_opcode": 161,
+        "instr_pops": 3,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "log1"
+    },
+    "log2": {
+        "description": "Append log record with two topics.",
+        "instr_args": [
+            "start",
+            "size",
+            "topic1",
+            "topic2"
+        ],
+        "instr_category": "event",
+        "instr_fork": "",
+        "instr_gas": 1125,
+        "instr_opcode": 162,
+        "instr_pops": 4,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "log2"
+    },
+    "log3": {
+        "description": "Append log record with three topics.",
+        "instr_args": [
+            "start",
+            "size",
+            "topic1",
+            "topic2",
+            "topic3"
+        ],
+        "instr_category": "event",
+        "instr_fork": "",
+        "instr_gas": 1500,
+        "instr_opcode": 163,
+        "instr_pops": 5,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "log3"
+    },
+    "log4": {
+        "description": "Append log record with four topics.",
+        "instr_args": [
+            "start",
+            "size",
+            "topic1",
+            "topic2",
+            "topic3",
+            "topic4"
+        ],
+        "instr_category": "event",
+        "instr_fork": "",
+        "instr_gas": 1875,
+        "instr_opcode": 164,
+        "instr_pops": 6,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "log4"
+    },
+    "lt": {
+        "description": "Lesser-than comparison",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 16,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "lt"
+    },
+    "mload": {
+        "description": "Load word from memory.",
+        "instr_args": [
+            "offset"
+        ],
+        "instr_category": "memory",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 81,
+        "instr_pops": 1,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "mload"
+    },
+    "mod": {
+        "description": "Modulo",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 6,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "mod"
+    },
+    "msize": {
+        "description": "Get the size of active memory in bytes.",
+        "instr_args": [],
+        "instr_category": "memory",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 89,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "memory.length"
+        ],
+        "instr_size": 1,
+        "prefix": "msize"
+    },
+    "mstore": {
+        "description": "Save word to memory.",
+        "instr_args": [
+            "offset",
+            "value"
+        ],
+        "instr_category": "memory",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 82,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "mstore"
+    },
+    "mstore8": {
+        "description": "Save byte to memory.",
+        "instr_args": [
+            "offset",
+            "value"
+        ],
+        "instr_category": "memory",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 83,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "mstore8"
+    },
+    "mul": {
+        "description": "Multiplication operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 2,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "mul"
+    },
+    "mulmod": {
+        "description": "Modulo multiplication operation",
+        "instr_args": [
+            "a",
+            "b",
+            "mod"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 8,
+        "instr_opcode": 9,
+        "instr_pops": 3,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "mulmod"
+    },
+    "not": {
+        "description": "Bitwise NOT operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 25,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "not"
+    },
+    "number": {
+        "description": "Get the block's number.",
+        "instr_args": [],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 67,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.number"
+        ],
+        "instr_size": 1,
+        "prefix": "number"
+    },
+    "or": {
+        "description": "Bitwise OR operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 23,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "or"
+    },
+    "origin": {
+        "description": "Get execution origination address.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 50,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "tx.origin"
+        ],
+        "instr_size": 1,
+        "prefix": "origin"
+    },
+    "pc": {
+        "description": "Get the value of the program counter prior to the increment.",
+        "instr_args": [],
+        "instr_category": "info",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 88,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "evm.pc"
+        ],
+        "instr_size": 1,
+        "prefix": "pc"
+    },
+    "pop": {
+        "description": "Remove item from stack.",
+        "instr_args": [
+            "#dummy"
+        ],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 80,
+        "instr_pops": 1,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "pop"
+    },
+    "push1": {
+        "description": "Place 1 byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 96,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 2,
+        "prefix": "push1"
+    },
+    "push10": {
+        "description": "Place 10-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 105,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 11,
+        "prefix": "push10"
+    },
+    "push11": {
+        "description": "Place 11-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 106,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 12,
+        "prefix": "push11"
+    },
+    "push12": {
+        "description": "Place 12-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 107,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 13,
+        "prefix": "push12"
+    },
+    "push13": {
+        "description": "Place 13-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 108,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 14,
+        "prefix": "push13"
+    },
+    "push14": {
+        "description": "Place 14-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 109,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 15,
+        "prefix": "push14"
+    },
+    "push15": {
+        "description": "Place 15-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 110,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 16,
+        "prefix": "push15"
+    },
+    "push16": {
+        "description": "Place 16-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 111,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 17,
+        "prefix": "push16"
+    },
+    "push17": {
+        "description": "Place 17-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 112,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 18,
+        "prefix": "push17"
+    },
+    "push18": {
+        "description": "Place 18-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 113,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 19,
+        "prefix": "push18"
+    },
+    "push19": {
+        "description": "Place 19-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 114,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 20,
+        "prefix": "push19"
+    },
+    "push2": {
+        "description": "Place 2-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 97,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 3,
+        "prefix": "push2"
+    },
+    "push20": {
+        "description": "Place 20-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 115,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 21,
+        "prefix": "push20"
+    },
+    "push21": {
+        "description": "Place 21-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 116,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 22,
+        "prefix": "push21"
+    },
+    "push22": {
+        "description": "Place 22-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 117,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 23,
+        "prefix": "push22"
+    },
+    "push23": {
+        "description": "Place 23-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 118,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 24,
+        "prefix": "push23"
+    },
+    "push24": {
+        "description": "Place 24-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 119,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 25,
+        "prefix": "push24"
+    },
+    "push25": {
+        "description": "Place 25-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 120,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 26,
+        "prefix": "push25"
+    },
+    "push26": {
+        "description": "Place 26-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 121,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 27,
+        "prefix": "push26"
+    },
+    "push27": {
+        "description": "Place 27-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 122,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 28,
+        "prefix": "push27"
+    },
+    "push28": {
+        "description": "Place 28-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 123,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 29,
+        "prefix": "push28"
+    },
+    "push29": {
+        "description": "Place 29-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 124,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 30,
+        "prefix": "push29"
+    },
+    "push3": {
+        "description": "Place 3-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 98,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 4,
+        "prefix": "push3"
+    },
+    "push30": {
+        "description": "Place 30-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 125,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 31,
+        "prefix": "push30"
+    },
+    "push31": {
+        "description": "Place 31-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 126,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 32,
+        "prefix": "push31"
+    },
+    "push32": {
+        "description": "Place 32-byte (full word) item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 127,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 33,
+        "prefix": "push32"
+    },
+    "push4": {
+        "description": "Place 4-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 99,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 5,
+        "prefix": "push4"
+    },
+    "push5": {
+        "description": "Place 5-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 100,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 6,
+        "prefix": "push5"
+    },
+    "push6": {
+        "description": "Place 6-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 101,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 7,
+        "prefix": "push6"
+    },
+    "push7": {
+        "description": "Place 7-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 102,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 8,
+        "prefix": "push7"
+    },
+    "push8": {
+        "description": "Place 8-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 103,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 9,
+        "prefix": "push8"
+    },
+    "push9": {
+        "description": "Place 9-byte item on stack.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 104,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "item"
+        ],
+        "instr_size": 10,
+        "prefix": "push9"
+    },
+    "return": {
+        "description": "Halt execution returning output data.",
+        "instr_args": [
+            "offset",
+            "size"
+        ],
+        "instr_category": "terminate",
+        "instr_fork": "",
+        "instr_gas": 0,
+        "instr_opcode": 243,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "return"
+    },
+    "returndatacopy": {
+        "description": "Copy data from the return data buffer.",
+        "instr_args": [
+            "memOffset",
+            "dataOffset",
+            "length"
+        ],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 62,
+        "instr_pops": 3,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "returndatacopy"
+    },
+    "returndatasize": {
+        "description": "Push the size of the return data buffer onto the stack.",
+        "instr_args": [],
+        "instr_category": "envinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 61,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "returndatasize"
+        ],
+        "instr_size": 1,
+        "prefix": "returndatasize"
+    },
+    "revert": {
+        "description": "throw an error",
+        "instr_args": [
+            "offset",
+            "size"
+        ],
+        "instr_category": "terminate",
+        "instr_fork": "",
+        "instr_gas": 0,
+        "instr_opcode": 253,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "revert"
+    },
+    "sar": {
+        "description": "<TBD> Shift arithmetic right",
+        "instr_args": [
+            "shift",
+            "value"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "constantinople",
+        "instr_gas": 3,
+        "instr_opcode": 29,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "sar"
+    },
+    "sdiv": {
+        "description": "Signed integer",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 5,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "sdiv"
+    },
+    "selfdestruct": {
+        "description": "Halt execution and register account for later deletion.",
+        "instr_args": [
+            "address"
+        ],
+        "instr_category": "terminate",
+        "instr_fork": "",
+        "instr_gas": 0,
+        "instr_opcode": 255,
+        "instr_pops": 1,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "selfdestruct"
+    },
+    "sgt": {
+        "description": "Signed greater-than comparison",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 19,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "sgt"
+    },
+    "sha3": {
+        "description": "Compute Keccak-256 hash.",
+        "instr_args": [
+            "offset",
+            "size"
+        ],
+        "instr_category": "cryptographic",
+        "instr_fork": "",
+        "instr_gas": 30,
+        "instr_opcode": 32,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "sha3"
+        ],
+        "instr_size": 1,
+        "prefix": "sha3"
+    },
+    "shl": {
+        "description": "<TBD> Shift left",
+        "instr_args": [
+            "shift",
+            "value"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "constantinople",
+        "instr_gas": 3,
+        "instr_opcode": 27,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "shl"
+    },
+    "shr": {
+        "description": "<TBD> Shift Right",
+        "instr_args": [
+            "shift",
+            "value"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "constantinople",
+        "instr_gas": 3,
+        "instr_opcode": 28,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "shr"
+    },
+    "signextend": {
+        "description": "Extend length of two's complement signed integer.",
+        "instr_args": [
+            "bits",
+            "num"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 11,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "signextend"
+    },
+    "sload": {
+        "description": "Load word from storage.",
+        "instr_args": [
+            "loc"
+        ],
+        "instr_category": "storage",
+        "instr_fork": "",
+        "instr_gas": 50,
+        "instr_opcode": 84,
+        "instr_pops": 1,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "value"
+        ],
+        "instr_size": 1,
+        "prefix": "sload"
+    },
+    "slt": {
+        "description": "Signed less-than comparison",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "comparison",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 18,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "flag"
+        ],
+        "instr_size": 1,
+        "prefix": "slt"
+    },
+    "smod": {
+        "description": "Signed modulo",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 5,
+        "instr_opcode": 7,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "smod"
+    },
+    "sstore": {
+        "description": "Save word to storage.",
+        "instr_args": [
+            "loc",
+            "value"
+        ],
+        "instr_category": "storage",
+        "instr_fork": "",
+        "instr_gas": 0,
+        "instr_opcode": 85,
+        "instr_pops": 2,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "sstore"
+    },
+    "staticcall": {
+        "description": "Call another contract (or itself) while disallowing any modifications to the state during the call.",
+        "instr_args": [
+            "gas",
+            "address",
+            "inOffset",
+            "inSize",
+            "retOffset",
+            "retSize"
+        ],
+        "instr_category": "system",
+        "instr_fork": "",
+        "instr_gas": 40,
+        "instr_opcode": 250,
+        "instr_pops": 6,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "staticcall"
+    },
+    "stop": {
+        "description": "Halts execution.",
+        "instr_args": [],
+        "instr_category": "terminate",
+        "instr_fork": "",
+        "instr_gas": 0,
+        "instr_opcode": 0,
+        "instr_pops": 0,
+        "instr_pushes": 0,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "stop"
+    },
+    "sub": {
+        "description": "Subtraction operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "arithmetic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 3,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "sub"
+    },
+    "swap1": {
+        "description": "Exchange 1st and 2nd stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 144,
+        "instr_pops": 2,
+        "instr_pushes": 2,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap1"
+    },
+    "swap10": {
+        "description": "Exchange 1st and 11th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 153,
+        "instr_pops": 11,
+        "instr_pushes": 11,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap10"
+    },
+    "swap11": {
+        "description": "Exchange 1st and 12th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 154,
+        "instr_pops": 12,
+        "instr_pushes": 12,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap11"
+    },
+    "swap12": {
+        "description": "Exchange 1st and 13th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 155,
+        "instr_pops": 13,
+        "instr_pushes": 13,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap12"
+    },
+    "swap13": {
+        "description": "Exchange 1st and 14th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 156,
+        "instr_pops": 14,
+        "instr_pushes": 14,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap13"
+    },
+    "swap14": {
+        "description": "Exchange 1st and 15th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 157,
+        "instr_pops": 15,
+        "instr_pushes": 15,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap14"
+    },
+    "swap15": {
+        "description": "Exchange 1st and 16th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 158,
+        "instr_pops": 16,
+        "instr_pushes": 16,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap15"
+    },
+    "swap16": {
+        "description": "Exchange 1st and 17th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 159,
+        "instr_pops": 17,
+        "instr_pushes": 17,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap16"
+    },
+    "swap2": {
+        "description": "Exchange 1st and 3rd stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 145,
+        "instr_pops": 3,
+        "instr_pushes": 3,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap2"
+    },
+    "swap3": {
+        "description": "Exchange 1st and 4th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 146,
+        "instr_pops": 4,
+        "instr_pushes": 3,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap3"
+    },
+    "swap4": {
+        "description": "Exchange 1st and 5th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 147,
+        "instr_pops": 5,
+        "instr_pushes": 4,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap4"
+    },
+    "swap5": {
+        "description": "Exchange 1st and 6th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 148,
+        "instr_pops": 6,
+        "instr_pushes": 5,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap5"
+    },
+    "swap6": {
+        "description": "Exchange 1st and 7th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 149,
+        "instr_pops": 7,
+        "instr_pushes": 6,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap6"
+    },
+    "swap7": {
+        "description": "Exchange 1st and 8th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 150,
+        "instr_pops": 8,
+        "instr_pushes": 7,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap7"
+    },
+    "swap8": {
+        "description": "Exchange 1st and 9th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 151,
+        "instr_pops": 9,
+        "instr_pushes": 9,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap8"
+    },
+    "swap9": {
+        "description": "Exchange 1st and 10th stack items.",
+        "instr_args": [],
+        "instr_category": "stack",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 152,
+        "instr_pops": 10,
+        "instr_pushes": 10,
+        "instr_returns": [],
+        "instr_size": 1,
+        "prefix": "swap9"
+    },
+    "timestamp": {
+        "description": "Get the block's timestamp.",
+        "instr_args": [],
+        "instr_category": "blockinfo",
+        "instr_fork": "",
+        "instr_gas": 2,
+        "instr_opcode": 66,
+        "instr_pops": 0,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "block.timestamp"
+        ],
+        "instr_size": 1,
+        "prefix": "timestamp"
+    },
+    "xor": {
+        "description": "Bitwise XOR operation.",
+        "instr_args": [
+            "a",
+            "b"
+        ],
+        "instr_category": "bitwise-logic",
+        "instr_fork": "",
+        "instr_gas": 3,
+        "instr_opcode": 24,
+        "instr_pops": 2,
+        "instr_pushes": 1,
+        "instr_returns": [
+            "result"
+        ],
+        "instr_size": 1,
+        "prefix": "xor"
+    }
+}

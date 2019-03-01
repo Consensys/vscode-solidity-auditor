@@ -2,13 +2,13 @@
     "name": "solidity-visual-auditor",
     "description": "Ethereum Solidity Language customized for auditors using Visual Studio Code",
     "keywords": [
-      "solidity",
-      "ethereum",
-      "blockchain",
-      "compiler",
-      "security"
+        "solidity",
+        "ethereum",
+        "blockchain",
+        "compiler",
+        "security"
     ],
-    "version": "0.0.7",
+    "version": "0.0.9",
     "publisher": "tintinweb",
     "engines": {
         "vscode": "^1.20.2"
@@ -23,39 +23,79 @@
         "type": "git",
         "url": "https://github.com/tintinweb/vscode-solidity-auditor"
     },
+    "activationEvents": [
+        "onLanguage:solidity"
+    ],
+    "main": "./src/extension",
+    "capabilities": {
+        "hoverProvider": "true"
+    },
     "contributes": {
-        "languages": [{
-            "id": "solidity",
-            "aliases": ["solidity", "solidity"],
-            "extensions": [".sol"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "solidity",
-            "scopeName": "source.solidity.security",
-            "path": "./syntaxes/solidity.tmLanguage.json",
-            "injectTo": [
-                "source.solidity"
-              ]
-            
-        }],
+        "languages": [
+            {
+                "id": "solidity",
+                "aliases": [
+                    "solidity",
+                    "solidity"
+                ],
+                "extensions": [
+                    ".sol"
+                ],
+                "configuration": "./src/language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "solidity",
+                "scopeName": "source.solidity.security",
+                "path": "./src/syntaxes/solidity.tmLanguage.json",
+                "injectTo": [
+                    "source.solidity"
+                ]
+            }
+        ],
         "themes": [
             {
                 "label": "Solidity Visual Auditor Dark",
                 "uiTheme": "vs-dark",
-                "path": "./themes/OneDarkAuditor.json"
+                "path": "./src/themes/OneDarkAuditor.json"
             },
             {
-				"label": "Solidity Visual Auditor Solarized Light",
-				"uiTheme": "vs",
-				"path": "./themes/solarized-light-color-theme.json"
-			}
+                "label": "Solidity Visual Auditor Solarized Light",
+                "uiTheme": "vs",
+                "path": "./src/themes/solarized-light-color-theme.json"
+            }
         ],
-        "keybindings":[
+        "keybindings": [
             {
                 "key": "cmd+alt+shift+i",
                 "command": "editor.action.inspectTMScopes"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Solidity Visual Auditor configuration",
+            "properties": {
+                "solidity-va.hover": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to enable/disable Solidity hover."
+                },
+                "solidity-va.deco.statevars": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to enable/disable Solidity statevar decoration"
+                },
+                "solidity-va.outline.decorations": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to enable/disable Function Mutability/Accessibility decoration in the outline view"
+                }
+            }
+        }
+    },
+    "dependencies": {
+        "c3-linearization": "^0.3.0",
+        "solidity-parser-antlr": "^0.4.1"
     }
 }

@@ -320,7 +320,7 @@
             ]
         },
         "type-primitive": {
-            "match": "\\b(address|string\\d*|bytes\\d*|int\\d*|uint\\d*|bool|hash\\d*)\\b",
+            "match": "\\b(address|string\\d*|bytes\\d*|int\\d*|uint\\d*|bool|hash\\d*|var)\\b",
             "name": "support.type.primitive.solidity"
         },
         "global": {
@@ -504,7 +504,7 @@
             }
         },
         "declaration-constructor": {
-            "begin": "\\b(constructor)\\b",
+            "begin": "\\b(constructor)\\s*\\b",
             "beginCaptures": {
                 "1": {
                     "name": "storage.type.constructor.solidity"
