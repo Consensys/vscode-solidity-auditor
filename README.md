@@ -7,24 +7,7 @@ This extension provides advanced **security conscious** syntax highlighting and 
 * state var highlighting (constant=green)
 * tooltips
 
-
-
-## Theme: Solidity Visual Auditor Dark
-
-**Simple DAO**
-<img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
-
-**Vulnerable Contract**
-
-![highlight](https://user-images.githubusercontent.com/2865694/52523502-4bcbb700-2c92-11e9-9ef1-085e3a244cda.png)
-
-
-## Theme: Solidity Visual Auditor Solarized Light
-
-**Simple DAO**
-
-<img width="970" alt="screenshot 2019-02-11 at 21 52 11" src="https://user-images.githubusercontent.com/2865694/52592696-5c715e00-2e47-11e9-99f4-32332e308ec3.png">
-
+we suggest using this plugin together with `vscode-solidity`.
 
 ## Features
 
@@ -57,13 +40,30 @@ Visually highlights:
 
 secure and 'insecure' code fragments are either highlighted red or green. 
 
+## Theme: Solidity Visual Auditor Dark
+
+**Simple DAO**
+<img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
+
+**Vulnerable Contract**
+
+![highlight](https://user-images.githubusercontent.com/2865694/52523502-4bcbb700-2c92-11e9-9ef1-085e3a244cda.png)
+
+
+## Theme: Solidity Visual Auditor Solarized Light
+
+**Simple DAO**
+
+<img width="970" alt="screenshot 2019-02-11 at 21 52 11" src="https://user-images.githubusercontent.com/2865694/52592696-5c715e00-2e47-11e9-99f4-32332e308ec3.png">
+
+
 ## Installation
 
 1. download the [latest compiled extesion as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
 2. install the extension `#> code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
 3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
 
-//[Found a bug -> file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+[Found a bug -> file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 ## Requirements
 

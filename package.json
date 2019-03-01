@@ -1,5 +1,6 @@
 {
     "name": "solidity-visual-auditor",
+    "displayName": "Solidity Visual Auditor",
     "description": "Ethereum Solidity Language customized for auditors using Visual Studio Code",
     "keywords": [
         "solidity",

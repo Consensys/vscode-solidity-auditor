@@ -226,13 +226,11 @@ function parseSourceUnit(input){
                 }
                 
                 for (var identDec in func.arguments){
-                    //if(identDec)
                     if(identifier.name==identDec){
                         identifier.declarations.local.push(func.arguments[identDec]);
                     }
                 }
                 for (var identDec in func.returns){
-                    //if(identDec)
                     if(identifier==identDec){
                         identifier.declarations.local.push(func.returns[identDec]);
                     }
