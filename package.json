@@ -91,6 +91,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to enable/disable Function Mutability/Accessibility decoration in the outline view"
+                },
+                "solidity-va.outline.inheritance.show": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show/hide inherited names in the outline view"
                 }
             }
         }

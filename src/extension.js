@@ -14,6 +14,8 @@ const mod_decorator = require('./deco/deco.js');
 var activeEditor;
 
 var ast_cache = {};
+var g_sourceUnits = {}
+var g_contracts = {}
 
 
 function inspect(input, filepath, parseImports){
@@ -25,21 +27,28 @@ function inspect(input, filepath, parseImports){
     /** cachelookup first */
     let hash = crypto.createHash('sha1').update(input).digest('base64')
     
-    if (ast_cache[hash]!=undefined)
+    if (ast_cache[hash]!=undefined){
+        console.log("inspect: " + filepath + "//CACHE DONE")
         return ast_cache[hash]  //return cached
-
+    }
     /** parse magic */
     sourceUnit = parseSourceUnit(input);
+    console.log("inspect: " + filepath + "//DONE")
 
     /** cache it */
     sourceUnit.hash = hash;
+    sourceUnit.filepath = filepath;
     ast_cache[hash]=sourceUnit;  //cache it
+    g_sourceUnits[sourceUnit.filepath] = sourceUnit
+    for (var contractName in sourceUnit.contracts) {
+        g_contracts[contractName] = sourceUnit.contracts[contractName]
+    }
 
     /** parse imports */
     sourceUnit.imports.forEach(function(imp){
 
-        let importPath = path.dirname(filepath) +"/./" + imp.path
-        imp.ast = inspectFile(importPath, false)  // this caches automatically
+        let importPath = path.resolve(path.dirname(filepath) +"/./" + imp.path)
+        imp.ast = inspectFile(importPath, true)  // this caches automatically
     })
     /** we're done */
     // should we flatten inherited functions to one object?
@@ -60,7 +69,6 @@ function inspectFile(file, parseImports){
     //let hash = crypto.createHash('sha1').update(content).digest('base64')
     //if (ast_cache[hash]!=undefined)
     //    return ast_cache[hash]  //return cached
-    console.log(file)
     let sourceUnit = inspect(content, file, parseImports)
     //sourceUnit.hash = hash
     //ast_cache[hash]=sourceUnit;  //cache it
@@ -104,7 +112,8 @@ function parseSourceUnit(input){
                 modifiers:{},
                 functions:{},
                 constructor:null,
-                events:{}
+                events:{},
+                inherited_names: {}
             }
             current_contract = sourceUnit.contracts[node.name]
 
@@ -172,6 +181,8 @@ function parseSourceUnit(input){
                         returns: {},  // declarations: quick access to return argument list
                         declarations: {},  // all declarations: arguments+returns+body
                         identifiers: [],  // all identifiers (use of variables)
+                        complexity: 0,    // we just count nr. of branching statements here
+                        accesses_svar: false //
                     }
                     current_function = current_contract.functions[_node.name];
                     // parse function body to get all function scope params.
@@ -188,9 +199,27 @@ function parseSourceUnit(input){
                             current_function.declarations[__node.name]=__node
                         }
                     })
+
                     /**** body declarations */
                     parser.visit(_node.body, {
-                        VariableDeclaration(__node){current_function.declarations[__node.name] = __node;}
+                        VariableDeclaration(__node){current_function.declarations[__node.name] = __node;},
+                        /** 
+                         * subjective complexity - nr. of branching instructions 
+                         *   https://stackoverflow.com/a/40069656/1729555
+                        */
+                        IfStatement(__node){current_function.complexity += 1},
+                        WhileStatement(__node){current_function.complexity += 1},
+                        ForStatement(__node){current_function.complexity += 1},
+                        DoWhileStatement(__node){current_function.complexity += 1},
+                        InlineAssemblyStatement(__node){current_function.complexity += 3},
+                        AssemblyIf(__node){current_function.complexity += 2},
+                        SubAssembly(__node){current_function.complexity += 2},
+                        AssemblyFor(__node){current_function.complexity += 2},
+                        AssemblyCase(__node){current_function.complexity += 1},
+                        Conditional(__node){current_function.complexity +=1},
+                        AssemblyCall(__node){current_function.complexity += 1},
+                        FunctionCall(__node){current_function.complexity += 2}
+                        // ignore throw, require, etc. for now
                     })
                     /**** all identifier */
                     /**** body declarations */
@@ -200,6 +229,12 @@ function parseSourceUnit(input){
                         //
                         //
                         Identifier(__node){
+                            if(!current_function)
+                                return
+                            __node.inFunction = current_function;
+                            current_function.identifiers.push(__node);
+                        },
+                        AssemblyCall(__node){
                             if(!current_function)
                                 return
                             __node.inFunction = current_function;
@@ -223,6 +258,7 @@ function parseSourceUnit(input){
                 
                 if(typeof sourceUnit.contracts[contract].stateVars[identifier.name]!="undefined"){
                     sourceUnit.contracts[contract].stateVars[identifier.name].usedAt.push(identifier)
+                    func.accesses_svar = true;
                 }
                 
                 for (var identDec in func.arguments){
@@ -242,19 +278,15 @@ function parseSourceUnit(input){
 
 
     /*** also import dependencies? */
-    console.log(sourceUnit)
-    
     return sourceUnit;
 }
 
 function findImportedContract(sourceUnit, searchName){
-    console.log("find "+ searchName)
     for (var contractName in sourceUnit.contracts) {
         if(sourceUnit.contracts[contractName].name==searchName)
             return sourceUnit.contracts[contractName];
     }
     //check imports
-    console.log("in imports")
     var BreakException = {};
 
     let result;
@@ -263,24 +295,20 @@ function findImportedContract(sourceUnit, searchName){
             return
         let contract = findImportedContract(imp.ast, searchName)
         if (typeof contract != "undefined" && contract.name==searchName){
-            console.log("FOUND "+ searchName)
             result = contract;
         }
     })
-    console.log("--eof--")
     return result
 
 }
 
 function linearizeContract(sourceUnit){
     let dependencies = {}
-    let contractObjects = {}
     for (var contractName in sourceUnit.contracts) {
         dependencies[contractName] = sourceUnit.contracts[contractName].dependencies;
         sourceUnit.contracts[contractName].dependencies.forEach(function(dep){
-            let contract = findImportedContract(sourceUnit, dep)
-            dependencies[contract.name]=contract.dependencies;
-            contractObjects[contract.name]=contract
+            let contract = g_contracts[dep]
+            dependencies[dep]=contract.dependencies;
         })
     }
     return linearize(dependencies, {reverse: true})
@@ -296,14 +324,56 @@ function onDidChange(event){
     console.log("did-change")
     //mod_decorator.updateDecorations();
     console.log("inspect")
-    var insights = inspect(activeEditor.document.getText());
-    console.log("got inspect result")
+    var insights = inspect(activeEditor.document.getText(), activeEditor.document.fileName);
+    console.log("inspect - end")
+
+    console.log("linearize")
+    var inheritance = linearizeContract(insights)
+    console.log(inheritance)
+    console.log("linearize - end")
 
     var words = new Array();
     var decorations = new Array();
 
     for (var contract in insights.contracts) {
         console.log("in contract" + contract)
+
+        console.log("resolve inheritance..")
+        //merge all contracts into one
+        inheritance[contract].forEach(function(contractName){
+            var subcontract = g_contracts[contractName];
+
+            for (let _var in subcontract.stateVars){
+                if(subcontract.stateVars[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.functions){
+                if(subcontract.functions[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.events){
+                if(subcontract.events[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.modifiers){
+                if(subcontract.modifiers[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.enums){
+                if(subcontract.enums[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.structs){
+                if(subcontract.structs[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+            for (let _var in subcontract.mappings){
+                if(subcontract.mappings[_var].visibility!="private")
+                    insights.contracts[contract].inherited_names[_var] = contractName;
+            }
+        })
+        console.log(insights.contracts[contract].inherited_names)
+        console.log("resolve inheritance -- done")
         for (var stateVar in insights.contracts[contract].stateVars) {
             let svar = insights.contracts[contract].stateVars[stateVar];
             // only statevars that are not const
@@ -510,16 +580,22 @@ class SolidityDocumentSymbolProvider{
                 /** functions - may include constructor / fallback */
                 for (var functionName in insights.contracts[contractName].functions){
 
-                    let modifiers = "";
+                    //console.log("--->" + functionName + " " + insights.contracts[contractName].functions[functionName].complexity)
+
+                    let prefix = "";
                     if (solidityVAConfig.outline.decorations){
-                        modifiers += getVisibilityToIcon(insights.contracts[contractName].functions[functionName]._node.visibility)
-                        modifiers += getStateMutabilityToIcon(insights.contracts[contractName].functions[functionName]._node.stateMutability)
+                        prefix += getVisibilityToIcon(insights.contracts[contractName].functions[functionName]._node.visibility)
+                        prefix += getStateMutabilityToIcon(insights.contracts[contractName].functions[functionName]._node.stateMutability)
                     }
+                    let suffix = "    ( ";
+                    suffix += " complex: "+insights.contracts[contractName].functions[functionName].complexity
+                    suffix += " state: " + (insights.contracts[contractName].functions[functionName].accesses_svar?"☑":"☐")
+                    suffix += " )"
 
                     if(insights.contracts[contractName].functions[functionName]._node.name==null || functionName=="_constructor_" || insights.contracts[contractName].functions[functionName]._node.isConstructor){
-                        symbols.push(getSymbolForNode(document, insights.contracts[contractName].functions[functionName]._node, vscode.SymbolKind.Constructor, "⚜ "+ modifiers + "constructor"))
+                        symbols.push(getSymbolForNode(document, insights.contracts[contractName].functions[functionName]._node, vscode.SymbolKind.Constructor, "⚜ "+ prefix + "constructor" + suffix))
                     } else
-                        symbols.push(getSymbolForNode(document, insights.contracts[contractName].functions[functionName]._node, vscode.SymbolKind.Function, modifiers + insights.contracts[contractName].functions[functionName]._node.name))
+                        symbols.push(getSymbolForNode(document, insights.contracts[contractName].functions[functionName]._node, vscode.SymbolKind.Function, prefix + insights.contracts[contractName].functions[functionName]._node.name + suffix))
                     //get all declarations in function
                     for (var declaration in insights.contracts[contractName].functions[functionName].declarations){
                         let vardec = insights.contracts[contractName].functions[functionName].declarations[declaration];
@@ -531,13 +607,13 @@ class SolidityDocumentSymbolProvider{
                 
                 /** modifiers */
                 for (var functionName in insights.contracts[contractName].modifiers){
-                    let modifiers = "";
+                    let prefix = "";
                     if (solidityVAConfig.outline.decorations){
-                        modifiers += getVisibilityToIcon(insights.contracts[contractName].modifiers[functionName].visibility)
-                        modifiers += getStateMutabilityToIcon(insights.contracts[contractName].modifiers[functionName].stateMutability)
+                        prefix += getVisibilityToIcon(insights.contracts[contractName].modifiers[functionName].visibility)
+                        prefix += getStateMutabilityToIcon(insights.contracts[contractName].modifiers[functionName].stateMutability)
                     }
 
-                    symbols.push(getSymbolForNode(document, insights.contracts[contractName].modifiers[functionName]._node, vscode.SymbolKind.Method, "Ⓜ "+ modifiers + insights.contracts[contractName].modifiers[functionName]._node.name))
+                    symbols.push(getSymbolForNode(document, insights.contracts[contractName].modifiers[functionName]._node, vscode.SymbolKind.Method, "Ⓜ "+ prefix + insights.contracts[contractName].modifiers[functionName]._node.name))
                     //get all declarations in function
                     for (var declaration in insights.contracts[contractName].modifiers[functionName].declarations){
                         let vardec = insights.contracts[contractName].modifiers[functionName].declarations[declaration];
@@ -548,12 +624,23 @@ class SolidityDocumentSymbolProvider{
                 }
                 /** events */
                 for (var functionName in insights.contracts[contractName].events){
-                    let modifiers = "";
+                    let prefix = "";
                     if (solidityVAConfig.outline.decorations){
-                        modifiers += getVisibilityToIcon(insights.contracts[contractName].events[functionName].visibility)
-                        modifiers += getStateMutabilityToIcon(insights.contracts[contractName].events[functionName].stateMutability)
+                        prefix += getVisibilityToIcon(insights.contracts[contractName].events[functionName].visibility)
+                        prefix += getStateMutabilityToIcon(insights.contracts[contractName].events[functionName].stateMutability)
                     }
-                    symbols.push(getSymbolForNode(document, insights.contracts[contractName].events[functionName], vscode.SymbolKind.Method, "📢 "+ modifiers +insights.contracts[contractName].events[functionName].name))
+                    symbols.push(getSymbolForNode(document, insights.contracts[contractName].events[functionName], vscode.SymbolKind.Method, "📢 "+ prefix +insights.contracts[contractName].events[functionName].name))
+                }
+
+                 /** functions - may include constructor / fallback */
+                if(solidityVAConfig.outline.inheritance.show){
+                    for (var name in insights.contracts[contractName].inherited_names){
+                        //skip self
+                        if(insights.contracts[contractName].inherited_names[name]==contractName)
+                            continue
+                        let varname=insights.contracts[contractName].inherited_names[name]+"."+name;
+                        symbols.push(getSymbolForNode(document, getFakeNode(varname, 1), vscode.SymbolKind.Variable, "  ↖"+ varname))
+                    }
                 }
             }
             resolve(symbols);
