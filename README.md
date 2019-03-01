@@ -85,20 +85,13 @@ None
 
 ## Release Notes
 
-### v0.0.9
+## v0.0.9
 
-* added solidity parser
-* added support for stateVar tracking
+- added solidity parser
+- added support for stateVar tracking
+- added SymbolProvider to populate outline
 
-### v0.0.4 - 0.0.8
-
-* minor style fixes
-* added support for inline comments in method heads (e.g. modifier calls). for all the crazy devs out there.
-* added light theme
-
-### v0.0.1 - 0.0.4
-
-first alpha
+[Changelog](CHANGELOG.md)
 
 <!-- 
 vsce package
