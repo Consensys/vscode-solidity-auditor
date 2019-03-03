@@ -1,8 +1,10 @@
 # Solidity language support for Visual Studio Code - Auditors Edition
 
-**DISCLAIMER** this is an experimental extension even though it should be quite stable - feedback highly appreciated :)
+**DISCLAIMER** this is an experimental extension but it should be quite stable - [feedback](https://github.com/tintinweb/vscode-solidity-auditor/issues) highly appreciated ❤
 
-This extension contributes advanced **security conscious** syntax highlighting, a detailed class outline and advanced code insights for Solidity to Visual Studio Code. [Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)
+This extension contributes **security conscious** syntax highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
+
+Scroll down and take the tour.
 
 ![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
 * outline view with security annotations and inherited names
@@ -13,7 +15,7 @@ we suggest using this plugin together with `vscode-solidity`.
 
 ## Features
 
-Advanced syntax highlighting and solidity insights for security auditors.
+Advanced syntax highlighting and solidity insights for security auditors and passive security awarenes developers.
 
 Themes (preferences -> Color Theme):
 
@@ -43,6 +45,60 @@ Visually highlights:
 * contract creation
 
 secure and 'insecure' code fragments are either highlighted red or green. 
+
+# Tour
+
+## code annotations / hover / tooltip
+
+additional information for various keywords (including security notes)
+
+<img width="722" alt="code_token_hover" src="https://user-images.githubusercontent.com/2865694/53698880-c34cbc00-3de2-11e9-8356-7fd5427f8469.png">
+
+asm instruction signatures
+
+<img width="713" alt="code_asm_tooltip" src="https://user-images.githubusercontent.com/2865694/53698881-c34cbc00-3de2-11e9-97ae-3b7145430c27.png">
+
+## statevar tracing
+
+highlight contract local statevars (golden box)
+
+<img width="624" alt="code_statevar" src="https://user-images.githubusercontent.com/2865694/53698888-cfd11480-3de2-11e9-8308-a05fdace95f2.png">
+
+alert on shadowed variable (red box)
+
+<img width="767" alt="code_shadowed" src="https://user-images.githubusercontent.com/2865694/53698885-cf387e00-3de2-11e9-9e69-5fb26cd7a3a0.png">
+
+highlight const statevar (green box)
+
+<img width="756" alt="code_const" src="https://user-images.githubusercontent.com/2865694/53698886-cf387e00-3de2-11e9-9de6-0ce116e86d20.png">
+
+highlight inherited statevar (blue box `Approval`)
+
+<img width="624" alt="code_inherited" src="https://user-images.githubusercontent.com/2865694/53698887-cfd11480-3de2-11e9-8374-a022b4fdaa33.png">
+
+
+## outline view
+
+library with function paramters `T` and declarations
+
+<img width="360" alt="outline_lib" src="https://user-images.githubusercontent.com/2865694/53698893-d1024180-3de2-11e9-8c93-a1ee0076a992.png">
+
+class and events, functions annotated (statemutability, visibility)
+
+<img width="360" alt="outline_class_event" src="https://user-images.githubusercontent.com/2865694/53698892-d1024180-3de2-11e9-89d0-300a1c57376e.png">
+
+class and events, functions annotated (statemutability, visibility)
+
+<img width="360" alt="outline_class_2" src="https://user-images.githubusercontent.com/2865694/53698891-d069ab00-3de2-11e9-8155-5f5aa568852c.png">
+
+inheritance browser - resolves inheritance, only shows inherited names
+
+<img width="360" alt="outline_inherit" src="https://user-images.githubusercontent.com/2865694/53698890-d069ab00-3de2-11e9-8dde-fb524794d1df.png">
+
+extra information (subjective function complexity; accesses statevar?)
+
+<img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
+
 
 ## Theme: Solidity Visual Auditor Dark
 
