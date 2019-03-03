@@ -48,33 +48,35 @@ function inspect(input, filepath, parseImports){
         g_contracts[contractName] = sourceUnit.contracts[contractName]
     }
 
-    /** parse imports */
-    sourceUnit.imports.forEach(function(imp){
-        //try file path
-        let importPath = path.resolve(path.dirname(filepath) +"/./" + imp.path)
-        if (!fs.existsSync(importPath)){
-            //try relative to workspace root
-            importPath = path.resolve(vscode.workspace.rootPath +"/./" + imp.path)
+    if (solidityVAConfig.parser.parseImports){
+        /** parse imports */
+        sourceUnit.imports.forEach(function(imp){
+            //try file path
+            let importPath = path.resolve(path.dirname(filepath) +"/./" + imp.path)
             if (!fs.existsSync(importPath)){
-                //try workspacepath node_modules
-                importPath = path.resolve(vscode.workspace.rootPath +"/node_modules/" + imp.path)
+                //try relative to workspace root
+                importPath = path.resolve(vscode.workspace.rootPath +"/./" + imp.path)
                 if (!fs.existsSync(importPath)){
-                    //try ../contracts/node_modules/...
-                    let basepath = filepath.split("/contracts/")
+                    //try workspacepath node_modules
+                    importPath = path.resolve(vscode.workspace.rootPath +"/node_modules/" + imp.path)
+                    if (!fs.existsSync(importPath)){
+                        //try ../contracts/node_modules/...
+                        let basepath = filepath.split("/contracts/")
 
-                    if (basepath.length==2){ //super dirty
-                        basepath=basepath[0]
-                        importPath = path.resolve(basepath +"/node_modules/" + imp.path)
+                        if (basepath.length==2){ //super dirty
+                            basepath=basepath[0]
+                            importPath = path.resolve(basepath +"/node_modules/" + imp.path)
+                        }
                     }
                 }
             }
-        }
-        try {
-            imp.ast = inspectFile(importPath, true)  // this caches automatically
-        } catch (e) {
-            console.error(e)
-        }
-    })
+            try {
+                imp.ast = inspectFile(importPath, true)  // this caches automatically
+            } catch (e) {
+                console.error(e)
+            }
+        })
+    }
     /** we're done */
     // should we flatten inherited functions to one object?
 
@@ -969,17 +971,6 @@ class SolidityDocumentSymbolProvider{
                 
                 /** modifiers */
                 for (var functionName in insights.contracts[contractName].modifiers){
-                    /** 
-                    let prefix = "";
-                    if (solidityVAConfig.outline.decorations){
-                        prefix += getVisibilityToIcon(insights.contracts[contractName].modifiers[functionName].visibility)
-                        prefix += getStateMutabilityToIcon(insights.contracts[contractName].modifiers[functionName].stateMutability)
-                    }
-
-                    functionLevelNode = astNodeAsDocumentSymbol(document, insights.contracts[contractName].modifiers[functionName]._node, vscode.SymbolKind.Method, "Ⓜ "+ prefix + insights.contracts[contractName].modifiers[functionName]._node.name)
-                    topLevelNode.children.push(functionLevelNode)
-
-                    */
 
                     let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].modifiers[functionName])
                     functionLevelNode = astNodeAsDocumentSymbol(
@@ -1009,13 +1000,6 @@ class SolidityDocumentSymbolProvider{
                 console.log("✓ modifiers")
                 /** events */
                 for (var functionName in insights.contracts[contractName].events){
-                    /*
-                    let prefix = "";
-                    if (solidityVAConfig.outline.decorations){
-                        prefix += getVisibilityToIcon(insights.contracts[contractName].events[functionName].visibility)
-                        prefix += getStateMutabilityToIcon(insights.contracts[contractName].events[functionName].stateMutability)
-                    }
-                    */
                     let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].events[functionName])
                     functionLevelNode = astNodeAsDocumentSymbol(
                         document, 

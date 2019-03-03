@@ -117,7 +117,14 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to show/hide imports in the outline view"
+                },
+                "solidity-va.parser.parseImports": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to recursively parse imports or not"
                 }
+
+                
             }
         }
     },
