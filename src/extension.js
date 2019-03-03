@@ -781,7 +781,7 @@ function getSymbolKindForDeclaration(node){
         case "FunctionDefinition":
             if (astnode.isConstructor){
                 result.symbol = vscode.SymbolKind.Constructor
-                result.name = "⚜ __constructor__ " + result.name
+                result.name = "⚜ __constructor__ " + (result.name?result.name:"")
             } else {
                 result.symbol = vscode.SymbolKind.Function
             }
@@ -839,6 +839,16 @@ function getSymbolKindForDeclaration(node){
                 result.name += "[]"
             }
             result.symbol = vscode.SymbolKind.TypeParameter  // lets misuse this kind for params
+            break;
+        case "ContractDefinition":
+            if(astnode.kind=="interface"){
+                result.symbol = vscode.SymbolKind.Interface
+            } else if(astnode.kind=="library"){
+                result.symbol = vscode.SymbolKind.Class
+                result.prefix += "📚"
+            } else {
+                result.symbol = vscode.SymbolKind.Class
+            }
             break;
         default:
             console.log(node)
@@ -898,8 +908,14 @@ class SolidityDocumentSymbolProvider{
             }
             
             for (var contractName in insights.contracts) {
-                
-                topLevelNode = astNodeAsDocumentSymbol(document, insights.contracts[contractName]._node, vscode.SymbolKind.Class)
+            
+                let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName])
+                topLevelNode = astNodeAsDocumentSymbol(
+                    document,
+                    insights.contracts[contractName]._node,
+                    symbolAnnotation.symbol,
+                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix
+                    )
                 symbols.push(topLevelNode)
 
                 /** the document */
@@ -1043,20 +1059,46 @@ class SolidityDocumentSymbolProvider{
                         if(inheritedFromContractName==contractName)
                             continue
 
+                        let _contract = g_contracts[inheritedFromContractName]
+                        let symbolAnnotation;
+                        if(typeof _contract=="undefined"){
+                            //contract not found :/
+                            symbolAnnotation = {
+                                symbol:vscode.SymbolKind.Class,
+                                name:inheritedFromContractName,
+                                prefix:"",
+                                suffix:"",
+                                details:"<not found>",
+                            }
+                        } else {
+                            symbolAnnotation = getSymbolKindForDeclaration(_contract)
+                        }
+
                         let currentContractNode = contractNodes[inheritedFromContractName]
                         if(typeof currentContractNode=="undefined"){
                             currentContractNode = astNodeAsDocumentSymbol(
                                 document, 
                                 getFakeNode(inheritedFromContractName, 1), 
-                                vscode.SymbolKind.Class,
-                                "  ↖ "+ inheritedFromContractName)
+                                symbolAnnotation.symbol,
+                                "  ↖ "+ symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details)
                             contractNodes[inheritedFromContractName] = currentContractNode
                             inheritedLevelNode.children.push(currentContractNode)
                             
                         }
                         // get the item to calculate range/location
-                        let varSymbol = getSymbolKindForDeclaration(g_contracts[inheritedFromContractName].names[name])
-
+                        let varSymbol;
+                        try {
+                            varSymbol = getSymbolKindForDeclaration(g_contracts[inheritedFromContractName].names[name])
+                        } catch(e){
+                            varSymbol = {
+                                symbol:vscode.SymbolKind.Variable,
+                                name:name,
+                                prefix:"",
+                                suffix:"",
+                                details:"<not found>",
+                            }
+                        }
                         let inheritanceNode = astNodeAsDocumentSymbol(
                             document, 
                             getFakeNode(varSymbol.name, 1), 
