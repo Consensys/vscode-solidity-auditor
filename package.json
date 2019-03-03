@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.9",
+    "version": "0.0.10",
     "publisher": "tintinweb",
     "engines": {
         "vscode": "^1.20.2"
@@ -96,6 +96,26 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to show/hide inherited names in the outline view"
+                },
+                "solidity-va.outline.extras": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show/hide extras (complexity, state var access) for functions in the outline view"
+                },
+                "solidity-va.outline.var.storage_annotations": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show/hide storage annotations for variables in the outline view"
+                },
+                "solidity-va.outline.pragmas.show": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show/hide pragmas in the outline view"
+                },
+                "solidity-va.outline.imports.show": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to show/hide imports in the outline view"
                 }
             }
         }

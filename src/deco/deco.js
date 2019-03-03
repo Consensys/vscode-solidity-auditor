@@ -48,6 +48,21 @@ const decoStyleLightOrange = vscode.window.createTextEditorDecorationType({
     },
 });
 
+const decoStyleLightBlue = vscode.window.createTextEditorDecorationType({
+    borderWidth: '1px',
+    borderStyle: 'dotted',
+    overviewRulerColor: 'blue',
+    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    light: {
+        // this color will be used in light color themes
+        borderColor: 'darkblue'
+    },
+    dark: {
+        // this color will be used in dark color themes
+        borderColor: 'lightblue'
+    },
+});
+
 
 // create a decorator type that we use to decorate large numbers
 const largeNumberDecorationType = vscode.window.createTextEditorDecorationType({
@@ -60,7 +75,8 @@ const largeNumberDecorationType = vscode.window.createTextEditorDecorationType({
 const styles = {
     decoStyleBoxedLightBlue:decoStyleBoxedLightBlue,
     decoStyleLightGreen:decoStyleLightGreen,
-    decoStyleLightOrange:decoStyleLightOrange
+    decoStyleLightOrange:decoStyleLightOrange,
+    decoStyleLightBlue:decoStyleLightBlue
 }
 
 function updateDecorations() {

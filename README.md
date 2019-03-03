@@ -1,11 +1,13 @@
 # Solidity language support for Visual Studio Code - Auditors Edition
 
-This extension provides advanced **security conscious** syntax highlighting and code insights support for Visual Studio Code.
+**DISCLAIMER** this is an experimental extension even though it should be quite stable - feedback highly appreciated :)
+
+This extension contributes advanced **security conscious** syntax highlighting, a detailed class outline and advanced code insights for Solidity to Visual Studio Code.
 
 ![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
-* outline view with security annotations
-* state var highlighting (constant=green)
-* tooltips
+* outline view with security annotations and inherited names
+* state var highlighting (constant=green, statevar=golden, inherited=blue)
+* various tooltips (asm instruction signatures, security notes)
 
 we suggest using this plugin together with `vscode-solidity`.
 
@@ -13,7 +15,7 @@ we suggest using this plugin together with `vscode-solidity`.
 
 Advanced syntax highlighting and solidity insights for security auditors.
 
-Themes:
+Themes (preferences -> Color Theme):
 
 * Dark - based on Atom One
 * Light - based on Solarized Light
@@ -26,6 +28,8 @@ Insights:
 
 Visually highlights:
 
+* the sourceUnit layout (contracts, statevars, methods, inherited names, ...)
+* annotates methods with security information, complexity rating and whether a method is accessing state variables
 * **StateVars** (constant, inherited)
   * Detects StateVar shadowing
 * **Constructor** and **Fallback** function
@@ -72,7 +76,10 @@ secure and 'insecure' code fragments are either highlighted red or green.
 ## Extension Settings
 
 * `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
-* 
+* `Solidity-va.deco.statevars` ... decorate statevars in code view (golden, green, blue boxes)
+* `Solidity-va.outline.decorations` ... decorate functions according to state mutability function visibility
+* `Solidity-va.outline.inheritance.show` ... add inherited functions to outline view
+* `Solidity-va.outline.extras` ... annotate functions with extra information (complexity, statevar access)
 
 ## Known Issues
 
@@ -85,11 +92,13 @@ None
 
 ## Release Notes
 
-## v0.0.9
+## v0.0.10
 
-- added solidity parser
-- added support for stateVar tracking
-- added SymbolProvider to populate outline
+- proper parsing of imports
+- linearization of inheritance
+- highlighting of inherited statevars/methods with location
+- outline view now shows pragmas/imports and inheritance
+- more annotations for outline view
 
 [Changelog](CHANGELOG.md)
 
