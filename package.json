@@ -11,6 +11,7 @@
     ],
     "version": "0.0.10",
     "publisher": "tintinweb",
+    "icon": "images/icon.png",
     "engines": {
         "vscode": "^1.20.2"
     },
