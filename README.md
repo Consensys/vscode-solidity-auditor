@@ -2,7 +2,7 @@
 
 **DISCLAIMER** this is an experimental extension even though it should be quite stable - feedback highly appreciated :)
 
-This extension contributes advanced **security conscious** syntax highlighting, a detailed class outline and advanced code insights for Solidity to Visual Studio Code.
+This extension contributes advanced **security conscious** syntax highlighting, a detailed class outline and advanced code insights for Solidity to Visual Studio Code. [Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)
 
 ![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
 * outline view with security annotations and inherited names
