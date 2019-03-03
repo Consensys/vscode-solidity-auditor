@@ -337,28 +337,34 @@
     },
     "public":{
         "prefix":"public",
-        "description":"public - all can access",
+        "description":"Public functions are part of the contract interface and can be either called internally or via messages. For public state variables, an automatic getter function (see below) is generated.",
         "security":"make sure to authenticate calls to this method as anyone can access it"
     },
     "external":{
         "prefix":"external",
-        "description":"external - Cannot be accessed internally, only externally. subset of public",
+        "description":"External functions are part of the contract interface, which means they can be called from other contracts and via transactions. An external function f cannot be called internally (i.e. f() does not work, but this.f() works). External functions are sometimes more efficient when they receive large arrays of data.",
         "security": "make sure to authenticate calls to this method as anyone can access it"
     },
     "internal":{
         "prefix":"internal",
-        "description":"internal - only this contract and contracts deriving from it can access. subset of private"
+        "description":"Those functions and state variables can only be accessed internally (i.e. from within the current contract or contracts deriving from it), without using this."
     },
     "private":{
         "prefix":"private",
-        "description":"private - can be accessed only from this contract"
+        "description":"Private functions and state variables are only visible for the contract they are defined in and not in derived contracts.",
+        "security":"Everything that is inside a contract is visible to all external observers. Making something private only prevents other contracts from accessing and modifying the information, but it will still be visible to the whole world outside of the blockchain."
     },
     "pure":{
         "prefix":"pure",
-        "description":"function call CANNOT read or write state. subset of view"
+        "description":"Functions can be declared pure in which case they promise not to read from or modify the state.",
+        "security": ["It is not possible to prevent functions from reading the state at the level of the EVM, it is only possible to prevent them from writing to the state (i.e. only view can be enforced at the EVM level, pure can not).", 
+            "Before version 0.4.17 the compiler didn’t enforce that pure is not reading the state."]
     },
     "view":{
         "prefix":"view",
-        "description":"function call CANNOT write state. It is however allowed to read state."
+        "description":"function call CANNOT write state. It is however allowed to read state.",
+        "security":["Functions can be declared view in which case they promise not to modify the state.",
+            "constant on functions is an alias to view, but this is deprecated and will be dropped in version 0.5.0.","Getter methods are marked view.",
+            "The compiler does not enforce yet that a view method is not modifying state. It raises a warning though."]
     }
 }
