@@ -15,12 +15,12 @@ we suggest using this plugin together with `vscode-solidity`.
 
 ## Features
 
-Advanced syntax highlighting and solidity insights for security auditors and passive security awarenes developers.
+Advanced syntax highlighting and solidity insights for security auditors and passive security awarenes developers. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
 
-Themes (preferences -> Color Theme):
+Themes (`preferences -> Color Theme`):
 
-* Dark - based on Atom One
-* Light - based on Solarized Light
+* Visual Auditor Dark - based on Atom One
+* Visual Auditor Light - based on Solarized Light
 
 Insights:
 
