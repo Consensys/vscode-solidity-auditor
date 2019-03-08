@@ -2,49 +2,54 @@
 
 **DISCLAIMER** this is an experimental extension but it should be quite stable - [feedback](https://github.com/tintinweb/vscode-solidity-auditor/issues) highly appreciated ❤
 
-This extension contributes **security conscious** syntax highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
+This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
 
 Scroll down and take the tour.
 
 ![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
+* semantic highlighting for state variables (constant=green, statevar=golden, inherited=blue)
 * outline view with security annotations and inherited names
-* state var highlighting (constant=green, statevar=golden, inherited=blue)
-* various tooltips (asm instruction signatures, security notes)
+* tooltips (asm instruction signatures, security notes)
 
 we suggest using this plugin together with `vscode-solidity`.
 
 ## Features
 
-Advanced syntax highlighting and solidity insights for security auditors and passive security awarenes developers. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
+Semantic highlighting and solidity insights for passive security awarenes. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
 
-Themes (`preferences -> Color Theme`):
+##### Themes (`preferences -> Color Theme`):
 
 * Visual Auditor Dark - based on Atom One
 * Visual Auditor Light - based on Solarized Light
 
-Insights:
+##### Syntax Highlighting
 
+* **access modifiers** (`external`, `public`, `payable`, ...)
+* security relevant built-ins, globals, methods and user/miner-tainted information (`address.call()`,`tx.origin`,`msg.data`, `block.*`, `now`) 
+* storage access modifiers (`memory`, `storage`)
+* developer notes in comments (`TODO`,`FIXME`,`HACK`, ...)
+* custom function modifiers 
+* contract creation / event invocations
+* easily differentiate between arithmetics vs. logical operations
+* make **Constructor** and **Fallback** function more prominent
+
+secure and 'insecure' code fragments are generally highlighted red or green. 
+
+##### Semantic Highlighting
+
+* highlights **StateVars** (constant, inherited)
+* detects and alerts about StateVar shadowing
+
+##### Insights:
+
+* populates vscode outline view with sourceUnit and contract layout
+  * contracts, statevars, methods, inherited names
+  * annotates security relevant information (visibility, ...)
+  * calculates complexity rating
+  * annotations functions with information about whether they are accessing statevars
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
 * onHover StateVar declaration information, including line of declaration
-
-Visually highlights:
-
-* the sourceUnit layout (contracts, statevars, methods, inherited names, ...)
-* annotates methods with security information, complexity rating and whether a method is accessing state variables
-* **StateVars** (constant, inherited)
-  * Detects StateVar shadowing
-* **Constructor** and **Fallback** function
-* insecure **access modifiers** (`external`, `public`, `payable`, ...)
-* insecure built-ins, globals, methods and user/miner-tainted information (`address.call()`,`tx.origin`,`msg.data`, `block.*`, `now`) 
-* storage access modifiers (`memory`, `storage`)
-* development notes in comments (`TODO`,`FIXME`,`HACK`, ...)
-* custom function modifiers
-* arithmetics vs. logical operations
-* event invocations
-* contract creation
-
-secure and 'insecure' code fragments are either highlighted red or green. 
 
 # Tour
 
