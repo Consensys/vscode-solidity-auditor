@@ -1,3 +1,4 @@
+
 const vscode = require('vscode');
 
 const fs = require('fs')
@@ -103,6 +104,14 @@ function inspectFile(file, parseImports){
     return sourceUnit
 }
 
+var ScopeEnum = {
+    STATE: 1,  // declared satevar
+    ARGUMENT: 2,  // declared in arguments
+    RETURNS: 3,  // declared in returns
+    LOCAL: 4,  // function body,
+    INHERITED: 5 // inherited
+  };
+
 function parseSourceUnit(input){
     try {
         var ast = parser.parse(input, {loc:true, tolerant:true})
@@ -157,6 +166,9 @@ function parseSourceUnit(input){
                     })
                 },
                 // --> is a subtype. Mapping(_node){current_contract.mappings[_node.name]=_node},
+                Mapping(_node){
+                    current_contract.mappings[_node.name]=_node
+                },
                 EnumDefinition(_node){
                     current_contract.enums[_node.name]=_node
                     current_contract.names[_node.name]=_node
@@ -292,6 +304,8 @@ function parseSourceUnit(input){
                             if(!current_function)
                                 return
                             __node.inFunction = current_function;
+                            __node.scope = undefined;
+                            __node.scopeRef = undefined;
                             current_function.identifiers.push(__node);
                         },
                         AssemblyCall(__node){
@@ -483,13 +497,19 @@ function varDecIsUserDefined(node){
 }
 
 function getVariableDeclarationType(node){
-    if(varDecIsArray(node))
-        node = node.typeName.baseTypeName
-    else
-        node = node.typeName
+    if (typeof node.typeName != "undefined"){
+        if(varDecIsArray(node)){
+            node = node.typeName.baseTypeName 
+        } else 
+            node = node.typeName;
+    }
+    
     if(node.type=="ElementaryTypeName"){
         return node.name;
     } else if (node.type=="UserDefinedTypeName"){
+        return node.namePath;
+    } else if (node.type=="Mapping"){
+        node.namePath = "map( " + getVariableDeclarationType(node.keyType)+ "=>" +getVariableDeclarationType(node.valueType)+ " )";
         return node.namePath;
     } else {
         return null
@@ -623,7 +643,6 @@ function getSymbolKindForDeclaration(node){
             }
             break;
         default:
-            console.log(node)
             console.log("<-----")
     }
     return result;
@@ -900,55 +919,49 @@ class SolidityDocumentSymbolProvider{
     }
 }
 
-function semanticHighlight(funcNode){
+function semanticHighlightFunctionParameters(arrIdents){
     
-    let colors = ["purple","green","blue","yellow","brown","orange","purple","green","blue","yellow","brown","orange"]
+    if(arrIdents.length<=0)
+        return []
+
     let index = 0;
     let colorAssign = {};
 
-    let toBeDecorated = new Array();
+    let funcNode = arrIdents[0].inFunction;  // just take the first items ref to function
+    var decorations = new Array();
 
     for(let name in funcNode.arguments){
-        colorAssign[name]=colors[index++]
-        toBeDecorated.push(funcNode.arguments[name])
-    }
-    for(let name in funcNode.returns){
-        colorAssign[name]=colors[index++]
-        toBeDecorated.push(funcNode.returns[name])
+        colorAssign[name]="styleArgument" +(index++%15);
+        let ident = funcNode.arguments[name];
+        let typeName = getVariableDeclarationType(ident);
+        typeName = typeName?typeName:""
+        decorations.push(
+            { 
+                range: new vscode.Range(
+                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column),
+                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                    ),
+                hoverMessage: "(*"+ typeName +"*) " +'**Argument** *' + funcNode._node.name + "*.**"+ident.name + '**',
+                decoStyle: colorAssign[ident.name]
+            });
     }
 
-    funcNode.identifiers.forEach(function(identifier){
-        identifier.declarations.local.forEach(function(astnode){
-            toBeDecorated.push(astnode)
-        })
-    })
-
-    let decorations = new Array();
-    toBeDecorated.forEach(function(ident){
+    
+    arrIdents.forEach(function(ident){
+        let typeName = getVariableDeclarationType(ident.scopeRef);
         decorations.push(
             { 
                 range: new vscode.Range(
                     new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
                     new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
                     ),
-                    hoverMessage: "",
-                decoStyle: vscode.window.createTextEditorDecorationType({
-                    borderWidth: '1px',
-                    borderStyle: 'dashed',
-                    light: {
-                        // this color will be used in light color themes
-                        borderColor: colorAssign[ident.name]
-                    },
-                    dark: {
-                        // this color will be used in dark color themes
-                        borderColor: colorAssign[ident.name]
-                    },
-                })
+                hoverMessage: "(*"+ typeName +"*) " +'**Argument** *' + funcNode._node.name + "*.**"+ident.name + '**',
+                decoStyle: colorAssign[ident.name]
             });
 
 
     })
-    console.log("✓ semantic highlight - " + funcNode._node.name)
+    console.log("✓ semantic highlight - " + funcNode._node.name);
     return decorations
 }
 
@@ -1094,16 +1107,32 @@ function onDidChange(event){
         /** have to get all identifiers :// */
         /** fixme ugly hack ... */
         for (var functionName in insights.contracts[contract].functions){
-            //decorations = decorations.concat(semanticHighlight(insights.contracts[contract].functions[functionName]))
-
             //all functions
+            var highlightIdentifiers = new Array();
+
             insights.contracts[contract].functions[functionName].identifiers.forEach(function(ident){
                 // all idents in function
                 let is_state_var = typeof insights.contracts[contract].stateVars[ident.name]!="undefined"
                 let is_declared_locally = typeof ident.inFunction.declarations[ident.name]!="undefined"
+                let is_declared_locally_arguments = typeof ident.inFunction.arguments[ident.name]!="undefined"
+                let is_declared_locally_returns = typeof ident.inFunction.returns[ident.name]!="undefined"
                 let is_inherited = typeof insights.contracts[contract].inherited_names[ident.name]!="undefined" && insights.contracts[contract].inherited_names[ident.name]!=contract
 
                 if(is_declared_locally){
+                    //set scope identifier
+                    if(is_declared_locally_arguments){
+                        ident.scope=ScopeEnum.ARGUMENT;
+                        ident.scopeRef = ident.inFunction.arguments[ident.name];
+                        highlightIdentifiers.push(ident); // .scope, .scopeRef and .inFunction is known.
+                    } else if(is_declared_locally_returns){
+                        ident.scope=ScopeEnum.RETURNS;
+                        ident.scopeRef = ident.inFunction.returns[ident.name];
+                    }else{
+                        ident.scope=ScopeEnum.LOCAL;
+                        ident.scopeRef = ident.inFunction.declarations[ident.name];
+                    }
+                    
+                    
                     if(is_state_var){
                         //shadowed staevar
                         console.log("!!!! shadowed statevar")
@@ -1130,6 +1159,9 @@ function onDidChange(event){
                         // is declared locally
                     }
                 } else if(is_state_var){
+                    ident.scope=ScopeEnum.STATE;
+                    ident.scopeRef = insights.contracts[contract].stateVars[ident.name];
+
                     if(is_inherited){
                         //shadowed inherited var
                         console.log("!!! statevar shadows inherited")
@@ -1153,6 +1185,8 @@ function onDidChange(event){
                         // should be covered by the other loop already
                     }
                 } else if (is_inherited){
+                    ident.scope=ScopeEnum.INHERITED;
+                    ident.scopeRef = insights.contracts[contract].inherited_names[ident.name];
                     // inherited
                     prefix = "**INHERITED**  "
                     decoStyle = "decoStyleLightBlue";
@@ -1173,6 +1207,10 @@ function onDidChange(event){
                     
                 }
             })
+
+            if (solidityVAConfig.deco.arguments)
+                decorations = decorations.concat(semanticHighlightFunctionParameters(highlightIdentifiers));
+
         }
     }
     console.log("--set-decorate--")
