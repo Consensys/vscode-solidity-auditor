@@ -366,5 +366,10 @@
         "security":["Functions can be declared view in which case they promise not to modify the state.",
             "constant on functions is an alias to view, but this is deprecated and will be dropped in version 0.5.0.","Getter methods are marked view.",
             "The compiler does not enforce yet that a view method is not modifying state. It raises a warning though."]
+    },
+    "extcodehash": {
+        "prefix": "extcodehash",
+        "description": "",
+        "security":"Note that EXTCODEHASH will be zero during constructor calls. Therefore it is not fit to use it to check if an address is a contract or not as this can be subverted by calling your contract in a constructor."
     }
 }
