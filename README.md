@@ -1,21 +1,20 @@
-# Solidity language support for Visual Studio Code - Auditors Edition
+# Solidity language support for Visual Studio Code - `Auditors Edition`
 
-**DISCLAIMER** this is an experimental extension but it should be quite stable - [feedback](https://github.com/tintinweb/vscode-solidity-auditor/issues) highly appreciated ❤
+**DISCLAIMER** This is an experimental extension but it should be quite stable - [feedback](https://github.com/tintinweb/vscode-solidity-auditor/issues) highly appreciated ❤
 
 This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
 
-Scroll down and take the tour.
+we suggest using this plugin together with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
 
-![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
-* semantic highlighting for state variables (constant=green, statevar=golden, inherited=blue)
-* outline view with security annotations and inherited names
-* tooltips (asm instruction signatures, security notes)
 
-we suggest using this plugin together with `vscode-solidity`.
+Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+
+
+---------------------
 
 ## Features
 
-Semantic highlighting and solidity insights for passive security awarenes. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
+Semantic highlighting and solidity insights for passive security awareness. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
 
 ##### Themes (`preferences -> Color Theme`):
 
@@ -33,7 +32,7 @@ Semantic highlighting and solidity insights for passive security awarenes. Most 
 * easily differentiate between arithmetics vs. logical operations
 * make **Constructor** and **Fallback** function more prominent
 
-secure and 'insecure' code fragments are generally highlighted red or green. 
+Code fragments are highlighted <span style="color:green">*Secure* code</span> and <span style="color:red">*Insecure* code</span>.
 
 ##### Semantic Highlighting
 
@@ -42,65 +41,85 @@ secure and 'insecure' code fragments are generally highlighted red or green.
 
 ##### Insights:
 
-* populates vscode outline view with sourceUnit and contract layout
-  * contracts, statevars, methods, inherited names
+* populates VS Code outline view with sourceUnit and contract layout
+  * contracts, stateVars, methods, inherited names
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
-  * annotations functions with information about whether they are accessing statevars
+  * annotations functions with information about whether they are accessing stateVars
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
-* onHover StateVar declaration information, including line of declaration
+* onHover StateVar declaration information, including the line of declaration
+
+# Installation
+
+**Method 1:** Install by going to [Visual Studio Market Place](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor#overview) and click  `Install`. 
+
+**Method 2:** Bring up the Extension view in VS Code and search for  `Solidity Visual Auditor` and click `Install`
+
+**Method 3 (Manual)**: 
+1. Download the [latest compiled extension as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
+2. Fire up Terminal and install the extension by running `code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
+3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
 
 # Tour
 
+Scroll down and take the tour.
+
+![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
+* semantic highlighting for state variables (constant=green, statevar=golden, inherited=blue)
+* outline view with security annotations and inherited names
+* tooltips (asm instruction signatures, security notes)
+
+
+
 ## code annotations / hover / tooltip
 
-additional information for various keywords (including security notes)
+* additional information for various keywords (including security notes)
 
 <img width="722" alt="code_token_hover" src="https://user-images.githubusercontent.com/2865694/53698880-c34cbc00-3de2-11e9-8356-7fd5427f8469.png">
 
-asm instruction signatures
+* asm instruction signatures
 
 <img width="713" alt="code_asm_tooltip" src="https://user-images.githubusercontent.com/2865694/53698881-c34cbc00-3de2-11e9-97ae-3b7145430c27.png">
 
-## statevar tracing
+## stateVar tracing
 
-highlight contract local statevars (golden box)
+* highlight contract local stateVars (golden box)
 
 <img width="624" alt="code_statevar" src="https://user-images.githubusercontent.com/2865694/53698888-cfd11480-3de2-11e9-8308-a05fdace95f2.png">
 
-alert on shadowed variable (red box)
+* alert on a shadowed variable (red box)
 
 <img width="767" alt="code_shadowed" src="https://user-images.githubusercontent.com/2865694/53698885-cf387e00-3de2-11e9-9e69-5fb26cd7a3a0.png">
 
-highlight const statevar (green box)
+* highlight const stateVar (green box)
 
 <img width="756" alt="code_const" src="https://user-images.githubusercontent.com/2865694/53698886-cf387e00-3de2-11e9-9de6-0ce116e86d20.png">
 
-highlight inherited statevar (blue box `Approval`)
+* highlight inherited stateVar (blue box `Approval`)
 
 <img width="624" alt="code_inherited" src="https://user-images.githubusercontent.com/2865694/53698887-cfd11480-3de2-11e9-8374-a022b4fdaa33.png">
 
 
 ## outline view
 
-library with function paramters `T` and declarations
+* library with function parameters `T` and declarations
 
 <img width="360" alt="outline_lib" src="https://user-images.githubusercontent.com/2865694/53698893-d1024180-3de2-11e9-8c93-a1ee0076a992.png">
 
-class and events, functions annotated (statemutability, visibility)
+* class and events, functions annotated (stateMutability, visibility)
 
 <img width="360" alt="outline_class_event" src="https://user-images.githubusercontent.com/2865694/53698892-d1024180-3de2-11e9-89d0-300a1c57376e.png">
 
-class and events, functions annotated (statemutability, visibility)
+* class and events, functions annotated (stateMutability, visibility)
 
 <img width="360" alt="outline_class_2" src="https://user-images.githubusercontent.com/2865694/53698891-d069ab00-3de2-11e9-8155-5f5aa568852c.png">
 
-inheritance browser - resolves inheritance, only shows inherited names
+* inheritance browser - resolves inheritance, only shows inherited names
 
 <img width="360" alt="outline_inherit" src="https://user-images.githubusercontent.com/2865694/53698890-d069ab00-3de2-11e9-8dde-fb524794d1df.png">
 
-extra information (subjective function complexity; accesses statevar?)
+* extra information (subjective function complexity; accesses stateVar?)
 
 <img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
 
@@ -122,17 +141,7 @@ extra information (subjective function complexity; accesses statevar?)
 <img width="970" alt="screenshot 2019-02-11 at 21 52 11" src="https://user-images.githubusercontent.com/2865694/52592696-5c715e00-2e47-11e9-99f4-32332e308ec3.png">
 
 
-## Installation
 
-1. download the [latest compiled extesion as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
-2. install the extension `#> code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
-3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
-
-[Found a bug -> file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
-
-## Requirements
-
-* this extension can be used together with `vscode-solidity`
 
 ## Extension Settings
 
@@ -146,12 +155,13 @@ extra information (subjective function complexity; accesses statevar?)
 
 None
 
-## Acknowledgements
+# Acknowledgements
 
 * Themes: [Atom One Dark Theme](https://github.com/akamud/vscode-theme-onedark) and an adapted version of built-in `Solarized Light`
 * Base Grammar for Solidity: [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity)
 
-## Release Notes
+
+# Release Notes
 
 ## v0.0.10
 
@@ -159,9 +169,9 @@ None
 - linearization of inheritance
 - highlighting of inherited statevars/methods with location
 - outline view now shows pragmas/imports and inheritance
-- more annotations for outline view
+- more annotations for the outline view
 
-[Changelog](CHANGELOG.md)
+[Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 
 <!-- 
 vsce package
