@@ -2,7 +2,6 @@
  * @author github.com/tintinweb
  * @license MIT
  * 
- * taken from the armlet example
  * */
 const vscode = require('vscode');
 const fs = require('fs')

@@ -145,11 +145,16 @@ Scroll down and take the tour.
 
 ## Extension Settings
 
+* `solidity-va.parser.parseImports` ... Whether to recursively parse imports or not
 * `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
 * `Solidity-va.deco.statevars` ... decorate statevars in code view (golden, green, blue boxes)
+* `Solidity-va.deco.arguments` ... whether to enable/disable semantic highlighting for function arguments
 * `Solidity-va.outline.decorations` ... decorate functions according to state mutability function visibility
 * `Solidity-va.outline.inheritance.show` ... add inherited functions to outline view
 * `Solidity-va.outline.extras` ... annotate functions with extra information (complexity, statevar access)
+* `Solidity-va.outline.var.storage_annotations` ... Whether to show/hide storage annotations for variables in the outline view
+* `Solidity-va.outline.pragmas.show` ... Whether to show/hide pragmas in the outline view
+* `Solidity-va.outline.imports.show` ... Whether to show/hide imports in the outline view
 
 ## Known Issues
 
