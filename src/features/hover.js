@@ -1,9 +1,9 @@
 const vscode = require('vscode');
 
-const builtinsArr = require('./builtins.json');
-const asmArr = require('./asm.json');
+const builtinsArr = require('./hover/builtins.json');
+const asmArr = require('./hover/asm.json');
 
-let solidityVAConfig;
+const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
 function createHover(name, snippet, type) {
     var text = Array();
@@ -90,7 +90,6 @@ function provideHoverHandler(document, position, token, type) {
 }
 
 function init(context, type, config){
-    solidityVAConfig = config;
     
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(type, {

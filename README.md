@@ -163,13 +163,11 @@ None
 
 # Release Notes
 
-## v0.0.10
+## v0.0.12
 
-- proper parsing of imports
-- linearization of inheritance
-- highlighting of inherited statevars/methods with location
-- outline view now shows pragmas/imports and inheritance
-- more annotations for the outline view
+- new feature: semantic function argument highlighting
+- new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
+- refactored folder structure
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 

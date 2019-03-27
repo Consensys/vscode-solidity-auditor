@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.10",
+    "version": "0.0.12",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -88,6 +88,11 @@
                     "default": true,
                     "description": "Whether to enable/disable Solidity statevar decoration"
                 },
+                "solidity-va.deco.arguments": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to enable/disable semantic highlighting for function arguments"
+                },
                 "solidity-va.outline.decorations": {
                     "type": "boolean",
                     "default": true,
@@ -123,13 +128,12 @@
                     "default": true,
                     "description": "Whether to recursively parse imports or not"
                 }
-
-                
             }
         }
     },
     "dependencies": {
         "c3-linearization": "^0.3.0",
+        "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.1"
     }
 }
