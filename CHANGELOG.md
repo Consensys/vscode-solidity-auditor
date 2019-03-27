@@ -2,6 +2,7 @@
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
 ## v0.0.12
+- bug: check if source-file is actually a solidity file on-change
 - new feature: semantic function argument highlighting
 - new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
 - refactored folder structure

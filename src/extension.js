@@ -61,21 +61,7 @@ function onInitModules(context, type){
     mod_decorator.init(context, solidityVAConfig);
 }
 
-var fileHashes = {}  //<path>:hash
-
-/** funcdecs */
-function fileDidChange(document){
-    let hash = crypto.createHash('sha1').update(document.getText()).digest('base64')
-    if(fileHashes.hasOwnProperty(document.uri.path) && fileHashes[document.uri]===hash){
-        return false;
-    }
-    fileHashes[document.uri.path]=hash;  // update hash
-    return true;
-}
-
-function onDidChangeForced(event){
-    onDidChange(event, true)
-}
+/** func decs */
 
 function analyzeSourceUnit(){
     //mod_decorator.updateDecorations();
@@ -330,7 +316,13 @@ function analyzeSourceUnit(){
     console.log("✓ apply decorations - audit tags")
 }
 
-async function onDidChange(event, force){
+/** events */
+
+function onDidSave(document){
+    
+}
+
+async function onDidChange(event){
     return new Promise((reject,resolve) => {
         if(vscode.window.activeTextEditor.document.languageId!=languageId){
             console.log("wrong langid")
@@ -338,15 +330,6 @@ async function onDidChange(event, force){
             return;
         }
         console.log("--- on-did-change")
-        // only do something if the file really changed
-        if(!force){
-            if(!fileDidChange(vscode.window.activeTextEditor.document)){
-                // avoid triggering the event when switching tabs
-                console.log("file did not change")
-                reject("file did not change")
-                return;
-            }
-        }
         
         analyzeSourceUnit()
         console.log("✓✓✓ on-did-change - resolved")
@@ -388,6 +371,11 @@ function onActivate(context) {
             if (activeEditor && event.document === activeEditor.document && event.document.languageId==type) {
                 onDidChange(event);
             }
+        }, null, context.subscriptions);
+
+          /***** OnSave */
+        vscode.workspace.onDidSaveTextDocument(document => {
+            onDidSave(document);  
         }, null, context.subscriptions);
 
         /** experimental */
