@@ -145,7 +145,8 @@ Scroll down and take the tour.
 
 ## Extension Settings
 
-* `solidity-va.parser.parseImports` ... Whether to recursively parse imports or not
+* `solidity-va.mode.active` .. Enable/Disable all active components of this extension (emergency master-switch).
+* `Solidity-va.parser.parseImports` ... Whether to recursively parse imports or not
 * `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
 * `Solidity-va.deco.statevars` ... decorate statevars in code view (golden, green, blue boxes)
 * `Solidity-va.deco.arguments` ... whether to enable/disable semantic highlighting for function arguments

@@ -127,6 +127,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to recursively parse imports or not"
+                },
+                "solidity-va.mode.active": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable all active components of this extension (emergency)."
                 }
             }
         }

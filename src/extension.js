@@ -368,6 +368,10 @@ function onActivate(context) {
             vscode.languages.reg
         )
         
+        if(!solidityVAConfig.mode.active){
+            console.log("ⓘ activate extension: entering passive mode. not registering any active code augmentation support.")
+            return;
+        }
         /** module init */
         onInitModules(context, type);
         onDidChange()
