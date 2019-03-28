@@ -38,8 +38,15 @@ Code fragments are highlighted <span style="color:green">*Secure* code</span> an
 
 * highlights **StateVars** (constant, inherited)
 * detects and alerts about StateVar shadowing
+* highlights **function arguments** in the function body
 
-##### Insights:
+
+##### Audit Featues
+
+* audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
+* generic interface for importing external scanner results - cdili json format (see below) 
+
+##### Code Insights
 
 * populates VS Code outline view with sourceUnit and contract layout
   * contracts, stateVars, methods, inherited names
@@ -65,11 +72,26 @@ Code fragments are highlighted <span style="color:green">*Secure* code</span> an
 
 Scroll down and take the tour.
 
-![vscode-auditor](https://user-images.githubusercontent.com/2865694/53627822-c0e33a00-3c09-11e9-8d58-bbb2ca247bea.png)
+![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 * semantic highlighting for state variables (constant=green, statevar=golden, inherited=blue)
 * outline view with security annotations and inherited names
 * tooltips (asm instruction signatures, security notes)
 
+
+
+## semantic function argument highlighting
+
+* arguments are assigned different colors in the scope of the function
+
+<img width="722" alt="semantic-arg-dark" src="https://user-images.githubusercontent.com/2865694/55149233-1bf54780-514a-11e9-827e-d0816a9c2ac8.png">
+<img width="722" alt="semantic-arg-light" src="https://user-images.githubusercontent.com/2865694/55149264-257eaf80-514a-11e9-8779-8cdd60b9ab22.png">
+
+## @audit bookmarks
+
+* `@audit - <msg>` ... flag lines for security review or start a security review discussion
+* `@audit-ok - <msg>` ... flag that a line was checked for security or a security discussion on that line turned out to be a non-issue 
+
+<img width="722" alt="audit-tags" src="https://user-images.githubusercontent.com/2865694/55152445-b3f62f80-5150-11e9-85df-de84023467c0.png">
 
 
 ## code annotations / hover / tooltip
@@ -172,7 +194,9 @@ Scroll down and take the tour.
 
 ## Known Issues
 
-None
+* outline view does not always refresh. TempFix: modify the file to trigger a refresh.
+
+[github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 # Acknowledgements
 

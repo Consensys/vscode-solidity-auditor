@@ -392,7 +392,7 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.languages.registerDocumentSymbolProvider(
                 {language: type}, 
-                new SolidityDocumentSymbolProvider(g_parser)
+                new SolidityDocumentSymbolProvider(g_parser, onDidChange/* hack hack hack */)
             )
         );
     }

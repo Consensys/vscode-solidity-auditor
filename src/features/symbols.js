@@ -237,8 +237,9 @@ function getSymbolKindForDeclaration(node){
 
 class SolidityDocumentSymbolProvider{
 
-    constructor(g_parser){
+    constructor(g_parser, cb_ondidchange){
         this.g_parser = g_parser
+        this.CB_onDidChange = cb_ondidchange
     }
     
     provideDocumentSymbols(document, token){
@@ -246,6 +247,9 @@ class SolidityDocumentSymbolProvider{
 
         return new Promise((resolve, reject) => {
             var symbols = [];
+            console.log("force ast refresh.. dirty hack - fixme!") //fixme!
+            this.CB_onDidChange()  //remove this hack
+            
             var insights = this.g_parser.inspect(document.getText());
             console.log("--- preparing symbols for: "+ document.fileName)
 

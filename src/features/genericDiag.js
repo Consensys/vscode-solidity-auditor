@@ -9,11 +9,23 @@ const vscode = require('vscode')
 const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
+const crypto = require('crypto')
+
+const fileHashes = {}
 
 const toVscodeSeverity = {
     major: vscode.DiagnosticSeverity.Error,
     minor: vscode.DiagnosticSeverity.Warning,
     info: vscode.DiagnosticSeverity.Information
+}
+
+function fileDidChange(path, input){
+    let hash = crypto.createHash('sha1').update(input).digest('base64');
+    if(fileHashes[path] && hash===fileHashes[path]){
+        return false;
+    }
+    fileHashes[path] = hash;
+    return true
 }
 
 /** classdec */
@@ -23,6 +35,19 @@ class DiliDiagnosticCollection {
         this.collections = {}
         this.issueFileGlob = issueFileGlob ? issueFileGlob : ["**/*-issues.json", "*-issues.json"]
         this.base = base
+        this.running = 0;
+    }
+
+    setRunning(timeout){
+        this.running = Date.now() + timeout
+    }
+
+    isRunning(){
+        if(Date.now()>this.running){
+            this.running=0
+            return false
+        }
+        return true
     }
 
     newCollection(name){
@@ -46,6 +71,11 @@ class DiliDiagnosticCollection {
     async updateIssues(){
         return new Promise((reject, resolve) => {
             var that = this;
+            if(this.isRunning()){
+                reject("is still running")
+                return;
+            }
+            this.setRunning(60)
             this.clearAll()
             this.issueFileGlob.forEach(function(g){
             glob(path.join(this.base,g), {}, function (er, files) {
@@ -58,7 +88,11 @@ class DiliDiagnosticCollection {
                     let collectionName = path.basename(f)
                     let collection = that.newCollection(collectionName)
                     try {
-                        var issues = JSON.parse(fs.readFileSync(f));
+                        let content = fs.readFileSync(f)
+                        if(!fileDidChange(f, content)){
+                            return
+                        }
+                        var issues = JSON.parse(content);
                         /*
                             {"onInputFile": "contracts/BountiesMetaTxRelayer.sol", 
                             "atLineNr": "10", 
@@ -73,6 +107,11 @@ class DiliDiagnosticCollection {
                         issues.forEach(function(issue){
                             //abspath or relpath?
                             let targetFileUri = issue.onInputFile.startsWith("/") ? issue.onInputFile : vscode.Uri.file(path.join(basedir,issue.onInputFile))
+                            if(!fs.existsSync(targetFileUri.path)){
+                                // skip nonexistent files
+                                // todo: maybe skip node_modules?
+                                return
+                            }
                             collection.set(targetFileUri, [{
                                 code: '',
                                 message: `${issue.linterName}/${issue.severity}/${issue.ruleType} - ${issue.message}`,
