@@ -13,11 +13,13 @@ const mod_hover = require('./features/hover');
 const mod_decorator = require('./features/deco');
 const {SolidityDocumentSymbolProvider} = require('./features/symbols')
 const {SolidityParser} = require('./features/parser')
+const {DiliDiagnosticCollection} = require('./features/genericDiag')
 
 /** globals - const */
 const languageId = "solidity";
 const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
+const g_diagnostics;
 const g_parser = new SolidityParser()
 var activeEditor;
 
@@ -59,6 +61,9 @@ function onInitModules(context, type){
     mod_hover.init(context, type, solidityVAConfig);
     //mod_codelens.init(context, type, solidityVAConfig);
     mod_decorator.init(context, solidityVAConfig);
+
+    //globals init
+    g_diagnostics = new DiliDiagnosticCollection(context, vscode.workspace.rootPath)
 }
 
 /** func decs */
@@ -319,7 +324,10 @@ function analyzeSourceUnit(){
 /** events */
 
 function onDidSave(document){
-    
+    // check if there are any 
+    if(solidityVAConfig.diagnostics.cdili_json.import){
+        g_diagnostics.updateIssues()
+    }
 }
 
 async function onDidChange(event){

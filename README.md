@@ -156,6 +156,19 @@ Scroll down and take the tour.
 * `Solidity-va.outline.var.storage_annotations` ... Whether to show/hide storage annotations for variables in the outline view
 * `Solidity-va.outline.pragmas.show` ... Whether to show/hide pragmas in the outline view
 * `Solidity-va.outline.imports.show` ... Whether to show/hide imports in the outline view
+* `Solidity-va.diagnostics.import.cdili-json` ... Recursively search for CDILI format *-issues.json from external scanners and visualize findings as diagnostics in vscode. see example:
+    ```json
+    {
+        "onInputFile": "contracts/BountiesMetaTxRelayer.sol", 
+        "atLineNr": "10", 
+        "ruleType": "code_smell", 
+        "severity": "major", 
+        "linterVersion": "0.1", 
+        "linterName": "maru", 
+        "message": "State Variable  Default Visibility - It is best practice to set the visibility of state variables explicitly. The default           visibility for \"bountiesContract\" is internal. Other possible visibility values are public and private.",         
+        "forRule": "State_Variable_Default_Visibility"
+    }
+    ```
 
 ## Known Issues
 
@@ -174,6 +187,7 @@ None
 - new feature: semantic function argument highlighting
 - new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
 - refactored folder structure
+- new feature: cdili-style json issues import from external scanners
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 
