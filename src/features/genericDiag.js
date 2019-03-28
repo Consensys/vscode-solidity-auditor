@@ -43,10 +43,11 @@ class DiliDiagnosticCollection {
         },this)
     }
 
-    updateIssues(){
-        var that = this;
-        this.clearAll()
-        this.issueFileGlob.forEach(function(g){
+    async updateIssues(){
+        return new Promise((reject, resolve) => {
+            var that = this;
+            this.clearAll()
+            this.issueFileGlob.forEach(function(g){
             glob(path.join(this.base,g), {}, function (er, files) {
                 // files is an array of filenames.
                 // If the `nonull` option is set, and nothing
@@ -70,7 +71,9 @@ class DiliDiagnosticCollection {
                             "forRule": "State_Variable_Default_Visibility"}
                         */
                         issues.forEach(function(issue){
-                            collection.set(vscode.Uri.file(path.join(basedir,issue.onInputFile)), [{
+                            //abspath or relpath?
+                            let targetFileUri = issue.onInputFile.startsWith("/") ? issue.onInputFile : vscode.Uri.file(path.join(basedir,issue.onInputFile))
+                            collection.set(targetFileUri, [{
                                 code: '',
                                 message: `${issue.linterName}/${issue.severity}/${issue.ruleType} - ${issue.message}`,
                                 range: new vscode.Range(new vscode.Position(issue.atLineNr - 1, 0), new vscode.Position(issue.atLineNr - 1, 255)),
@@ -85,7 +88,7 @@ class DiliDiagnosticCollection {
                 })
             })
         }, this)
-        
+        })
     }
 }
 
