@@ -19,9 +19,9 @@ const {DiliDiagnosticCollection} = require('./features/genericDiag')
 const languageId = "solidity";
 const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
-const g_diagnostics;
 const g_parser = new SolidityParser()
 var activeEditor;
+var g_diagnostics;
 
 const ScopeEnum = {
     STATE: 1,  // declared satevar
@@ -325,7 +325,7 @@ function analyzeSourceUnit(){
 
 function onDidSave(document){
     // check if there are any 
-    if(solidityVAConfig.diagnostics.cdili_json.import){
+    if(solidityVAConfig.diagnostics.cdili_json.import && g_diagnostics){
         g_diagnostics.updateIssues()
     }
 }
@@ -366,6 +366,7 @@ function onActivate(context) {
         /** module init */
         onInitModules(context, type);
         onDidChange()
+        onDidSave(vscode.window.activeTextEditor.document)
 
         /** event setup */
         /***** DidChange */
