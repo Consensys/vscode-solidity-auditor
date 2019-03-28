@@ -156,7 +156,7 @@ Scroll down and take the tour.
 * `Solidity-va.outline.var.storage_annotations` ... Whether to show/hide storage annotations for variables in the outline view
 * `Solidity-va.outline.pragmas.show` ... Whether to show/hide pragmas in the outline view
 * `Solidity-va.outline.imports.show` ... Whether to show/hide imports in the outline view
-* `Solidity-va.diagnostics.import.cdili-json` ... Automatically import diagnostic issues from external scanners using the `cdili-issue.json` format:
+* `Solidity-va.diagnostics.import.cdili-json` ... Automatically import diagnostic issues from external scanners using the `cdili-issue.json` format:
     ```json
     {
         "onInputFile": "contracts/BountiesMetaTxRelayer.sol", 
@@ -187,7 +187,7 @@ None
 - bug: check if source-file is actually a solidity file on-change
 - new feature: semantic function argument highlighting
 - new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
-- new feature: automatically import diagnostic issues from external scanners using `cdili-issue.json` format
+- new feature: automatically import diagnostic issues from external scanners using `cdili-issue.json` format
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 

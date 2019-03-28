@@ -6,7 +6,7 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 - bug: check if source-file is actually a solidity file on-change
 - new feature: semantic function argument highlighting
 - new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
-- new feature: automatically import diagnostic issues from external scanners using `cdili-issue.json` format
+- new feature: automatically import diagnostic issues from external scanners using `cdili-issue.json` format
 
 ## v0.0.10
 
