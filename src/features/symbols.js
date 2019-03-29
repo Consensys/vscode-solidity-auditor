@@ -250,7 +250,7 @@ class SolidityDocumentSymbolProvider{
             console.log("force ast refresh.. dirty hack - fixme!") //fixme!
             this.CB_onDidChange()  //remove this hack
             
-            var insights = this.g_parser.inspect(document.getText());
+            var insights = this.g_parser.inspect(document.getText(), document.fileName, true);
             console.log("--- preparing symbols for: "+ document.fileName)
 
             if(solidityVAConfig.outline.pragmas.show){

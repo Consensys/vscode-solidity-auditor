@@ -244,7 +244,6 @@ class SolidityParser{
 
                     },
                     FunctionDefinition(_node){
-                        
                         current_contract.functions[_node.name]={
                             _node:_node,
                             arguments: {},  // declarations: quick access to argument list
