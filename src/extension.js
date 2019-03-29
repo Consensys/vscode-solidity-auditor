@@ -6,7 +6,7 @@
  * */
 /** imports */
 const vscode = require('vscode');
-const crypto = require('crypto');
+const {CancellationTokenSource} = require('vscode')
 
 //const mod_codelens = require('./features/codelens');
 const mod_hover = require('./features/hover');
@@ -23,6 +23,12 @@ const g_parser = new SolidityParser()
 var activeEditor;
 var g_diagnostics;
 
+
+const currentCancellationTokens = {
+    onDidChange: new CancellationTokenSource(),
+    onDidSave: new CancellationTokenSource()
+}
+
 const ScopeEnum = {
     STATE: 1,  // declared satevar
     ARGUMENT: 2,  // declared in arguments
@@ -33,7 +39,7 @@ const ScopeEnum = {
 
 /** helper */
 
-function setDecorations(editor, decorations){
+async function setDecorations(editor, decorations){
     if (!editor) {
         return;
     }
@@ -68,15 +74,25 @@ function onInitModules(context, type){
 
 /** func decs */
 
-function analyzeSourceUnit(){
+function analyzeSourceUnit(cancellationToken, document){
     //mod_decorator.updateDecorations();
     console.log("inspect ...")
     //var insights = inspect(activeEditor.document.getText(), activeEditor.document.fileName);
-    var insights = g_parser.inspect(activeEditor.document.getText(), activeEditor.document.fileName)
+    var insights = g_parser.inspect(
+        document?document.getText():activeEditor.document.getText(), 
+        document?document.fileName:activeEditor.document.fileName, 
+        false, 
+        cancellationToken)
     console.log("✓ inspect")
+
+    if(cancellationToken.isCancellationRequested){
+        //abort - new analysis running already
+        return
+    }
 
     console.log("linearize ...")
     var inheritance = g_parser.linearizeContract(insights)
+    console.log(inheritance)
     console.log("✓ linearize")
 
     var words = new Array();
@@ -448,6 +464,12 @@ function analyzeSourceUnit(){
         }
         console.log("✓ decorate scope (new) - identifier ")
     }
+
+    if(cancellationToken.isCancellationRequested){
+        //abort - new analysis running already
+        return
+    }
+
     if (solidityVAConfig.deco.statevars)
         setDecorations(activeEditor, decorations)
         console.log("✓ apply decorations - scope")
@@ -463,25 +485,32 @@ function analyzeSourceUnit(){
 /** events */
 
 function onDidSave(document){
+    currentCancellationTokens.onDidSave.cancel()
+    currentCancellationTokens.onDidSave = new CancellationTokenSource()
     // check if there are any 
     if(solidityVAConfig.diagnostics.cdili_json.import && g_diagnostics){
-        g_diagnostics.updateIssues()
+        g_diagnostics.updateIssues(currentCancellationTokens.onDidSave.token)
     }
+
 }
 
-async function onDidChange(event){
-    return new Promise((reject,resolve) => {
-        if(vscode.window.activeTextEditor.document.languageId!=languageId){
-            console.log("wrong langid")
-            reject("wrong langid")
-            return;
+function onDidChange(event){
+    if(vscode.window.activeTextEditor.document.languageId!=languageId){
+        console.log("wrong langid")
+        return;
+    }
+    currentCancellationTokens.onDidChange.cancel()
+    currentCancellationTokens.onDidChange = new CancellationTokenSource()
+    console.log("--- on-did-change")
+    try{
+        analyzeSourceUnit(currentCancellationTokens.onDidChange.token)
+    } catch (err){
+        if (typeof err !=="CancellationToken"){
+            throw err
         }
-        console.log("--- on-did-change")
-        
-        analyzeSourceUnit()
-        console.log("✓✓✓ on-did-change - resolved")
-        resolve()
-    });
+    }
+    
+    console.log("✓✓✓ on-did-change - resolved")
 }
 
 function onActivate(context) {
@@ -531,7 +560,7 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.languages.registerDocumentSymbolProvider(
                 {language: type}, 
-                new SolidityDocumentSymbolProvider(g_parser, onDidChange/* hack hack hack */)
+                new SolidityDocumentSymbolProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
             )
         );
     }
