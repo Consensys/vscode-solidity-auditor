@@ -19,9 +19,14 @@ class SolidityParser{
         this.contracts = {}
         this.ast_cache = {}
         this.sourceUnits = {}
+        this.inheritance = null
     }
 
-    inspect(input, filepath, parseImports){
+    inspect(input, filepath, parseImports, cancellationToken){
+        if(cancellationToken.isCancellationRequested){
+            throw cancellationToken
+        }
+
         if (typeof filepath=="undefined")
             filepath = vscode.window.activeTextEditor.document.fileName
         typeof parseImports == "undefined" || parseImports==false ? false : true
@@ -74,7 +79,7 @@ class SolidityParser{
                     }
                 }
                 try {
-                    imp.ast = this.inspectFile(importPath, true)  // this caches automatically
+                    imp.ast = this.inspectFile(importPath, true, cancellationToken)  // this caches automatically
                 } catch (e) {
                     console.error(e)
                 }
@@ -86,7 +91,7 @@ class SolidityParser{
 
     }
 
-    async inspectFile(file, parseImports){
+    async inspectFile(file, parseImports, cancellationToken){
         return new Promise((resolve, reject) => {
             console.log("inspectFILE - "+file)
             let content
@@ -102,7 +107,7 @@ class SolidityParser{
             //let hash = crypto.createHash('sha1').update(content).digest('base64')
             //if (this.ast_cache[hash]!=undefined)
             //    return this.ast_cache[hash]  //return cached
-            let sourceUnit = this.inspect(content, file, parseImports)
+            let sourceUnit = this.inspect(content, file, parseImports, cancellationToken)
             //sourceUnit.hash = hash
             //this.ast_cache[hash]=sourceUnit;  //cache it
             //resolve(sourceUnit)
@@ -419,10 +424,25 @@ class SolidityParser{
             dependencies[contractName] = sourceUnit.contracts[contractName].dependencies;
             sourceUnit.contracts[contractName].dependencies.forEach(function(dep){
                 let contract = this.contracts[dep]
-                if(typeof contract=="undefined")
+                if(typeof contract=="undefined"){
                     console.error("ERROR - could not load contract object for "+dep)
-                else
-                    dependencies[dep]=contract.dependencies;
+                    return
+                }
+                dependencies[dep]=contract.dependencies  // this needs to be recursive otherwise we'll only see the first layer
+            }, this)
+        }
+        // fetch all other contracts that may be referenced in dependencies
+        for (var depName in dependencies) {
+            dependencies[depName].forEach(function(dep){
+                if(dependencies.hasOwnProperty(dep)){
+                    return  // alrerady in our list
+                }
+                let contract = this.contracts[dep]
+                if(typeof contract=="undefined"){
+                    console.error("ERROR - could not load contract object for "+dep)
+                    return
+                }
+                dependencies[dep]=contract.dependencies  // this needs to be recursive otherwise we'll only see the first layer
             }, this)
         }
         return linearize(dependencies, {reverse: true})
