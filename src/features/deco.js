@@ -130,7 +130,7 @@ function updateDecorations() {
     activeEditor.setDecorations(largeNumberDecorationType, largeNumbers);
 }
 
-function decorateWords(editor, words, decoStyle){
+async function decorateWords(editor, words, decoStyle){
     if (!editor) {
         return;
     }
@@ -230,7 +230,7 @@ function semanticHighlightFunctionParameters(arrIdents){
     
     if(arrIdents.length<=0)
         return []
-
+    
     let index = 0;
     let colorAssign = {};
 
@@ -240,6 +240,9 @@ function semanticHighlightFunctionParameters(arrIdents){
     for(let name in funcNode.arguments){
         colorAssign[name]="styleArgument" +(index++%15);
         let ident = funcNode.arguments[name];
+        if(ident.name===null){
+            continue //skip unnamed arguments (solidity allows function a(bytes,bytes))
+        }
         let typeName = getVariableDeclarationType(ident);
         typeName = typeName?typeName:""
         decorations.push(
