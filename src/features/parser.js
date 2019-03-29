@@ -432,6 +432,7 @@ class SolidityParser{
             }, this)
         }
         // fetch all other contracts that may be referenced in dependencies
+        // TODO: this is probably wrong. we need to c3 linearize contract for contract
         for (var depName in dependencies) {
             dependencies[depName].forEach(function(dep){
                 if(dependencies.hasOwnProperty(dep)){

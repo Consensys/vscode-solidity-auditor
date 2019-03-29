@@ -210,12 +210,13 @@ Scroll down and take the tour.
 
 # Release Notes
 
-## v0.0.12
-- refactored folder structure
-- bug: check if source-file is actually a solidity file on-change
-- new feature: semantic function argument highlighting
-- new feature: audit tags (`//@audit - potential overflow`, `//@audit-ok - potential overflow - false positive`)
-- new feature: automatically import diagnostic issues from external scanners using `cdili-issue.json` format
+## v0.0.13
+- handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
+- new feature: functions in outline now show modifier decorations
+- fix error for functions with anonymous arguments
+- fix highlighting of statevars in modifiers (and detect shadowing)
+- fix class inheritance in outline missing dependencies of dependencies
+- async functions
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 

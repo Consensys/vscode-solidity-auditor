@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.13
+- handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
+- new feature: functions in outline now show modifier decorations
+- fix error for functions with anonymous arguments
+- fix highlighting of statevars in modifiers (and detect shadowing)
+- fix class inheritance in outline missing dependencies of dependencies
+- rework cdili issue import handling
+- async functions
+
 ## v0.0.12
 - refactored folder structure
 - bug: check if source-file is actually a solidity file on-change
