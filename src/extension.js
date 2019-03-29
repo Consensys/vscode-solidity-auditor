@@ -92,7 +92,6 @@ function analyzeSourceUnit(cancellationToken, document){
 
     console.log("linearize ...")
     var inheritance = g_parser.linearizeContract(insights)
-    console.log(inheritance)
     console.log("✓ linearize")
 
     var words = new Array();
