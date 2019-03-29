@@ -198,9 +198,9 @@ Scroll down and take the tour.
 
 ## Known Issues
 
-* outline view does not always refresh. TempFix: modify the file to trigger a refresh.
-
-[github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+* changing settings may require a vscode restart.
+* outline view does not always refresh. **TempFix**: modify the file to trigger a refresh.
+* [github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 # Acknowledgements
 
