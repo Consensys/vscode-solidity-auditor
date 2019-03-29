@@ -9,6 +9,7 @@ we suggest using this plugin together with [vscode-solidity](https://github.com/
 
 Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
+![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 
 ---------------------
 
@@ -32,7 +33,7 @@ Semantic highlighting and solidity insights for passive security awareness. Most
 * easily differentiate between arithmetics vs. logical operations
 * make **Constructor** and **Fallback** function more prominent
 
-Code fragments are highlighted <span style="color:green">*Secure* code</span> and <span style="color:red">*Insecure* code</span>.
+Code fragments are highlighted to draw your attention to <span style="color:green">*Secure code* (![#c5f015](https://placehold.it/15/c5f015/000000?text=+))</span> and <span style="color:red">*Insecure code* (![#f03c15](https://placehold.it/15/f03c15/000000?text=+))</span>.
 
 ##### Semantic Highlighting
 
@@ -74,8 +75,11 @@ Scroll down and take the tour.
 
 ![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 * semantic highlighting for state variables (constant=green, statevar=golden, inherited=blue)
+* semantic highlighting for function arguments
 * outline view with security annotations and inherited names
 * tooltips (asm instruction signatures, security notes)
+* `@audit` tags
+* generic interface to import issues from external scanners
 
 
 
