@@ -238,9 +238,9 @@ function getSymbolKindForDeclaration(node){
 
 class SolidityDocumentSymbolProvider{
 
-    constructor(g_parser, cb_ondidchange){
+    constructor(g_parser, cb_analyze){
         this.g_parser = g_parser
-        this.CB_onDidChange = cb_ondidchange
+        this.cb_analyze = cb_analyze
     }
     
     provideDocumentSymbols(document, token){
@@ -248,11 +248,21 @@ class SolidityDocumentSymbolProvider{
 
         return new Promise((resolve, reject) => {
             var symbols = [];
-            console.log("force ast refresh.. dirty hack - fixme!") //fixme!
-            this.CB_onDidChange()  //remove this hack
+
+            console.log("force ast refresh..!") //fixme!
+            this.cb_analyze(token, document)  //remove this hack
             
-            var insights = this.g_parser.inspect(document.getText(), document.fileName, true);
+            if(token.isCancellationRequested){
+                reject(token)
+                return
+            }
+            var insights = this.g_parser.inspect(document.getText(), document.fileName, true, token);
             console.log("--- preparing symbols for: "+ document.fileName)
+
+            if(token.isCancellationRequested){
+                reject(token)
+                return
+            }
 
             if(solidityVAConfig.outline.pragmas.show){
                 var topLevelNode = astNodeAsDocumentSymbol(
