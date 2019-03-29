@@ -133,6 +133,11 @@
                     "default": false,
                     "description": "Recursively search for CDILI format *-issues.json from external scanners and visualize findings as diagnostics in vscode"
                 },
+                "solidity-va.audit.tags.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to enable/disable audit tags (@audit/@audit-ok)"
+                },
                 "solidity-va.mode.active": {
                     "type": "boolean",
                     "default": true,

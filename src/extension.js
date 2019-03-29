@@ -315,10 +315,12 @@ function analyzeSourceUnit(){
         setDecorations(activeEditor, decorations)
         console.log("✓ apply decorations - scope")
 
-    console.log("apply deco satic words...")
-    mod_decorator.decorateWords(activeEditor, ["@audit\-ok[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkGreen)
-    mod_decorator.decorateWords(activeEditor, ["@audit[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkRed)
-    console.log("✓ apply decorations - audit tags")
+    if(solidityVAConfig.audit.tags.enable){
+        console.log("apply deco satic words...")
+        mod_decorator.decorateWords(activeEditor, ["@audit\-ok[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkGreen)
+        mod_decorator.decorateWords(activeEditor, ["@audit[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkRed)
+        console.log("✓ apply decorations - audit tags")
+    }
 }
 
 /** events */

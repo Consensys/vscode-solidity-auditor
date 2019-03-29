@@ -568,7 +568,7 @@
                     "name": "storage.type.modifier.keyword.solidity"
                 },
                 {
-                    "match": "\\b(public|external|payable|inherited|storage|memory)\\b",
+                    "match": "\\b(public|external|payable|inherited|storage|memory|calldata)\\b",
                     "name": "storage.type.modifier.keyword.extendedscope.solidity"
                 }
             ]

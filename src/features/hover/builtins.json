@@ -281,6 +281,11 @@
         "security":["Array/Structs: check for uninit pointer.",
             "Array/Structs: check that variable is not used before declaration"]
     },
+    "calldata": {
+        "prefix": "calldata",
+        "description": "special data location that contains the function arguments, only available for external function call parameters",
+        "security":[]
+    },
     "ERC20": {
         "prefix": "ERC20",
         "description": "",
