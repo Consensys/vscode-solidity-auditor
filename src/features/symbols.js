@@ -142,6 +142,7 @@ function getSymbolKindForDeclaration(node){
     }
 
     switch(astnode.type) {
+        case "ModifierInvocation":
         case "ModifierDefinition":
             result.symbol = vscode.SymbolKind.Method 
 
@@ -348,7 +349,35 @@ class SolidityDocumentSymbolProvider{
                         symbolAnnotation.details)
     
                     topLevelNode.children.push(functionLevelNode)
-                    
+                    // add a fake modifiers list to outline
+                    // add pseudonode modifiers
+                    let numModifiers = Object.keys(insights.contracts[contractName].functions[functionName].modifiers).length
+                    if(numModifiers!==0){
+                        let modifiersLevelNode = astNodeAsDocumentSymbol(
+                            document, 
+                            getFakeNode("modifiers",1),
+                            vscode.SymbolKind.Namespace,
+                            "modifiers",
+                            "... (" + numModifiers + ")"
+                            )
+                        functionLevelNode.children.push(modifiersLevelNode)
+                        // add modifiers
+                        for (let modifierName in insights.contracts[contractName].functions[functionName].modifiers){
+                            let vardec = insights.contracts[contractName].functions[functionName].modifiers[modifierName];
+                            
+                            let symbolAnnotation = getSymbolKindForDeclaration(vardec)
+                            
+                            modifiersLevelNode.children.push(astNodeAsDocumentSymbol(
+                                document, 
+                                vardec, 
+                                symbolAnnotation.symbol,
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details
+                                ))
+                        }
+                    }
+
+
                     //get all declarations in function
                     
                     for (var declaration in insights.contracts[contractName].functions[functionName].declarations){
@@ -365,7 +394,6 @@ class SolidityDocumentSymbolProvider{
                             symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
                             symbolAnnotation.details
                             ))
-                        
                     }
                     
                 }

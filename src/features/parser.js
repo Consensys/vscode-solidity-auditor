@@ -246,6 +246,7 @@ class SolidityParser{
                     FunctionDefinition(_node){
                         current_contract.functions[_node.name]={
                             _node:_node,
+                            modifiers: {},   // quick access to modifiers
                             arguments: {},  // declarations: quick access to argument list
                             returns: {},  // declarations: quick access to return argument list
                             declarations: {},  // all declarations: arguments+returns+body
@@ -256,6 +257,12 @@ class SolidityParser{
                         }
                         current_function = current_contract.functions[_node.name];
                         current_contract.names[_node.name]=current_function;
+                        // subparse modifier list
+                        parser.visit(_node.modifiers, {
+                            ModifierInvocation: function(__node){
+                                current_function.modifiers[__node.name]=__node
+                            }
+                        })
                         // parse function body to get all function scope params.
                         // first get declarations
                         parser.visit(_node.parameters, {
@@ -270,7 +277,6 @@ class SolidityParser{
                                 current_function.declarations[__node.name]=__node
                             }
                         })
-
                         /**** body declarations */
                         parser.visit(_node.body, {
                             VariableDeclaration(__node){current_function.declarations[__node.name] = __node;},
