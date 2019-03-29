@@ -305,7 +305,144 @@ function analyzeSourceUnit(){
                 }
                 //annotate external calls?
             })
+            if (solidityVAConfig.deco.arguments)
+                decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+        }
+        //decorate modifiers (fixme copy pasta)
+        for (var functionName in insights.contracts[contract].modifiers){
+            //all modifiers
+            var highlightIdentifiers = new Array();
+            insights.contracts[contract].modifiers[functionName].identifiers.forEach(function(ident){
+                // all idents in function
+                let is_state_var = typeof insights.contracts[contract].stateVars[ident.name]!="undefined"
+                let is_declared_locally = typeof ident.inFunction.declarations[ident.name]!="undefined"
+                let is_declared_locally_arguments = typeof ident.inFunction.arguments[ident.name]!="undefined"
+                let is_declared_locally_returns = typeof ident.inFunction.returns[ident.name]!="undefined"
+                let is_inherited = typeof insights.contracts[contract].inherited_names[ident.name]!="undefined" && insights.contracts[contract].inherited_names[ident.name]!=contract
 
+                if(is_declared_locally){
+                    //set scope identifier
+                    if(is_declared_locally_arguments){
+                        ident.scope=ScopeEnum.ARGUMENT;
+                        ident.scopeRef = ident.inFunction.arguments[ident.name];
+                        highlightIdentifiers.push(ident); // .scope, .scopeRef and .inFunction is known.
+                    } else if(is_declared_locally_returns){
+                        ident.scope=ScopeEnum.RETURNS;
+                        ident.scopeRef = ident.inFunction.returns[ident.name];
+                    }else{
+                        ident.scope=ScopeEnum.LOCAL;
+                        ident.scopeRef = ident.inFunction.declarations[ident.name];
+                    }
+                    
+                    
+                    if(is_state_var){
+                        //shadowed staevar
+                        console.log("!!!!! shadowed derived var")
+                        prefix = "**INHERITED**  ❗SHADOWED❗"
+                        decoStyle = "decoStyleLightOrange";
+                        let subcontract =  insights.contracts[contract].inherited_names[ident.name]
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+
+                        decorations.push(
+                            { 
+                                range: new vscode.Range(
+                                    new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                                    ),
+                                    hoverMessage: prefix + "(*"+ "undef" +"*) " +'**StateVar** *' + subcontract + "*.**"+ident.name + '**' + " "+decl_uri,
+                                decoStyle: decoStyle
+                            });
+            
+                        //is handled in the other loop
+                    }else if(is_inherited){
+                        //shadoewed inherited var
+                        console.log("!!!!! shadowed derived var")
+                        prefix = "**INHERITED**  ❗SHADOWED❗"
+                        decoStyle = "decoStyleLightOrange";
+                        let subcontract =  insights.contracts[contract].inherited_names[ident.name]
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+
+                        decorations.push(
+                            { 
+                                range: new vscode.Range(
+                                    new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                                    ),
+                                    hoverMessage: prefix + "(*"+ "undef" +"*) " +'**StateVar** *' + subcontract + "*.**"+ident.name + '**' + " "+decl_uri,
+                                decoStyle: decoStyle
+                            });
+                    }else {
+                        //all good
+                        // is declared locally
+                    }
+                } else if(is_state_var){
+                    ident.scope=ScopeEnum.STATE;
+                    ident.scopeRef = insights.contracts[contract].stateVars[ident.name];
+
+                    if(is_inherited){
+                        //shadowed inherited var
+                        console.log("!!! statevar shadows inherited")
+                        console.log("!!!!! shadowed derived var")
+                        prefix = "**INHERITED**  ❗SHADOWED❗"
+                        decoStyle = "decoStyleLightOrange";
+                        let subcontract =  insights.contracts[contract].inherited_names[ident.name]
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+
+                        decorations.push(
+                            { 
+                                range: new vscode.Range(
+                                    new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                                    ),
+                                    hoverMessage: prefix + "(*"+ "undef" +"*) " +'**StateVar** *' + subcontract + "*.**"+ident.name + '**' + " "+decl_uri,
+                                decoStyle: decoStyle
+                            });
+                    } else {
+                        //all good statevar
+                        // should be covered by the other loop already
+                        var prefix = "";
+                        if(ident.scopeRef.isDeclaredConst){
+                            prefix = "**CONST**  "
+                            decoStyle = "decoStyleLightGreen";
+                        } else {
+                            decoStyle = "decoStyleBoxedLightBlue";
+                        } 
+
+                        decorations.push(
+                            { 
+                                range: new vscode.Range(
+                                    new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                                    new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                                    ),
+                                    hoverMessage: prefix + "(*"+ (ident.type) +"*) " +'**StateVar** *' + contract + "*.**"+ident.name + '**' + " "+decl_uri,
+                                decoStyle: decoStyle
+                        });
+
+                    }
+                } else if (is_inherited){
+                    ident.scope=ScopeEnum.INHERITED;
+                    ident.scopeRef = insights.contracts[contract].inherited_names[ident.name];
+                    // inherited
+                    prefix = "**INHERITED**  "
+                    decoStyle = "decoStyleLightBlue";
+                    let subcontract =  insights.contracts[contract].inherited_names[ident.name]
+                    var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                    
+                    decorations.push(
+                        { 
+                            range: new vscode.Range(
+                                new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                                new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                                ),
+                                hoverMessage: prefix + "(*"+ "undef" +"*) " +'**StateVar** *' + subcontract + "*.**"+ident.name + '**' + " "+decl_uri,
+                            decoStyle: decoStyle
+                        });
+                } else {
+                    //function calls etc.. fallthru
+                    
+                }
+                //annotate external calls?
+            })
             if (solidityVAConfig.deco.arguments)
                 decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
         }
