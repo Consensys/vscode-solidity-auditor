@@ -74,6 +74,12 @@
                 "command": "editor.action.inspectTMScopes"
             }
         ],
+        "commands": [
+            {
+                "command": "solidity-va.test.createTemplate",
+                "title": "Solidity Visual Auditor: create Unittest stub for current Contract"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Solidity Visual Auditor configuration",

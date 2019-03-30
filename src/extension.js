@@ -14,6 +14,7 @@ const mod_decorator = require('./features/deco');
 const {SolidityDocumentSymbolProvider} = require('./features/symbols')
 const {SolidityParser} = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
+const mod_templates= require('./features/templates');
 
 /** globals - const */
 const languageId = "solidity";
@@ -532,6 +533,20 @@ function onActivate(context) {
         onInitModules(context, type);
         onDidChange()
         onDidSave(vscode.window.activeTextEditor.document)
+
+        /** command setup */
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.test.createTemplate', 
+                function () {
+                    if(vscode.window.activeTextEditor.document.languageId!=type){
+                        vscode.window.showErrorMessage(`[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.path}`)
+                        return;
+                    }
+                    mod_templates.createNewUnittestStubForCurrentContractCommand(vscode.window.activeTextEditor.document, g_parser)
+                }
+            )
+        )
 
         /** event setup */
         /***** DidChange */
