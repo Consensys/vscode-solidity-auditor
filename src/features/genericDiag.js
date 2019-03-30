@@ -60,18 +60,18 @@ class DiliDiagnosticCollection {
         return new Promise((reject, resolve) => {
             var that = this;
             try{
-                this.issueFileGlob.forEach(function(g){
-                    glob(path.join(this.base,g), {}, function (er, files) {
-                        // files is an array of filenames.
-                        // If the `nonull` option is set, and nothing
-                        // was found, then files is ["**/*.js"]
-                        // er is an error object or null.
-                        files.forEach(function(f){
+                
+                vscode.workspace.findFiles("**/*-issues.json",'**/node_modules', 100, cancellationToken)
+                    .then((uris) => {
+                        uris.forEach(function(uri){
+                            let f = uri.path
+                            let basedir = path.dirname(f)
+                            let collectionName = f //path.basename(f)
+
                             if(cancellationToken.isCancellationRequested){
                                 throw cancellationToken
                             }
-                            let basedir = path.dirname(f)
-                            let collectionName = f //path.basename(f)
+
                             let collection = that.newCollection(collectionName)
                             try {
                                 let content = fs.readFileSync(f)
@@ -112,9 +112,8 @@ class DiliDiagnosticCollection {
                                 console.error(err)
                             }
                         })
-                    resolve()
-                    })
-                }, this)
+                })
+                resolve()
             } catch (err) {
                 reject(err)
                 if (typeof err !=="CancellationToken"){
