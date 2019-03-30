@@ -59,16 +59,24 @@ function createHover(name, snippet, type) {
     }
 }
 
-function provideHoverHandler(document, position, token, type) {
+function provideHoverHandler(document, position, token, type, g_parser) {
     if (solidityVAConfig.hover === false) {
         return;
     }
     const range = document.getWordRangeAtPosition(position, /(tx\.gasprice|tx\.origin|msg\.data|msg\.sender|msg\.sig|msg\.value|block\.coinbase|block\.difficulty|block\.gaslimit|block\.number|block\.timestamp|abi\.encodePacked|abi\.encodeWithSelector|abi\.encodeWithSignature|abi\.decode|abi\.encode|\.?[0-9_\w>]+)/);
     if(range.length<=0)
         return;
+
+    const sourceUnit = g_parser.sourceUnits[document.uri.path]
+    if(sourceUnit.commentMapper && sourceUnit.commentMapper.isRangeOffsetInComment(document.offsetAt(range.start), document.offsetAt(range.end))){
+        return  // is in comment
+    }
+
     const word = document.getText(range);
 
-    //console.log(word);
+    if(token.isCancellationRequested){
+        return token
+    }
 
     for (const snippet in builtinsArr) {
         if (
@@ -89,17 +97,6 @@ function provideHoverHandler(document, position, token, type) {
     }
 }
 
-function init(context, type, config){
-    
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(type, {
-            provideHover(document, position, token) {
-                return provideHoverHandler(document, position, token, type);
-            }
-        })
-    );
-}
-
 module.exports = {
-    init:init
+    provideHoverHandler:provideHoverHandler
 }

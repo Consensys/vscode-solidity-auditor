@@ -64,7 +64,6 @@ async function setDecorations(editor, decorations){
 /*** EVENTS *********************************************** */
 
 function onInitModules(context, type){
-    mod_hover.init(context, type, solidityVAConfig);
     //mod_codelens.init(context, type, solidityVAConfig);
     mod_decorator.init(context, solidityVAConfig);
 
@@ -94,7 +93,6 @@ function analyzeSourceUnit(cancellationToken, document){
     var inheritance = g_parser.linearizeContract(insights)
     console.log("✓ linearize")
 
-    var words = new Array();
     var decorations = new Array();
 
     for (var contract in insights.contracts) {
@@ -160,7 +158,7 @@ function analyzeSourceUnit(cancellationToken, document){
                 prefix = "**CONST**  "
                 decoStyle = "decoStyleLightGreen";
             }
-            //words.push(stateVar);
+
             decorations.push({ 
                     range: new vscode.Range(
                         new vscode.Position(svar.loc.start.line-1, svar.loc.start.column),
@@ -553,6 +551,14 @@ function onActivate(context) {
         vscode.workspace.onDidSaveTextDocument(document => {
             onDidSave(document);  
         }, null, context.subscriptions);
+
+        context.subscriptions.push(
+            vscode.languages.registerHoverProvider(type, {
+                provideHover(document, position, token) {
+                    return mod_hover.provideHoverHandler(document, position, token, type, g_parser);
+                }
+            })
+        );
 
         /** experimental */
         //onDidChange() // forces inspection and makes sure data is ready for symbolprovider

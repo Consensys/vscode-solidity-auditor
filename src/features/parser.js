@@ -10,8 +10,9 @@ const parser = require('solidity-parser-antlr');
 const parserHelpers = require("./parser/parserHelpers")
 const { linearize } = require('c3-linearization')
 const crypto = require('crypto');
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
+const {CommentMapperRex} = require('./utils')
 
+const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
 class SolidityParser{
 
@@ -19,7 +20,6 @@ class SolidityParser{
         this.contracts = {}
         this.ast_cache = {}
         this.sourceUnits = {}
-        this.inheritance = null
     }
 
     inspect(input, filepath, parseImports, cancellationToken){
@@ -50,6 +50,7 @@ class SolidityParser{
         /** cache it */
         sourceUnit.hash = hash;
         sourceUnit.filepath = filepath;
+        sourceUnit.commentMapper = new CommentMapperRex(input)
         this.ast_cache[hash]=sourceUnit;  //cache it
         this.sourceUnits[sourceUnit.filepath] = sourceUnit
         for (var contractName in sourceUnit.contracts) {

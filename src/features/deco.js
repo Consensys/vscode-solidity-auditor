@@ -130,7 +130,7 @@ function updateDecorations() {
     activeEditor.setDecorations(largeNumberDecorationType, largeNumbers);
 }
 
-async function decorateWords(editor, words, decoStyle){
+async function decorateWords(editor, words, decoStyle, commentMapper){
     if (!editor) {
         return;
     }
@@ -142,6 +142,9 @@ async function decorateWords(editor, words, decoStyle){
         var regEx = new RegExp( word ,"g");
         let match;
         while (match = regEx.exec(text)) {
+            if(commentMapper && commentMapper.indexIsInComment(match.index, match.index + match[0].trim().length)){
+                continue
+            }
             var startPos = editor.document.positionAt(match.index);
             var endPos = editor.document.positionAt(match.index + match[0].trim().length);
             //endPos.line = startPos.line; //hacky force
