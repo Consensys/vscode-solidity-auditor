@@ -213,10 +213,14 @@ Scroll down and take the tour.
 ## v0.0.13
 - handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
 - new feature: functions in outline now show modifier decorations
+- new feature: vscode.command to generate a unittest stub for the current contract (`cmd`+`shift`+`p` -> `Solidity Visual Auditor: create Unittest stub for current Contract`)
 - fix error for functions with anonymous arguments
 - fix highlighting of statevars in modifiers (and detect shadowing)
 - fix class inheritance in outline missing dependencies of dependencies
+- fix hover being applied to comments
+- rework cdili issue import handling (performance improvements)
 - async functions
+
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 
