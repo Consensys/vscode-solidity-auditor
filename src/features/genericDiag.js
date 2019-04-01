@@ -14,6 +14,7 @@ const crypto = require('crypto')
 const fileHashes = {}
 
 const toVscodeSeverity = {
+    critical: vscode.DiagnosticSeverity.Error,
     major: vscode.DiagnosticSeverity.Error,
     minor: vscode.DiagnosticSeverity.Warning,
     info: vscode.DiagnosticSeverity.Information
@@ -66,19 +67,16 @@ class DiliDiagnosticCollection {
                         uris.forEach(function(uri){
                             let f = uri.path
                             let basedir = path.dirname(f)
-                            let collectionName = f //path.basename(f)
+                            let collectionName = f // path.basename(f)
 
-                            if(cancellationToken.isCancellationRequested){
-                                throw cancellationToken
-                            }
-
-                            let collection = that.newCollection(collectionName)
+                            
                             try {
                                 let content = fs.readFileSync(f)
                                 if(!fileDidChange(f, content)){
                                     return
                                 }
-                                collection.clear()  //only reload this collection
+
+                                //collection.clear()  //only reload this collection
                                 var issues = JSON.parse(content);
                                 /*
                                     {"onInputFile": "contracts/BountiesMetaTxRelayer.sol", 
@@ -91,23 +89,44 @@ class DiliDiagnosticCollection {
                                     "message": "State Variable  Default Visibility - It is best practice to set the visibility of state variables explicitly. The default           visibility for \"bountiesContract\" is internal. Other possible visibility values are public and private.",         
                                     "forRule": "State_Variable_Default_Visibility"}
                                 */
+                                let pathToIssues = new Map()
+                                let pathToUri = new Map()
+                                
                                 issues.forEach(function(issue){
                                     //abspath or relpath?
                                     let targetFileUri = issue.onInputFile.startsWith("/") ? issue.onInputFile : vscode.Uri.file(path.join(basedir,issue.onInputFile))
+                                        
                                     if(!fs.existsSync(targetFileUri.path)){
                                         // skip nonexistent files
                                         // todo: maybe skip node_modules?
+                                        //console.error(targetFileUri.path)
                                         return
                                     }
-                                    collection.set(targetFileUri, [{
+
+                                    if(!pathToIssues.has(targetFileUri.path)){
+                                        pathToIssues.set(targetFileUri.path,new Array())
+                                    }
+                                    pathToUri.set(targetFileUri.path, targetFileUri)
+                                    pathToIssues.get(targetFileUri.path).push({
                                         code: '',
                                         message: `${issue.linterName}/${issue.severity}/${issue.ruleType} - ${issue.message}`,
                                         range: new vscode.Range(new vscode.Position(issue.atLineNr - 1, 0), new vscode.Position(issue.atLineNr - 1, 255)),
                                         severity: toVscodeSeverity[issue.severity],
                                         source: "",
                                         relatedInformation: []
-                                    }]);
+                                        
+                                    });
                                 })
+
+                                if(cancellationToken.isCancellationRequested){
+                                    throw cancellationToken
+                                }
+
+                                let collection = that.newCollection(collectionName)
+                                pathToIssues.forEach(function(value, key){
+                                    collection.set(pathToUri.get(key), value)
+                                })
+
                             } catch (err) {
                                 console.error(err)
                             }
