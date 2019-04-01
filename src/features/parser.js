@@ -23,7 +23,7 @@ class SolidityParser{
     }
 
     inspect(input, filepath, parseImports, cancellationToken){
-        if(cancellationToken.isCancellationRequested){
+        if(cancellationToken && cancellationToken.isCancellationRequested){
             throw cancellationToken
         }
 

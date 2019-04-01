@@ -483,7 +483,7 @@ function analyzeSourceUnit(cancellationToken, document){
 /** events */
 
 function onDidSave(document){
-    currentCancellationTokens.onDidSave.cancel()
+    currentCancellationTokens.onDidSave.dispose()
     currentCancellationTokens.onDidSave = new CancellationTokenSource()
     // check if there are any 
     if(solidityVAConfig.diagnostics.cdili_json.import && g_diagnostics){
@@ -497,7 +497,7 @@ function onDidChange(event){
         console.log("wrong langid")
         return;
     }
-    currentCancellationTokens.onDidChange.cancel()
+    currentCancellationTokens.onDidChange.dispose()
     currentCancellationTokens.onDidChange = new CancellationTokenSource()
     console.log("--- on-did-change")
     try{
