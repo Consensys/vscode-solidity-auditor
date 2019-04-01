@@ -5,11 +5,13 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 - handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
 - new feature: functions in outline now show modifier decorations
 - new feature: vscode.command to generate a unittest stub for the current contract (`cmd`+`shift`+`p` -> `Solidity Visual Auditor: create Unittest stub for current Contract`)
+- new feature: alert when using [reserved names](https://solidity.readthedocs.io/en/latest/miscellaneous.html#reserved-keywords) as identifiers
 - fix error for functions with anonymous arguments
 - fix highlighting of statevars in modifiers (and detect shadowing)
 - fix class inheritance in outline missing dependencies of dependencies
 - fix hover being applied to comments
 - rework cdili issue import handling (performance improvements)
+- fix cdili issue import only importing one issue per file
 - async functions
 
 ## v0.0.12
