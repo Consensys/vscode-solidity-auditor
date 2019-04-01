@@ -13,6 +13,7 @@ const mod_hover = require('./features/hover');
 const mod_decorator = require('./features/deco');
 const {SolidityDocumentSymbolProvider} = require('./features/symbols')
 const {SolidityParser} = require('./features/parser')
+const mod_parser = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
 const mod_templates= require('./features/templates');
 
@@ -73,6 +74,35 @@ function onInitModules(context, type){
 }
 
 /** func decs */
+
+function checkReservedIdentifiers(identifiers){
+    let decorations = new Array()
+    if(!identifiers)
+        return decorations
+
+    let prefix = "**BUILTIN-RESERVED**  ❗SHADOWED❗"
+    let decoStyle = "decoStyleLightOrange";
+    let decl_uri = "[more info..](https://solidity.readthedocs.io/en/latest/miscellaneous.html#reserved-keywords)"
+    
+
+    if(typeof identifiers.forEach!=="function"){
+        identifiers = Object.values(identifiers)
+    }
+    identifiers.forEach(function(ident){
+        if(mod_parser.reservedKeywords.indexOf(ident.name)>=0){
+            decorations.push(
+                { 
+                    range: new vscode.Range(
+                        new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
+                        new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
+                        ),
+                        hoverMessage: prefix + "**" + ident.name + '**' + " (" + decl_uri + ")",
+                    decoStyle: decoStyle
+                });
+        }
+    })
+    return decorations;
+}
 
 function analyzeSourceUnit(cancellationToken, document){
     //mod_decorator.updateDecorations();
@@ -321,6 +351,12 @@ function analyzeSourceUnit(cancellationToken, document){
             })
             if (solidityVAConfig.deco.arguments)
                 decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+
+            if (solidityVAConfig.deco.warn.reserved){
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].identifiers))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].arguments))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].returns))
+            }
         }
         //decorate modifiers (fixme copy pasta)
         for (var functionName in insights.contracts[contract].modifiers){
@@ -459,6 +495,21 @@ function analyzeSourceUnit(cancellationToken, document){
             })
             if (solidityVAConfig.deco.arguments)
                 decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+
+            if (solidityVAConfig.deco.warn.reserved){
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].identifiers))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].arguments))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].returns))
+            }
+                
+        }
+        //decorate events
+        for (var functionName in insights.contracts[contract].events){
+            if (solidityVAConfig.deco.warn.reserved){
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].identifiers))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].arguments))
+                decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].returns))
+            }
         }
         console.log("✓ decorate scope (new) - identifier ")
     }

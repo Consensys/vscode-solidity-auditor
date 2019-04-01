@@ -14,6 +14,44 @@ const {CommentMapperRex} = require('./utils')
 
 const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
+//https://github.com/ethereum/solidity/blob/c5879589af646bee899745c1a21d065537ad0ea5/test/libsolidity/SolidityParser.cpp#L509
+const reservedKeywords = [ 
+    "abstract",
+    "after",
+    "alias",
+    "apply",
+    "auto",
+    "case",
+    "catch",
+    "copyof",
+    "default",
+    "define",
+    "final",
+    "immutable",
+    "implements",
+    "in",
+    "inline",
+    "let",
+    "macro",
+    "match",
+    "mutable",
+    "null",
+    "of",
+    "override",
+    "partial",
+    "promise",
+    "reference",
+    "relocatable",
+    "sealed",
+    "sizeof",
+    "static",
+    "supports",
+    "switch",
+    "try",
+    "typedef",
+    "typeof",
+    "unchecked"]
+
 class SolidityParser{
 
     constructor(){
@@ -454,5 +492,6 @@ class SolidityParser{
 
 
 module.exports = {
-    SolidityParser:SolidityParser
+    SolidityParser:SolidityParser,
+    reservedKeywords:reservedKeywords
 }

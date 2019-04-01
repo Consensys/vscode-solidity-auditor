@@ -99,6 +99,11 @@
                     "default": true,
                     "description": "Whether to enable/disable semantic highlighting for function arguments"
                 },
+                "solidity-va.deco.warn.reserved": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable warning decoration when overriding reserved names"
+                },
                 "solidity-va.outline.decorations": {
                     "type": "boolean",
                     "default": true,
