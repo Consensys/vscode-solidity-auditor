@@ -80,7 +80,7 @@ function checkReservedIdentifiers(identifiers){
     if(!identifiers)
         return decorations
 
-    let prefix = "**BUILTIN-RESERVED**  ❗SHADOWED❗"
+    let prefix = "**BUILTIN-RESERVED**  ❗RESERVED KEYWORD❗"
     let decoStyle = "decoStyleLightOrange";
     let decl_uri = "[more info..](https://solidity.readthedocs.io/en/latest/miscellaneous.html#reserved-keywords)"
     

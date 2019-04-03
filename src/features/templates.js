@@ -30,26 +30,58 @@ async function createNewUnittestStubForCurrentContractCommand(document, g_parser
 var ${contract.name} = artifacts.require("${contract.path}");
 
 contract('${contract.name}', (accounts) => {
-var creatorAddress = accounts[0];
-var firstOwnerAddress = accounts[1];
-var secondOwnerAddress = accounts[2];
-var externalAddress = accounts[3];
-var unprivilegedAddress = accounts[4]
-/* create named accounts for contract roles */
+    var creatorAddress = accounts[0];
+    var firstOwnerAddress = accounts[1];
+    var secondOwnerAddress = accounts[2];
+    var externalAddress = accounts[3];
+    var unprivilegedAddress = accounts[4]
+    /* create named accounts for contract roles */
 
-it('should revert if ...', () => {
-    return ${contract.name}.deployed()
-        .then(instance => {
-            return instance.publicOrExternalContractMethod(argument1, argument2, {from:externalAddress});
-        })
-        .then(result => {
-            assert.fail();
-        })
-        .catch(error => {
-            assert.notEqual(error.message, "assert.fail()", "Reason ...");
+    before(async () => {
+        /* before tests */
+    })
+    
+    beforeEach(async () => {
+        /* before each context */
+    })
+
+    it('should revert if ...', () => {
+        return ${contract.name}.deployed()
+            .then(instance => {
+                return instance.publicOrExternalContractMethod(argument1, argument2, {from:externalAddress});
+            })
+            .then(result => {
+                assert.fail();
+            })
+            .catch(error => {
+                assert.notEqual(error.message, "assert.fail()", "Reason ...");
+            });
         });
-    });
 
+    context('testgroup - security tests - description...', () => {
+        //deploy a new contract
+        before(async () => {
+            /* before tests */
+            const new${contract.name} =  await ${contract.name}.new()
+        })
+        
+
+        beforeEach(async () => {
+            /* before each tests */
+        })
+
+        
+
+        it('fails on initialize ...', async () => {
+            return assertRevert(async () => {
+                await new${contract.name}.initialize()
+            })
+        })
+
+        it('checks if method returns true', async () => {
+            assert.isTrue(await new${contract.name}.thisMethodShouldReturnTrue())
+        })
+    })
 });
 `;
 
@@ -60,3 +92,12 @@ it('should revert if ...', () => {
 module.exports = {
     createNewUnittestStubForCurrentContractCommand:createNewUnittestStubForCurrentContractCommand
 }
+
+
+
+
+    
+
+    
+
+    
