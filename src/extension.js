@@ -1,3 +1,4 @@
+'use strict'
 /** 
  * @author github.com/tintinweb
  * @license MIT
@@ -15,10 +16,14 @@ const {SolidityDocumentSymbolProvider} = require('./features/symbols')
 const {SolidityParser} = require('./features/parser')
 const mod_parser = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
-const mod_templates= require('./features/templates');
+const {Commands} = require('./features/commands');
+const {SolidityCodeLensProvider} = require('./features/codelens')
+const settings = require('./settings')
+
 
 /** globals - const */
-const languageId = "solidity";
+const languageId = settings.languageId;
+const docSelector = settings.docSelector;
 const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
 const g_parser = new SolidityParser()
@@ -45,7 +50,7 @@ async function setDecorations(editor, decorations){
     if (!editor) {
         return;
     }
-    deco_map = {}
+    let deco_map = {}
 
     for (var styleKey in mod_decorator.styles) {
         deco_map[styleKey] = new Array();
@@ -567,11 +572,11 @@ function onActivate(context) {
     if (!active || !active.document) return;
     activeEditor = active;
 
-    console.log("activate")
+    console.log("onActivate")
 
-    registerDocType(languageId);
+    registerDocType(languageId, docSelector);
 
-    function registerDocType(type) {
+    function registerDocType(type, docSel) {
         context.subscriptions.push(
             vscode.languages.reg
         )
@@ -585,16 +590,72 @@ function onActivate(context) {
         onDidChange()
         onDidSave(vscode.window.activeTextEditor.document)
 
+        let commands = new Commands(g_parser)
+        
         /** command setup */
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.test.createTemplate', 
+                function (contractName) {
+                    commands.generateUnittestStubForContract(vscode.window.activeTextEditor.document, contractName)
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.mdreport', 
                 function () {
-                    if(vscode.window.activeTextEditor.document.languageId!=type){
-                        vscode.window.showErrorMessage(`[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.path}`)
-                        return;
-                    }
-                    mod_templates.createNewUnittestStubForCurrentContractCommand(vscode.window.activeTextEditor.document, g_parser)
+                    commands.surya(vscode.window.activeTextEditor.document, "mdreport")
+                }
+            )
+        )
+        /*  does not yet return the values but writes to console
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.describe', 
+                function () {
+                    commands.surya(vscode.window.activeTextEditor.document, "describe")
+                }
+            )
+        )
+        */
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.graph', 
+                function () {
+                    commands.surya(vscode.window.activeTextEditor.document, "graph")
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.inheritance', 
+                function () {
+                    commands.surya(vscode.window.activeTextEditor.document, "inheritance")
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.parse', 
+                function () {
+                    commands.surya(vscode.window.activeTextEditor.document, "parse")
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.dependencies', 
+                function (ContractName) {
+                    commands.surya(vscode.window.activeTextEditor.document, "dependencies", [ContractName])
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.ftrace', 
+                function (functionName) {
+                    commands.surya(vscode.window.activeTextEditor.document, "ftrace", [functionName])
                 }
             )
         )
@@ -625,13 +686,20 @@ function onActivate(context) {
                 }
             })
         );
-
+        
         /** experimental */
         //onDidChange() // forces inspection and makes sure data is ready for symbolprovider
         context.subscriptions.push(
             vscode.languages.registerDocumentSymbolProvider(
-                {language: type}, 
+                docSel, 
                 new SolidityDocumentSymbolProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
+            )
+        );
+        
+        context.subscriptions.push(
+            vscode.languages.registerCodeLensProvider(
+                docSel,
+                new SolidityCodeLensProvider(g_parser)
             )
         );
     }

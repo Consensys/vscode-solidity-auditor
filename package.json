@@ -77,7 +77,23 @@
         "commands": [
             {
                 "command": "solidity-va.test.createTemplate",
-                "title": "Solidity Visual Auditor: create Unittest stub for current Contract"
+                "title": "Solidity Visual Auditor: Unittest - create stub for current contract"
+            },
+            {
+                "command": "solidity-va.surya.mdreport",
+                "title": "Solidity Visual Auditor: Surya - generate report"
+            },
+            {
+                "command": "solidity-va.surya.describe",
+                "title": "Solidity Visual Auditor: Surya - describe"
+            },
+            {
+                "command": "solidity-va.surya.graph",
+                "title": "Solidity Visual Auditor: Surya - graph"
+            },
+            {
+                "command": "solidity-va.surya.inheritance",
+                "title": "Solidity Visual Auditor: Surya - show inheritance graph"
             }
         ],
         "configuration": {
@@ -160,6 +176,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "sabre-mythx": "^0.1.5",
-        "solidity-parser-antlr": "^0.4.1"
+        "solidity-parser-antlr": "^0.4.2",
+        "surya": "^0.2.11-dev.1"
     }
 }

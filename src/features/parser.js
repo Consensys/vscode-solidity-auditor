@@ -1,3 +1,4 @@
+'use strict'
 /** 
  * @author github.com/tintinweb
  * @license MIT
@@ -164,6 +165,9 @@ class SolidityParser{
             return;
             }
         }
+        if(typeof ast==="undefined"){
+            console.error("solidity-parser-antlr - failed to parse input")
+        }
 
         var sourceUnit = {
             contracts:{},
@@ -196,7 +200,7 @@ class SolidityParser{
                     names:{}   // all names in current contract (methods, events, structs, ...)
                 }
                 current_contract = sourceUnit.contracts[node.name]
-
+                
                 parser.visit(node, {
                     
                     StateVariableDeclaration(_node){
@@ -297,7 +301,8 @@ class SolidityParser{
                             identifiers: [],  // all identifiers (use of variables)
                             complexity: 0,    // we just count nr. of branching statements here
                             accesses_svar: false, //
-                            calls: []  // internal and external calls
+                            calls: [],  // internal and external calls
+                            assemblyFunctions: {}  // list of assembly functions
                         }
                         current_function = current_contract.functions[_node.name];
                         current_contract.names[_node.name]=current_function;
@@ -375,6 +380,9 @@ class SolidityParser{
                                         //
                                     }
                                 }
+                            },
+                            AssemblyFunctionDefinition(__node){
+                                current_function.assemblyFunctions[__node.name] = __node
                             }
                             // ignore throw, require, etc. for now
                         })

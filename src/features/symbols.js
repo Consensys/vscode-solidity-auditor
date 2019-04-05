@@ -228,8 +228,11 @@ function getSymbolKindForDeclaration(node){
                 result.symbol = vscode.SymbolKind.Class
             }
             break;
+        case "AssemblyFunctionDefinition":
+            result.symbol = vscode.SymbolKind.Function
+            break;
         default:
-            console.log("<-----")
+            console.error("<-----")
     }
     return result;
 }  
@@ -387,7 +390,33 @@ class SolidityDocumentSymbolProvider{
                         }
                     }
 
-
+                    // add fake assembly functions list to outline
+                    let numAssemblyFuncDefs = Object.keys(insights.contracts[contractName].functions[functionName].assemblyFunctions).length
+                    if(numAssemblyFuncDefs!==0){
+                        let assemblyLevelNode = astNodeAsDocumentSymbol(
+                            document, 
+                            getFakeNode("assembly..",1),
+                            vscode.SymbolKind.Namespace,
+                            "assembly",
+                            "... (" + numAssemblyFuncDefs + ")"
+                            )
+                        
+                        functionLevelNode.children.push(assemblyLevelNode)
+                        // add modifiers
+                        for (let modifierName in insights.contracts[contractName].functions[functionName].assemblyFunctions){
+                            let vardec = insights.contracts[contractName].functions[functionName].assemblyFunctions[modifierName];
+                            
+                            let symbolAnnotation = getSymbolKindForDeclaration(vardec)
+                            
+                            assemblyLevelNode.children.push(astNodeAsDocumentSymbol(
+                                document, 
+                                vardec, 
+                                symbolAnnotation.symbol,
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details
+                                ))
+                        }
+                    }
                     //get all declarations in function
                     
                     for (var declaration in insights.contracts[contractName].functions[functionName].declarations){

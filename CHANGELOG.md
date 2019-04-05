@@ -1,6 +1,23 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.14
+- 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
+- added codelens (inline code actions)
+  - file
+    - surya - report
+    - surya - graph
+    - surya - inheritance
+    - surya - parse
+  - contracts
+    - create unittest stub for contract (e.g. for verifying vulnerabilities)
+    - surya - dependencies 
+  - functions
+    - surya - ftrace
+- to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
+- to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
+- outline - added assembly functions
+
 ## v0.0.13
 
 - new feature: vscode.command to generate a unittest stub for the current contract (`cmd`+`shift`+`p` -> `Solidity Visual Auditor: create Unittest stub for current Contract`)  

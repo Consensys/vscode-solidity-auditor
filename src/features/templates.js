@@ -7,17 +7,23 @@
 
 const vscode = require('vscode');
 
-async function createNewUnittestStubForCurrentContractCommand(document, g_parser){
-    let sourceUnit = g_parser.sourceUnits[document.uri.path]
-    if(!sourceUnit || Object.keys(sourceUnit.contracts).length<=0){
-        vscode.window.showErrorMessage(`[Solidity VA] unable to create unittest stub for current contract. missing analysis for source-unit: ${active.document.uri.path}`)
-        return
-    }
-
+function generateUnittestStubForContract(document, g_parser, contractName){
     let contract = {
-        name: Object.keys(sourceUnit.contracts)[0],
+        name: contractName,
         path: document.uri.path
     }
+
+    if(!contractName){
+        //take first
+        let sourceUnit = g_parser.sourceUnits[document.uri.path]
+        if(!sourceUnit || Object.keys(sourceUnit.contracts).length<=0){
+            vscode.window.showErrorMessage(`[Solidity VA] unable to create unittest stub for current contract. missing analysis for source-unit: ${active.document.uri.path}`)
+            return
+        }
+
+        contract.name = Object.keys(sourceUnit.contracts)[0]
+    }
+    
     let content = `
 /**
  * 
@@ -84,13 +90,11 @@ contract('${contract.name}', (accounts) => {
     })
 });
 `;
-
-    vscode.workspace.openTextDocument({content: content, language: "javascript"})
-        .then(doc => vscode.window.showTextDocument(doc))
+    return content;
 }
 
 module.exports = {
-    createNewUnittestStubForCurrentContractCommand:createNewUnittestStubForCurrentContractCommand
+    generateUnittestStubForContract:generateUnittestStubForContract
 }
 
 
