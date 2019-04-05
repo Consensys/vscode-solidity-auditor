@@ -7,17 +7,18 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
   ![vscode-auditor-cmd-unittest-stub](https://user-images.githubusercontent.com/2865694/55644906-7db35280-57d7-11e9-8802-f35bed28028f.gif)
 
 - new feature: functions in outline now show modifier decorations  
-  ![image](https://user-images.githubusercontent.com/2865694/55644739-10072680-57d7-11e9-9b88-822ae2288278.png)
+  <img width="360" alt="outline_lib" src="https://user-images.githubusercontent.com/2865694/55644739-10072680-57d7-11e9-9b88-822ae2288278.png">
+
 - new feature: alert when using [reserved names](https://solidity.readthedocs.io/en/latest/miscellaneous.html#reserved-keywords) as identifiers  
   ![vscode-auditor-shadow-reserved](https://user-images.githubusercontent.com/2865694/55644488-62941300-57d6-11e9-839f-437aaf5fe6c1.gif)
 
 - handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
 - fix error for functions with anonymous arguments
 - fix highlighting of statevars in modifiers (and detect shadowing)  
-  ![image](https://user-images.githubusercontent.com/2865694/55644609-bd2d6f00-57d6-11e9-96d6-c8a5b5295149.png)
+  <img width="360" alt="outline_lib" src="https://user-images.githubusercontent.com/2865694/55644609-bd2d6f00-57d6-11e9-96d6-c8a5b5295149.png">
 
 - fix class inheritance in outline missing dependencies of dependencies  
-  ![image](https://user-images.githubusercontent.com/2865694/55644655-dafad400-57d6-11e9-8671-0ce2cbe7f0b8.png)
+  <img width="360" alt="outline_lib" src="https://user-images.githubusercontent.com/2865694/55644655-dafad400-57d6-11e9-8671-0ce2cbe7f0b8.png">
 
 - fix hover being applied to comments
 - rework cdili issue import handling (performance improvements)
