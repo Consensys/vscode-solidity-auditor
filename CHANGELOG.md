@@ -3,20 +3,29 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 
 ## v0.0.14
 - 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
-- added codelens (inline code actions)
+- new feature: codelens (inline code actions)
   - file
+    - surya - graph  
+    ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
     - surya - report
-    - surya - graph
     - surya - inheritance
-    - surya - parse
+    - surya - parse  
+    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)
   - contracts
-    - create unittest stub for contract (e.g. for verifying vulnerabilities)
+    - create unittest stub for contract (e.g. for verifying vulnerabilities)  
+     ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+
     - surya - dependencies 
   - functions
-    - surya - ftrace
-- to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
-- to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
-- outline - added assembly functions
+    - surya - ftrace  
+    ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+
+
+- Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
+- Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
+- outline - added assembly functions  
+  <img width="360" alt="assembly" src="https://user-images.githubusercontent.com/2865694/55646137-b56fc980-57da-11e9-8fab-e24b5ef5e46b.png">
+
 
 ## v0.0.13
 
