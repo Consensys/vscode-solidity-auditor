@@ -596,16 +596,16 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.test.createTemplate', 
-                function (contractName) {
-                    commands.generateUnittestStubForContract(vscode.window.activeTextEditor.document, contractName)
+                function (doc, contractName) {
+                    commands.generateUnittestStubForContract(doc || vscode.window.activeTextEditor.document, contractName)
                 }
             )
         )
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.mdreport', 
-                function () {
-                    commands.surya(vscode.window.activeTextEditor.document, "mdreport")
+                function (doc) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "mdreport")
                 }
             )
         )
@@ -622,40 +622,41 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.graph', 
-                function () {
-                    commands.surya(vscode.window.activeTextEditor.document, "graph")
+                function (doc, files) {
+                    console.error(files)
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "graph", files)
                 }
             )
         )
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.inheritance', 
-                function () {
-                    commands.surya(vscode.window.activeTextEditor.document, "inheritance")
+                function (doc) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "inheritance")
                 }
             )
         )
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.parse', 
-                function () {
-                    commands.surya(vscode.window.activeTextEditor.document, "parse")
+                function (doc) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "parse")
                 }
             )
         )
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.dependencies', 
-                function (ContractName) {
-                    commands.surya(vscode.window.activeTextEditor.document, "dependencies", [ContractName])
+                function (doc, ContractName) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "dependencies", [ContractName])
                 }
             )
         )
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.ftrace', 
-                function (functionName) {
-                    commands.surya(vscode.window.activeTextEditor.document, "ftrace", [functionName])
+                function (doc, functionName) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [functionName])
                 }
             )
         )

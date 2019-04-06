@@ -34,8 +34,7 @@ class SolidityCodeLensProvider  {
             new vscode.CodeLens(
                 firstLine, {
                     command: 'solidity-va.surya.mdreport',
-                    title: 'report',
-                    arguments: [document.uri.path]
+                    title: 'report'
                 }
             )
         )
@@ -54,8 +53,17 @@ class SolidityCodeLensProvider  {
             new vscode.CodeLens(
                 firstLine, {
                     command: 'solidity-va.surya.graph',
+                    title: 'graph (this)',
+                    arguments: [document, [document.uri.path]]
+                }
+            )
+        )
+        codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.surya.graph',
                     title: 'graph',
-                    arguments: [document.uri.path]
+                    arguments: [document]  //auto-loads all parsed files
                 }
             )
         )
@@ -64,7 +72,7 @@ class SolidityCodeLensProvider  {
                 firstLine, {
                     command: 'solidity-va.surya.inheritance',
                     title: 'intheritance',
-                    arguments: [document.uri.path]
+                    arguments: [document]
                 }
             )
         )
@@ -73,7 +81,7 @@ class SolidityCodeLensProvider  {
                 firstLine, {
                     command: 'solidity-va.surya.parse',
                     title: 'parse',
-                    arguments: [document.uri.path]
+                    arguments: [document]
                 }
             )
         )
@@ -100,13 +108,13 @@ class SolidityCodeLensProvider  {
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.test.createTemplate',
             title: 'UnitTest stub',
-            arguments: [item.name]
+            arguments: [document, item.name]
             })
         )
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.surya.dependencies',
             title: 'dependencies',
-            arguments: [item.name, []]
+            arguments: [document, item.name, []]
             })
         )
         return lenses
@@ -119,7 +127,7 @@ class SolidityCodeLensProvider  {
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.surya.ftrace',
             title: 'ftrace',
-            arguments: [contractName+"::"+item._node.name, "all", document.uri.path]
+            arguments: [document, contractName+"::"+item._node.name, "all", document.uri.path]
             })
         )
         return lenses
