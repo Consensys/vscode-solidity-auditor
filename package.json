@@ -94,6 +94,10 @@
             {
                 "command": "solidity-va.surya.inheritance",
                 "title": "Solidity Visual Auditor: Surya - show inheritance graph"
+            },
+            {
+                "command": "solidity-va.insights.topLevelContracts",
+                "title": "Solidity Visual Auditor: Insights - suggest top level / entry point contracts"
             }
         ],
         "configuration": {
@@ -177,6 +181,6 @@
         "c3-linearization": "^0.3.0",
         "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
-        "surya": "^0.2.11-dev.1"
+        "surya": "^0.2.11-dev.2"
     }
 }

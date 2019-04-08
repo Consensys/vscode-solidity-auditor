@@ -623,7 +623,6 @@ function onActivate(context) {
             vscode.commands.registerCommand(
                 'solidity-va.surya.graph', 
                 function (doc, files) {
-                    console.error(files)
                     commands.surya(doc || vscode.window.activeTextEditor.document, "graph", files)
                 }
             )
@@ -657,6 +656,15 @@ function onActivate(context) {
                 'solidity-va.surya.ftrace', 
                 function (doc, functionName) {
                     commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [functionName])
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.insights.topLevelContracts', 
+                function (doc, contractName) {
+                    commands.findTopLevelContracts()
                 }
             )
         )

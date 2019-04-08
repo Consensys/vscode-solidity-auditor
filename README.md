@@ -56,6 +56,8 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
+* surya integration
+* suggest top level contracts
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
 * onHover StateVar declaration information, including the line of declaration
@@ -212,8 +214,9 @@ Scroll down and take the tour.
 
 # Release Notes
 
-- 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
-- new feature: codelens (inline code actions)
+## v0.0.14
+- feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
+- feature: codelens (inline code actions)
   - file
     - surya - graph  
     ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
@@ -229,11 +232,13 @@ Scroll down and take the tour.
   - functions
     - surya - ftrace  
     ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+- feature: suggest top level contracts "entrypoint contracts" (e.g. for contract flattening or as suggested startingpoints)
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
 - outline - added assembly functions  
   <img width="360" alt="assembly" src="https://user-images.githubusercontent.com/2865694/55646137-b56fc980-57da-11e9-8fab-e24b5ef5e46b.png">
+
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)

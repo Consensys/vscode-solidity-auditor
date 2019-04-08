@@ -1,3 +1,4 @@
+'use strict'
 /** 
  * @author github.com/tintinweb
  * @license MIT
@@ -6,23 +7,11 @@
  * */
 
 const vscode = require('vscode');
+const fs = require('fs')
 const settings = require('../settings')
 
 const mod_templates = require('./templates');
 const surya = require('surya')
-
-function createWebViewBesides(id,title,content){
-    const panel = vscode.window.createWebviewPanel(
-        id,
-        title,
-        vscode.ViewColumn.Beside,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: true
-        }
-      );
-      panel.webview.html = content
-}
 
 
 class Commands{
@@ -61,7 +50,7 @@ class Commands{
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
             case "graph":
-                ret = surya.graph(files)
+                ret = surya.graph(args || files)
 
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
@@ -147,6 +136,48 @@ class Commands{
               // code block
         }
     }
+
+    async findTopLevelContracts(files, scanfiles){
+        var that = this;
+        var dependencies={}
+        if(!scanfiles){
+            await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+                .then((solfiles) => {
+                    solfiles.forEach(function(solfile){
+                        try {
+                            let content = fs.readFileSync(solfile.path).toString('utf-8')
+                            let sourceUnit = that.g_parser.parseSourceUnit(content)
+                            for(let contractName in sourceUnit.contracts){
+                                dependencies[contractName] = sourceUnit.contracts[contractName].dependencies
+                            }
+                        } catch {
+
+                        }
+                    });
+                });
+        } else {
+            //files not set: take loaded sourceUnits from this.g_parser
+            //files set: only take these sourceUnits
+            for(let contractName in that.g_parser.contracts){
+                dependencies[contractName] = sourceUnit.contracts[contractName].dependencies
+            }
+        }
+        
+        var depnames = [].concat.apply([], Object.values(dependencies));
+
+        let topLevelContracts = Object.keys(dependencies).filter(function (i) {
+            return depnames.indexOf(i) === -1;
+        });
+
+        let content = `
+Top Level Contracts
+===================
+
+${topLevelContracts.join("\n")}`
+        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+                    .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+        }
+        
 }
 
 
