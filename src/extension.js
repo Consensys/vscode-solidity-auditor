@@ -663,8 +663,25 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.insights.topLevelContracts', 
-                function (doc, contractName) {
+                function () {
                     commands.findTopLevelContracts()
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.flaterra', 
+                function (doc) {
+                    commands.flaterra(doc || vscode.window.activeTextEditor.document)
+                }
+            )
+        )
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.flattenCandidates', 
+                function () {
+                    commands.flattenCandidates()
                 }
             )
         )

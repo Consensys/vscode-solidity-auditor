@@ -8,10 +8,45 @@
 
 const vscode = require('vscode');
 const fs = require('fs')
+const child_process = require('child_process');
+const path = require('path')
+
 const settings = require('../settings')
 
 const mod_templates = require('./templates');
 const surya = require('surya')
+
+
+function runCommand(cmd, args, env, cwd, stdin){
+    cwd = cwd || vscode.workspace.rootPath;
+
+    return new Promise((resolve, reject) => {
+        console.log(`running command: ${cmd} ${args.join(" ")}`);
+        let p = child_process.execFile(cmd, args, { env: env, cwd: cwd }, (err, stdout, stderr) => {
+            p.stdout.on('data', function(data) {
+                if(stdin){
+                    p.stdin.setEncoding('utf-8');
+                    p.stdin.write(stdin);
+                    p.stdin.end()
+                }
+            })
+            if(err===null || err.code === 0){
+                console.log("success")
+                return resolve(err)
+            }
+            else if (err.code === 'ENOENT') {
+                console.log(`File does not exist: ${cmd}`);
+                throw new Error(err)
+            } else if(stderr.trim().length >0){
+                console.log("stderr error:");
+                console.log(stderr)
+                reject("err_stdout")
+            }
+            console.error("general error: " + err)
+            return reject(err)
+        })
+    })
+}
 
 
 class Commands{
@@ -21,7 +56,7 @@ class Commands{
     }
 
     _checkIsSolidity(document){
-        if(document.languageId!=settings.languageId){
+        if(!document || document.languageId!=settings.languageId){
             vscode.window.showErrorMessage(`[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.path}`)
             throw new Error("not a solidity file")
         }
@@ -137,9 +172,10 @@ class Commands{
         }
     }
 
-    async findTopLevelContracts(files, scanfiles){
+    async _findTopLevelContracts(files, scanfiles){
         var that = this;
         var dependencies={}
+        var contractToFile={}
         if(!scanfiles){
             await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
                 .then((solfiles) => {
@@ -149,6 +185,7 @@ class Commands{
                             let sourceUnit = that.g_parser.parseSourceUnit(content)
                             for(let contractName in sourceUnit.contracts){
                                 dependencies[contractName] = sourceUnit.contracts[contractName].dependencies
+                                contractToFile[contractName] = solfile
                             }
                         } catch {
 
@@ -169,16 +206,100 @@ class Commands{
             return depnames.indexOf(i) === -1;
         });
 
+        let ret = {}
+        topLevelContracts.forEach(contractName => {
+            ret[contractName] = contractToFile[contractName]
+        })
+        return ret
+    }
+
+    async findTopLevelContracts(files, scanfiles){
+        let topLevelContracts = await this._findTopLevelContracts(files, scanfiles);
+
+        let topLevelContractsText = Object.keys(topLevelContracts).join('\n')
+        /*
+        for (var name in topLevelContracts) {
+            topLevelContractsText += name + ' (' + topLevelContracts[name]+')\n';
+        }
+        */
+
         let content = `
 Top Level Contracts
 ===================
 
-${topLevelContracts.join("\n")}`
+${topLevelContractsText}`
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+        
+    async flaterra(documentOrUri, noTryInstall){
+        let docUri = documentOrUri;
+        if(documentOrUri.hasOwnProperty("uri")){
+            this._checkIsSolidity(documentOrUri)
+            docUri = documentOrUri.uri
         }
         
+
+        let cmd = "python3"
+        let args = ["-m", "flaterra", "--contract", vscode.workspace.asRelativePath(docUri)]
+
+
+        runCommand(cmd, args)
+            .then(
+                (success) =>{
+                vscode.window.showInformationMessage(`Contract flattened: ${path.basename(docUri.path,".sol")}_flat.sol`)
+                },
+                (err) => {
+                    console.log(err)
+
+                    if(err!=="err_stdout"){
+                        vscode.window.showErrorMessage('`flaterra` failed with: ' + err)
+                        .then(selection => {
+                            console.log(selection);
+                        });
+                    } else {
+                        if(!noTryInstall){
+                            vscode.window.showWarningMessage('Contract Flattener `flaterra` is not installed.\n run `pip3 install flaterra --user` to install? ', 'Install')
+                                .then(selection => {
+                                    console.log(selection);
+                                    if(selection=="Install"){
+                                        runCommand("pip3", ["install", "flaterra", "--user"], undefined, undefined, "y\n")
+                                            .then(
+                                                (success) =>{
+                                                vscode.window.showInformationMessage("Successfully installed flaterra.")
+                                                this.flaterra(documentOrUri, true)
+                                                },
+                                                (error) => {
+                                                    vscode.window.showErrorMessage("Failed to install flaterra.")
+                                                }
+                                            )
+                                            .catch(err =>{
+                                                vscode.window.showErrorMessage("Failed to install flaterra. " + err)
+                                            })
+                                    } else {
+                                        // do not retry
+                                    }
+                                });
+                            }
+                    }
+                })
+            .catch(err => {
+                    console.log("python3 not installed - game over")
+            })    
+    }
+
+    async flattenCandidates(){
+        let topLevelContracts = await this._findTopLevelContracts()
+        let content = ""
+        for(let name in topLevelContracts){
+            this.flaterra(new vscode.Uri(topLevelContracts[name]))
+            content += name + "  =>  " + topLevelContracts[name] + "\n"
+        }
+        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
 }
+
 
 
 module.exports = {

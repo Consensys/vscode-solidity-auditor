@@ -98,7 +98,16 @@
             {
                 "command": "solidity-va.insights.topLevelContracts",
                 "title": "Solidity Visual Auditor: Insights - suggest top level / entry point contracts"
+            },
+            {
+                "command": "solidity-va.tools.flaterra",
+                "title": "Solidity Visual Auditor: Tools - flatten current file"
+            },
+            {
+                "command": "solidity-va.tools.flattenCandidates",
+                "title": "Solidity Visual Auditor: Tools - flatten all suggested top level contracts"
             }
+            
         ],
         "configuration": {
             "type": "object",

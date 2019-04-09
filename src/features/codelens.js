@@ -86,6 +86,16 @@ class SolidityCodeLensProvider  {
             )
         )
 
+        codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.tools.flaterra',
+                    title: 'flatten',
+                    arguments: [document]
+                }
+            )
+        )
+
         let annotateContractTypes = ["contract","library"]
         /** all contract decls */
         for(let name in parser.contracts){

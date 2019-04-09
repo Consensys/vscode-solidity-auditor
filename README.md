@@ -220,10 +220,11 @@ Scroll down and take the tour.
   - file
     - surya - graph  
     ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
-    - surya - report
+    - surya - generate report
     - surya - inheritance
-    - surya - parse  
-    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)
+    - surya - parse file (show AST) 
+    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
+    - flatten sourceUnit using [flaterra](https://github.com/cleanunicorn/flaterra) 
   - contracts
     - create unittest stub for contract (e.g. for verifying vulnerabilities)  
      ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
@@ -232,7 +233,9 @@ Scroll down and take the tour.
   - functions
     - surya - ftrace  
     ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
-- feature: suggest top level contracts "entrypoint contracts" (e.g. for contract flattening or as suggested startingpoints)
+- feature: command - suggest top level contracts "entrypoint contracts" (e.g. for contract flattening or as suggested startingpoints)
+- feature: command - flatten all suggested top level contracts
+
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
