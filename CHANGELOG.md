@@ -20,9 +20,12 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
   - functions
     - surya - ftrace  
     ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
-- feature: command - suggest top level contracts "entrypoint contracts" (e.g. for contract flattening or as suggested startingpoints)
-- feature: command - flatten all suggested top level contracts
-- feature: command - list all function signatures (human readable or json format)
+- feature: command - suggest top level contracts aka "entrypoint contracts" (most derived)
+- feature: command - flatten current (codelens) or all suggested top level contracts (command)
+![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
+- feature: command - list all function signatures (human readable or json format)  
+![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)

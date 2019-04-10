@@ -733,19 +733,22 @@ function onActivate(context) {
         
         /** experimental */
         //onDidChange() // forces inspection and makes sure data is ready for symbolprovider
-        context.subscriptions.push(
-            vscode.languages.registerDocumentSymbolProvider(
-                docSel, 
-                new SolidityDocumentSymbolProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
-            )
-        );
-        
-        context.subscriptions.push(
-            vscode.languages.registerCodeLensProvider(
-                docSel,
-                new SolidityCodeLensProvider(g_parser)
-            )
-        );
+        if(solidityVAConfig.outline.enable){
+            context.subscriptions.push(
+                vscode.languages.registerDocumentSymbolProvider(
+                    docSel, 
+                    new SolidityDocumentSymbolProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
+                )
+            );
+        }
+        if(solidityVAConfig.codelens.enable){
+            context.subscriptions.push(
+                vscode.languages.registerCodeLensProvider(
+                    docSel,
+                    new SolidityCodeLensProvider(g_parser)
+                )
+            );
+        }
     }
 }
 

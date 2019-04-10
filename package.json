@@ -150,6 +150,11 @@
                     "default": true,
                     "description": "Enable/Disable warning decoration when overriding reserved names"
                 },
+                "solidity-va.outline.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable outline / symbolprovider"
+                },
                 "solidity-va.outline.decorations": {
                     "type": "boolean",
                     "default": true,
@@ -195,6 +200,11 @@
                     "default": true,
                     "description": "Whether to enable/disable audit tags (@audit/@audit-ok)"
                 },
+                "solidity-va.codelens.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens - inline action"
+                },
                 "solidity-va.mode.active": {
                     "type": "boolean",
                     "default": true,
@@ -208,6 +218,6 @@
         "keccak": "^2.0.0",
         "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
-        "surya": "^0.2.11-dev.2"
+        "surya": "^0.2.11"
     }
 }

@@ -99,7 +99,7 @@ class SolidityCodeLensProvider  {
         codeLens.push(
             new vscode.CodeLens(
                 firstLine, {
-                    command: 'solidity-va.tools.function.signatures.json',
+                    command: 'solidity-va.tools.function.signatures',
                     title: 'funcSigs',
                     arguments: [document]
                 }
