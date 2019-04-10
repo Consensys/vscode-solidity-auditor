@@ -9,6 +9,8 @@ we suggest using this plugin together with [vscode-solidity](https://github.com/
 
 Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
+![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
+
 ![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 
 ---------------------
@@ -54,6 +56,8 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
+* surya integration
+* suggest top level contracts
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
 * onHover StateVar declaration information, including the line of declaration
@@ -176,6 +180,7 @@ Scroll down and take the tour.
 * `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
 * `Solidity-va.deco.statevars` ... decorate statevars in code view (golden, green, blue boxes)
 * `Solidity-va.deco.arguments` ... whether to enable/disable semantic highlighting for function arguments
+* `Solidity-va.outline.enable` ... enable/disable outline and symbolprovider
 * `Solidity-va.outline.decorations` ... decorate functions according to state mutability function visibility
 * `Solidity-va.outline.inheritance.show` ... add inherited functions to outline view
 * `Solidity-va.outline.extras` ... annotate functions with extra information (complexity, statevar access)
@@ -195,6 +200,8 @@ Scroll down and take the tour.
         "forRule": "State_Variable_Default_Visibility"
     }
     ```
+* `Solidity-va.audit.tags.enable` ... enable/disable audit tags
+* `Solidity-va.codelens.enable` ... enable/disable codelens support (inline code actions)
 
 ## Known Issues
 
@@ -210,18 +217,36 @@ Scroll down and take the tour.
 
 # Release Notes
 
-## v0.0.13
-- handle cancellationRequests (avoid piling up analysis runs or having them run in parallel)
-- new feature: functions in outline now show modifier decorations
-- new feature: vscode.command to generate a unittest stub for the current contract (`cmd`+`shift`+`p` -> `Solidity Visual Auditor: create Unittest stub for current Contract`)
-- new feature: alert when using [reserved names](https://solidity.readthedocs.io/en/latest/miscellaneous.html#reserved-keywords) as identifiers
-- fix error for functions with anonymous arguments
-- fix highlighting of statevars in modifiers (and detect shadowing)
-- fix class inheritance in outline missing dependencies of dependencies
-- fix hover being applied to comments
-- rework cdili issue import handling (performance improvements)
-- fix cdili issue import only importing one issue per file
-- async functions
+## v0.0.14 - aka big surya wedding
+- feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
+- feature: codelens (inline code actions)
+  - file
+    - surya - graph  
+    ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
+    - surya - generate report
+    - surya - inheritance
+    - surya - parse file (show AST) 
+    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
+    - flatten sourceUnit using [flaterra](https://github.com/cleanunicorn/flaterra) 
+  - contracts
+    - create unittest stub for contract (e.g. for verifying vulnerabilities)  
+     ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+
+    - surya - dependencies 
+  - functions
+    - surya - ftrace  
+    ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+- feature: command - suggest top level contracts aka "entrypoint contracts" (most derived)
+- feature: command - flatten current (codelens) or all suggested top level contracts (command)
+![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
+- feature: command - list all function signatures (human readable or json format)  
+![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+
+
+- Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
+- Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
+- outline - added assembly functions  
+  <img width="360" alt="assembly" src="https://user-images.githubusercontent.com/2865694/55646137-b56fc980-57da-11e9-8fab-e24b5ef5e46b.png">
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)

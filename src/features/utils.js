@@ -40,6 +40,28 @@ class CommentMapperRex{
 
 }
 
+
+const createKeccakHash = require('keccak')
+
+function functionSignatureExtractor(content){
+    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]+)\)/g
+    let match;
+    let sighashes = {}
+
+    while (match = funcSigRegex.exec(content)) {
+        let args = []
+        match.groups.args.split(",").forEach(item => {
+            args.push(item.trim().split(" ")[0])
+        })
+        let fnsig = `${match.groups.name.trim()}(${args.join(',')})`
+        sighashes[createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8)] = fnsig
+    }
+    return sighashes
+}
+
+
+
 module.exports = {
-    CommentMapperRex : CommentMapperRex
+    CommentMapperRex : CommentMapperRex,
+    functionSignatureExtractor : functionSignatureExtractor
 }

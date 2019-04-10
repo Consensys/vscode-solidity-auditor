@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.13",
+    "version": "0.0.14",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -77,7 +77,53 @@
         "commands": [
             {
                 "command": "solidity-va.test.createTemplate",
-                "title": "Solidity Visual Auditor: create Unittest stub for current Contract"
+                "title": "Unittest - create stub for current contract",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.surya.mdreport",
+                "title": "Surya - generate report",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.surya.describe",
+                "title": "Surya - describe",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.surya.graph",
+                "title": "Surya - graph",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.surya.inheritance",
+                "title": "Surya - show inheritance graph",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.insights.topLevelContracts",
+                "title": "Tools - list suggested top level / entry point contracts",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.flaterra",
+                "title": "Tools - flatten current file",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.flattenCandidates",
+                "title": "Tools - flatten all suggested top level contracts",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.function.signatures",
+                "title": "Tools - list function signatures",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.function.signatures.json",
+                "title": "Tools - list function signatures (json)",
+                "category": "Solidity Visual Auditor"
             }
         ],
         "configuration": {
@@ -103,6 +149,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable warning decoration when overriding reserved names"
+                },
+                "solidity-va.outline.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable outline / symbolprovider"
                 },
                 "solidity-va.outline.decorations": {
                     "type": "boolean",
@@ -149,6 +200,11 @@
                     "default": true,
                     "description": "Whether to enable/disable audit tags (@audit/@audit-ok)"
                 },
+                "solidity-va.codelens.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens - inline action"
+                },
                 "solidity-va.mode.active": {
                     "type": "boolean",
                     "default": true,
@@ -159,7 +215,9 @@
     },
     "dependencies": {
         "c3-linearization": "^0.3.0",
+        "keccak": "^2.0.0",
         "sabre-mythx": "^0.1.5",
-        "solidity-parser-antlr": "^0.4.1"
+        "solidity-parser-antlr": "^0.4.2",
+        "surya": "^0.2.11"
     }
 }
