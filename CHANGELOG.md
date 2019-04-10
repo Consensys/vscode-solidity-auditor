@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
-## v0.0.14
+## v0.0.14 - aka big surya wedding
 - feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
 - feature: codelens (inline code actions)
   - file
@@ -22,7 +22,7 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
     ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
 - feature: command - suggest top level contracts "entrypoint contracts" (e.g. for contract flattening or as suggested startingpoints)
 - feature: command - flatten all suggested top level contracts
-
+- feature: command - list all function signatures (human readable or json format)
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
