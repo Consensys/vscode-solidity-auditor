@@ -96,6 +96,18 @@ class SolidityCodeLensProvider  {
             )
         )
 
+        codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.tools.function.signatures.json',
+                    title: 'funcSigs',
+                    arguments: [document]
+                }
+            )
+        )
+
+        
+
         let annotateContractTypes = ["contract","library"]
         /** all contract decls */
         for(let name in parser.contracts){

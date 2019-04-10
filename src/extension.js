@@ -576,7 +576,7 @@ function onActivate(context) {
 
     registerDocType(languageId, docSelector);
 
-    function registerDocType(type, docSel) {
+    async function registerDocType(type, docSel) {
         context.subscriptions.push(
             vscode.languages.reg
         )
@@ -682,6 +682,24 @@ function onActivate(context) {
                 'solidity-va.tools.flattenCandidates', 
                 function () {
                     commands.flattenCandidates()
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.function.signatures', 
+                function (doc, asJson) {
+                    commands.listFunctionSignatures(doc || vscode.window.activeTextEditor.document, asJson)
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.function.signatures.json', 
+                function (doc) {
+                    commands.listFunctionSignatures(doc || vscode.window.activeTextEditor.document, true)
                 }
             )
         )

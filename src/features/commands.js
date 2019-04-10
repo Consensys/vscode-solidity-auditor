@@ -14,6 +14,8 @@ const path = require('path')
 const settings = require('../settings')
 
 const mod_templates = require('./templates');
+const mod_utils = require('./utils.js')
+
 const surya = require('surya')
 
 
@@ -294,6 +296,21 @@ ${topLevelContractsText}`
         for(let name in topLevelContracts){
             this.flaterra(new vscode.Uri(topLevelContracts[name]))
             content += name + "  =>  " + topLevelContracts[name] + "\n"
+        }
+        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+
+    async listFunctionSignatures(document, asJson){
+        let sighashes = mod_utils.functionSignatureExtractor(document.getText())
+        let content
+        if(asJson){
+            content = JSON.stringify(sighashes)
+        } else {
+            content = "Sighash   |   Function Signature\n========================\n"
+            for(let hash in sighashes){
+                content += hash + "  =>  " + sighashes[hash] + "\n"
+            }
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))

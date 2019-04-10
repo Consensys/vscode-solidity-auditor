@@ -77,37 +77,54 @@
         "commands": [
             {
                 "command": "solidity-va.test.createTemplate",
-                "title": "Solidity Visual Auditor: Unittest - create stub for current contract"
+                "title": "Unittest - create stub for current contract",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.surya.mdreport",
-                "title": "Solidity Visual Auditor: Surya - generate report"
+                "title": "Surya - generate report",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.surya.describe",
-                "title": "Solidity Visual Auditor: Surya - describe"
+                "title": "Surya - describe",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.surya.graph",
-                "title": "Solidity Visual Auditor: Surya - graph"
+                "title": "Surya - graph",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.surya.inheritance",
-                "title": "Solidity Visual Auditor: Surya - show inheritance graph"
+                "title": "Surya - show inheritance graph",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.insights.topLevelContracts",
-                "title": "Solidity Visual Auditor: Insights - suggest top level / entry point contracts"
+                "title": "Tools - list suggested top level / entry point contracts",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.tools.flaterra",
-                "title": "Solidity Visual Auditor: Tools - flatten current file"
+                "title": "Tools - flatten current file",
+                "category": "Solidity Visual Auditor"
             },
             {
                 "command": "solidity-va.tools.flattenCandidates",
-                "title": "Solidity Visual Auditor: Tools - flatten all suggested top level contracts"
+                "title": "Tools - flatten all suggested top level contracts",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.function.signatures",
+                "title": "Tools - list function signatures",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.function.signatures.json",
+                "title": "Tools - list function signatures (json)",
+                "category": "Solidity Visual Auditor"
             }
-            
         ],
         "configuration": {
             "type": "object",
@@ -188,6 +205,7 @@
     },
     "dependencies": {
         "c3-linearization": "^0.3.0",
+        "keccak": "^2.0.0",
         "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
         "surya": "^0.2.11-dev.2"
