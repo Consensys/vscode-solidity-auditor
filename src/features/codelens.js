@@ -133,12 +133,14 @@ class SolidityCodeLensProvider  {
             arguments: [document, item.name]
             })
         )
+        /* //TODO - surya to return dependencies
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.surya.dependencies',
             title: 'dependencies',
             arguments: [document, item.name, []]
             })
         )
+        */
         return lenses
     }
 
