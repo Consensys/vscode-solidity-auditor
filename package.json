@@ -124,7 +124,13 @@
                 "command": "solidity-va.tools.function.signatures.json",
                 "title": "Tools - list function signatures (json)",
                 "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.tools.remix.openExternal",
+                "title": "Tools - launch Remix-IDE",
+                "category": "Solidity Visual Auditor"
             }
+            
         ],
         "configuration": {
             "type": "object",

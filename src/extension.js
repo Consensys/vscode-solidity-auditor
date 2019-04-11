@@ -704,6 +704,15 @@ function onActivate(context) {
             )
         )
 
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.remix.openExternal', 
+                function () {
+                    vscode.env.openExternal(vscode.Uri.parse("https://remix.ethereum.org"))
+                }
+            )
+        )
+
         /** event setup */
         /***** DidChange */
         vscode.window.onDidChangeActiveTextEditor(editor => {

@@ -60,7 +60,8 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 * [Sūrya](https://github.com/ConsenSys/surya/) integration
 * command: suggest top level contracts / find most derived contracts
 * command: flatten most derived contracts
-* command: list function sighashes
+* command: calculate function signature hashes
+* command: open Remix-IDE in external browser window
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
 * onHover StateVar declaration information, including the line of declaration
@@ -248,7 +249,7 @@ Scroll down and take the tour.
 ![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
 - feature: command - list all function signatures (human readable or json format)  
 ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
-
+- feature: command - open remix in external browser
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
