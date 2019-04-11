@@ -47,7 +47,8 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 ##### Audit Featues
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
-* generic interface for importing external scanner results - cdili json format (see below) 
+* generic interface for importing external scanner results - cdili json format (see below)
+* codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes
 
 ##### Code Insights
 
@@ -56,8 +57,10 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
-* surya integration
-* suggest top level contracts
+* [Sūrya](https://github.com/ConsenSys/surya/) integration
+* command: suggest top level contracts / find most derived contracts
+* command: flatten most derived contracts
+* command: list function sighashes
 * onHover ASM instruction signatures
 * onHover Security Notes for certain keywords
 * onHover StateVar declaration information, including the line of declaration
