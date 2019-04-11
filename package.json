@@ -195,6 +195,22 @@
                     "default": false,
                     "description": "Recursively search for CDILI format *-issues.json from external scanners and visualize findings as diagnostics in vscode"
                 },
+                "solidity-va.tools.surya.input.contracts": {
+                    "type": "string",
+                    "enum": ["cached", "workspace"],
+                    "default": "cached",
+                    "description": "Define whether surya should take cached files or all contracts in the workspace as input"
+                },
+                "solidity-va.preview.dot": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Open dot output in graphviz rendered form (relies on a graphviz preview extension to be installed)"
+                },
+                "solidity-va.preview.markdown": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Open markdown output in rendered form (relies on a markdown preview extension to be installed)"
+                },
                 "solidity-va.audit.tags.enable": {
                     "type": "boolean",
                     "default": true,

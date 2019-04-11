@@ -205,6 +205,10 @@ Scroll down and take the tour.
     ```
 * `Solidity-va.audit.tags.enable` ... enable/disable audit tags
 * `Solidity-va.codelens.enable` ... enable/disable codelens support (inline code actions)
+* `solidity-va.preview.dot` ... open dot output in graphviz rendered form
+* `solidity-va.preview.markdown` ... open markdown output in rendered form
+* `Solidity-va.tools.surya.input.contracts` ... Define whether surya should take cached files or all contracts in the workspace as input
+
 
 ## Known Issues
 

@@ -23,7 +23,7 @@ class SolidityCodeLensProvider  {
         this.g_parser = g_parser
     }
 
-    async provideCodeLenses(document) {
+    async provideCodeLenses(document, token) {
         
         let codeLens = new Array()
         let firstLine = new vscode.Range(0, 0, 0, 0)
@@ -106,11 +106,13 @@ class SolidityCodeLensProvider  {
             )
         )
 
-        
-
         let annotateContractTypes = ["contract","library"]
         /** all contract decls */
         for(let name in parser.contracts){
+            if(token.isCancellationRequested){
+                return []
+            }
+
             if(annotateContractTypes.indexOf(parser.contracts[name]._node.kind)>=0){
                 codeLens = codeLens.concat(this.onContractDecl(document,parser.contracts[name]))
 

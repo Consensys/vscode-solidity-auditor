@@ -18,6 +18,8 @@ const mod_utils = require('./utils.js')
 
 const surya = require('surya')
 
+const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
+
 
 function runCommand(cmd, args, env, cwd, stdin){
     cwd = cwd || vscode.workspace.rootPath;
@@ -78,7 +80,19 @@ class Commands{
         this._checkIsSolidity(document)  // throws
     
         let ret;
-        let files = [document.uri.path, ...Object.keys(this.g_parser.sourceUnits)]  //better only add imported files. need to resolve that somehow
+
+        let files;
+
+        if(solidityVAConfig.tools.surya.input.contracts=="workspace"){
+            await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+                .then(uris => {
+                    files = uris.map(function (uri) {
+                        return uri.path
+                    });
+                })
+        } else {
+            files = [document.uri.path, ...Object.keys(this.g_parser.sourceUnits)]  //better only add imported files. need to resolve that somehow
+        } 
 
         switch(command) {
             case "describe":
@@ -88,26 +102,25 @@ class Commands{
                 break;
             case "graph":
                 ret = surya.graph(args || files)
-
+                //solidity-va.preview.render.markdown
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
-                        try {
-                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)  // togles view. preferred
-                            return
-                        } catch {}
-                        //command not available. fallback open as text and try graphviz.showPreview
-                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                            .then(editor => {
-                                try {
-                                    vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                    .then(resolve => {
-                                        //kill the prevs panel? does not work?
+                        if(solidityVAConfig.preview.dot){
+                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                            .catch(error => {
+                                //command not available. fallback open as text and try graphviz.showPreview
+                                vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                    .then(editor => {
+                                        vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                            .catch(error => {
+                                                //command not available - do nothing
+                                            })
                                     })
-                                    return
-                                } catch {}
-                                //command not available
-                                
                             })
+                        } else {
+                            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                        }
+                        
                     })
                 /*
                 vscode.env.openExternal(vscode.Uri.file("/Users/tintin/workspace/vscode/solidity-auditor/images/icon.png"))
@@ -118,23 +131,22 @@ class Commands{
                 ret = surya.inheritance(files,{draggable:false})
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
-                        try {
-                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)  // togles view. preferred
-                            return
-                        } catch {}
-                        //command not available. fallback open as text and try graphviz.showPreview
-                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                            .then(editor => {
-                                try {
-                                    vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                    .then(resolve => {
-                                        //kill the prevs panel? does not work?
+                        if(solidityVAConfig.preview.dot){
+                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                            .catch(error => {
+                                //command not available. fallback open as text and try graphviz.showPreview
+                                vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                    .then(editor => {
+                                        vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                            .catch(error => {
+                                                //command not available - do nothing
+                                            })
                                     })
-                                    return
-                                } catch {}
-                                //command not available
-                                
                             })
+                        } else {
+                            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                        }
+                        
                     })
                     /*
                 let draggable = surya.inheritance(files,{draggable:true})
@@ -161,12 +173,22 @@ class Commands{
                 ret = surya.mdreport(files)
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => {
-                        try {
-                            vscode.commands.executeCommand("markdown-preview-enhanced.openPreview", doc.uri)  // togles view. preferred
-                            return
-                        } catch {}
+                        if(solidityVAConfig.preview.markdown){
+                            vscode.commands.executeCommand("markdown-preview-enhanced.openPreview", doc.uri)
+                                .catch(error => {
+                                    //command does not exist
+                                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                        .then(editor => {
+                                            vscode.commands.executeCommand("markdown.extension.togglePreview")
+                                            .catch(error => {
+                                                //command does not exist
+                                            })
+                                        })
+                                })
+                        } else {
+                            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                        }
                         //command not available. fallback open as text
-                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
                     })
                 break;
             default:
