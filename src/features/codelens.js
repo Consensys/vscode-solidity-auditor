@@ -71,7 +71,7 @@ class SolidityCodeLensProvider  {
             new vscode.CodeLens(
                 firstLine, {
                     command: 'solidity-va.surya.inheritance',
-                    title: 'intheritance',
+                    title: 'inheritance',
                     arguments: [document]
                 }
             )
