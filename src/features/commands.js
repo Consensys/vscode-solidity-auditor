@@ -38,15 +38,7 @@ function runCommand(cmd, args, env, cwd, stdin){
                 console.log("success")
                 return resolve(err)
             }
-            else if (err.code === 'ENOENT') {
-                console.log(`File does not exist: ${cmd}`);
-                throw new Error(err)
-            } else if(stderr.trim().length >0){
-                console.log("stderr error:");
-                console.log(stderr)
-                reject("err_stdout")
-            }
-            console.error("general error: " + err)
+            err.stderr = stderr
             return reject(err)
         })
     })
@@ -271,19 +263,14 @@ ${topLevelContractsText}`
         runCommand(cmd, args)
             .then(
                 (success) =>{
-                vscode.window.showInformationMessage(`Contract flattened: ${path.basename(docUri.path,".sol")}_flat.sol`)
+                    vscode.window.showInformationMessage(`Contract flattened: ${path.basename(docUri.path,".sol")}_flat.sol`)
                 },
                 (err) => {
-                    console.log(err)
-
-                    if(err!=="err_stdout"){
-                        vscode.window.showErrorMessage('`flaterra` failed with: ' + err)
-                        .then(selection => {
-                            console.log(selection);
-                        });
-                    } else {
+                    if(err.code === 'ENOENT'){
+                        vscode.window.showErrorMessage("'`flaterra` failed with error: unable to execute python3")
+                    } else if (err.stderr.indexOf(": No module named flaterra")>=0){
                         if(!noTryInstall){
-                            vscode.window.showWarningMessage('Contract Flattener `flaterra` is not installed.\n run `pip3 install flaterra --user` to install? ', 'Install')
+                            vscode.window.showWarningMessage('Contract Flattener `flaterra` is not installed.\n run `pip3 install flaterra --user` to install? ', 'Install')
                                 .then(selection => {
                                     console.log(selection);
                                     if(selection=="Install"){
@@ -305,10 +292,15 @@ ${topLevelContractsText}`
                                     }
                                 });
                             }
+                    } else {
+                        vscode.window.showErrorMessage('`flaterra` failed with: ' + err)
+                            .then(selection => {
+                                console.log(selection);
+                            });
                     }
                 })
             .catch(err => {
-                    console.log("python3 not installed - game over")
+                    console.log("runcommand threw exception: "+ err)
             })    
     }
 
