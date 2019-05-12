@@ -44,7 +44,7 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 * highlights **function arguments** in the function body
 
 
-##### Audit Featues
+##### Audit Features
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
 * generic interface for importing external scanner results - cdili json format (see below)
