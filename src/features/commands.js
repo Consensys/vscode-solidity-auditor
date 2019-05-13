@@ -177,16 +177,19 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(solidityVAConfig.preview.dot){
-                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
-                            .catch(error => {
-                                //command not available. fallback open as text and try graphviz.showPreview
-                                vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                                    .then(editor => {
-                                        vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                            .catch(error => {
-                                                //command not available - do nothing
-                                            })
-                                    })
+                            vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
+                            .catch(error =>{
+                                vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                                .catch(error => {
+                                    //command not available. fallback open as text and try graphviz.showPreview
+                                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                        .then(editor => {
+                                            vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                                .catch(error => {
+                                                    //command not available - do nothing
+                                                })
+                                        })
+                                })
                             })
                         } else {
                             vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
