@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.14",
+    "version": "0.0.15",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -126,11 +126,15 @@
                 "category": "Solidity Visual Auditor"
             },
             {
+                "command": "solidity-va.tools.function.signatures.forWorkspace.json",
+                "title": "Tools - list function signatures for all solidity files in workspace (json)",
+                "category": "Solidity Visual Auditor"
+            },
+            {
                 "command": "solidity-va.tools.remix.openExternal",
                 "title": "Tools - launch Remix-IDE",
                 "category": "Solidity Visual Auditor"
             }
-            
         ],
         "configuration": {
             "type": "object",
@@ -203,7 +207,10 @@
                 },
                 "solidity-va.tools.surya.input.contracts": {
                     "type": "string",
-                    "enum": ["cached", "workspace"],
+                    "enum": [
+                        "cached",
+                        "workspace"
+                    ],
                     "default": "cached",
                     "description": "Define whether surya should take cached files or all contracts in the workspace as input"
                 },
@@ -235,11 +242,14 @@
             }
         }
     },
+    "extensionDependencies": [
+        "tintinweb.graphviz-interactive-preview"
+    ],
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
         "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
-        "surya": "^0.2.11"
+        "surya": "^0.2.12-dev.11"
     }
 }
