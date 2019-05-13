@@ -88,7 +88,7 @@ class Commands{
 
         switch(command) {
             case "describe":
-                ret = surya.describe(files)
+                ret = surya.describe(files, {}, true)
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
@@ -157,7 +157,7 @@ class Commands{
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
             case "ftrace":
-                ret = surya.ftrace(args[0]+"::"+args[1], "all", files)
+                ret = surya.ftrace(args[0]+"::"+args[1], "all", files, {}, true)
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
