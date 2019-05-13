@@ -18,6 +18,7 @@ const mod_parser = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
 const {Commands} = require('./features/commands');
 const {SolidityCodeLensProvider} = require('./features/codelens')
+const {SolidityReferenceProvider} = require('./features/references')
 const settings = require('./settings')
 
 
@@ -765,6 +766,15 @@ function onActivate(context) {
                 vscode.languages.registerCodeLensProvider(
                     docSel,
                     new SolidityCodeLensProvider(g_parser)
+                )
+            );
+        }
+
+        if(solidityVAConfig.outline.enable){
+            context.subscriptions.push(
+                vscode.languages.registerReferenceProvider(
+                    docSel, 
+                    new SolidityReferenceProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
                 )
             );
         }
