@@ -13,7 +13,6 @@ const {CancellationTokenSource} = require('vscode')
 const mod_hover = require('./features/hover');
 const mod_decorator = require('./features/deco');
 const {SolidityDocumentSymbolProvider} = require('./features/symbols')
-const {SolidityReferenceProvider} = require('./features/references')
 const {SolidityParser} = require('./features/parser')
 const mod_parser = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
@@ -757,15 +756,6 @@ function onActivate(context) {
                 vscode.languages.registerDocumentSymbolProvider(
                     docSel, 
                     new SolidityDocumentSymbolProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
-                )
-            );
-        }
-
-        if(solidityVAConfig.outline.enable){
-            context.subscriptions.push(
-                vscode.languages.registerReferenceProvider(
-                    docSel, 
-                    new SolidityReferenceProvider(g_parser, analyzeSourceUnit/* TODO hack hack hack move the inheritance part to parser*/)
                 )
             );
         }
