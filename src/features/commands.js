@@ -20,6 +20,56 @@ const surya = require('surya')
 
 const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
+const suryaDefaultColorSchemeDark = {
+    digraph : {
+      bgcolor: "#2e3e56",
+      nodeAttribs : {
+        style:"filled",
+        fillcolor:"#edad56",
+        color:"#edad56",
+        penwidth:"3"
+      },
+      edgeAttribs : {
+        color:"#fcfcfc", 
+        penwidth:"2", 
+        fontname:"helvetica Neue Ultra Light"
+      }
+    },
+    visibility : {
+      isFilled: true,
+      public: "#FF9797",
+      external: "#ffbdb9",
+      private: "#edad56",
+      internal: "#f2c383",
+    },
+    nodeType : {
+      isFilled: false,
+      shape: "doubleoctagon",
+      modifier: "#1bc6a6",
+      payable: "brown",
+    },
+    call : {
+      default: "white",
+      regular: "#1bc6a6",
+      this: "#80e097"
+    },
+    contract : {
+      defined: {
+        bgcolor: "#445773",
+        color: "#445773",
+        fontcolor:"#f0f0f0",
+        style: "rounded"
+      },
+      undefined: {
+        bgcolor: "#3b4b63",
+        color: "#e8726d",
+        fontcolor: "#f0f0f0",
+        style: "rounded,dashed"
+      }
+    }
+  
+  }
+
 
 function runCommand(cmd, args, env, cwd, stdin){
     cwd = cwd || vscode.workspace.rootPath;
@@ -93,21 +143,24 @@ class Commands{
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
             case "graph":
-                ret = surya.graph(args || files)
+                ret = surya.graph(args || files, suryaDefaultColorSchemeDark)
                 //solidity-va.preview.render.markdown
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(solidityVAConfig.preview.dot){
-                            vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
-                            .catch(error => {
-                                //command not available. fallback open as text and try graphviz.showPreview
-                                vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                                    .then(editor => {
-                                        vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                            .catch(error => {
-                                                //command not available - do nothing
-                                            })
-                                    })
+                            vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
+                            .catch(error =>{
+                                vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                                .catch(error => {
+                                    //command not available. fallback open as text and try graphviz.showPreview
+                                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                        .then(editor => {
+                                            vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                                .catch(error => {
+                                                    //command not available - do nothing
+                                                })
+                                        })
+                                })
                             })
                         } else {
                             vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
@@ -153,8 +206,25 @@ class Commands{
                 break;
             case "dependencies":
                 ret = surya.dependencies(files, args[0])
-                vscode.workspace.openTextDocument({content: ret, language: "markdown"})
-                    .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+
+                let outTxt = []
+
+                if(ret){
+                    outTxt.push(ret[0])
+                
+                    if (ret.length < 2) {
+                        outTxt = ['No Dependencies Found']
+                    }
+                    else {
+                        ret.shift()
+                        const reducer = (accumulator, currentValue) => `${accumulator}\n  ↖ ${currentValue}`
+                        outTxt.push(`  ↖ ${ret.reduce(reducer)}`)
+                    }
+                    
+
+                    vscode.workspace.openTextDocument({content: outTxt.join("\n"), language: "markdown"})
+                        .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+                }
                 break;
             case "ftrace":
                 ret = surya.ftrace(args[0]+"::"+args[1], "all", files)
@@ -324,6 +394,35 @@ ${topLevelContractsText}`
             content = "Sighash   |   Function Signature\n========================\n"
             for(let hash in sighashes){
                 content += hash + "  =>  " + sighashes[hash] + "\n"
+            }
+        }
+        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+
+    async listFunctionSignaturesForWorkspace(asJson){
+
+        let sighashes = {}
+
+        await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+                .then(uris => {
+                    uris.forEach(uri => {
+                        try {
+                            let currSigs = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.path).toString('utf-8'));
+                            for(let k in currSigs){
+                                sighashes[k]=currSigs[k]
+                            }
+                        } catch {}
+                    })
+                })
+
+        let content
+        if(asJson){
+            content = JSON.stringify(sighashes)
+        } else {
+            content = "Sighash   |   Function Signature\n========================  \n"
+            for(let hash in sighashes){
+                content += hash + "  =>  " + sighashes[hash] + "  \n"
             }
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
