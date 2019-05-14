@@ -64,7 +64,9 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
-* [Sūrya](https://github.com/ConsenSys/surya/) integration
+* 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [Sūrya](https://github.com/ConsenSys/surya)
+  * access your favorite Sūrya features from within vscode!
+  * interactive call graphs with call flow highlighting and more!
 * command: suggest top level contracts / find most derived contracts
 * command: flatten most derived contracts
 * command: calculate function signature hashes
@@ -141,6 +143,24 @@ Scroll down and take the tour.
 
 <img width="624" alt="code_inherited" src="https://user-images.githubusercontent.com/2865694/53698887-cfd11480-3de2-11e9-8374-a022b4fdaa33.png">
 
+## codelenses
+
+* surya - interactive graph
+
+![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+
+* surya - generate report, show inheritance, show AST
+
+![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
+
+* surya - flatten source file with [flaterra](https://github.com/cleanunicorn/flaterra) 
+
+![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+
+* surya - ftrace
+
+![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+
 
 ## outline view
 
@@ -163,6 +183,16 @@ Scroll down and take the tour.
 * extra information (subjective function complexity; accesses stateVar?)
 
 <img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
+
+## commands
+
+* suggest top level contracts aka "entrypoint contracts" (most derived)
+* flatten current (codelens) or all suggested top level contracts (command)
+![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
+* list all function signatures (human readable or json format)  
+![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+* open remix in external browser
+
 
 
 ## Theme: Solidity Visual Auditor Dark
@@ -221,7 +251,8 @@ Scroll down and take the tour.
 ## Known Issues
 
 * changing settings may require a vscode restart.
-* outline view does not always refresh. **TempFix**: modify the file to trigger a refresh.
+* outline view does not always refresh. **TempFix**: modify and save the file to trigger a refresh.
+* codelenses do not appear. **TempFix**: modify and save the file to trigger a refresh.
 * [github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 # Acknowledgements
