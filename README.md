@@ -16,7 +16,7 @@ we suggest using this plugin together with [vscode-solidity](https://github.com/
 
 Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
-![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
+![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
 ![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 
