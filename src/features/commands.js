@@ -143,7 +143,7 @@ class Commands{
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
             case "graph":
-                ret = surya.graph(args || files, suryaDefaultColorSchemeDark)
+                ret = surya.graph(args || files, {colorScheme: suryaDefaultColorSchemeDark})
                 //solidity-va.preview.render.markdown
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
