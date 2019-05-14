@@ -248,7 +248,6 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
         "surya": "^0.2.12-dev.12"
     }

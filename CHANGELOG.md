@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.15 - aka fancy graphs
+
+- update to latest surya release. (known issue: ftrace might fail right now and will be fixed with a subsequent release)
+- awesome dark themed call graph.
+- awesome interactive graphs [vscode-interactive-graphviz](https://github.com/tintinweb/vscode-interactive-graphviz)
+  - ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+
 ## v0.0.14 - aka big surya wedding
 - feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
 - feature: codelens (inline code actions)
