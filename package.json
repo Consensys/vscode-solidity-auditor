@@ -216,7 +216,7 @@
                 },
                 "solidity-va.preview.dot": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Open dot output in graphviz rendered form (relies on a graphviz preview extension to be installed)"
                 },
                 "solidity-va.preview.markdown": {

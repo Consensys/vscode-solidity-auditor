@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.16
+- fix - enable graph rendering by default
+
 ## v0.0.15 - aka fancy graphs
 
 - update to latest surya release. (known issue: ftrace might fail right now and will be fixed with a subsequent release)
