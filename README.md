@@ -264,7 +264,8 @@ Scroll down and take the tour.
 # Release Notes
 
 ## v0.0.16
-- fix - enable graph rendering by default
+- fix: enable graph rendering by default
+- fix: codelenses are sometimes missing (graph)
 
 ## v0.0.15 - aka fancy graphs
 

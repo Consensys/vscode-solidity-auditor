@@ -2,7 +2,8 @@
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
 ## v0.0.16
-- fix - enable graph rendering by default
+- fix: enable graph rendering by default
+- fix: codelenses are sometimes missing (graph)
 
 ## v0.0.15 - aka fancy graphs
 
