@@ -19,14 +19,19 @@ function elemLocToRange(elem){
 }
 
 class SolidityCodeLensProvider  {
-    constructor(g_parser){
+    constructor(g_parser, cb_analyze){
         this.g_parser = g_parser
+        this.cb_analyze = cb_analyze
     }
 
     async provideCodeLenses(document, token) {
         
         let codeLens = new Array()
         let firstLine = new vscode.Range(0, 0, 0, 0)
+
+        //kick-off analysis even though this might be overlapping :/ we'll fix that later
+        this.cb_analyze(token, document)
+
         let parser = this.g_parser.sourceUnits[document.uri.path]
         
         /** top level lenses */

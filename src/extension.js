@@ -764,7 +764,7 @@ function onActivate(context) {
             context.subscriptions.push(
                 vscode.languages.registerCodeLensProvider(
                     docSel,
-                    new SolidityCodeLensProvider(g_parser)
+                    new SolidityCodeLensProvider(g_parser, analyzeSourceUnit)
                 )
             );
         }
