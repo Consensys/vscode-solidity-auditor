@@ -532,6 +532,7 @@ function analyzeSourceUnit(cancellationToken, document){
 
     if(solidityVAConfig.audit.tags.enable){
         console.log("apply deco satic words...")
+        mod_decorator.decorateWords(activeEditor, ["@audit\-info[ \\t\\n]", "@audit\-issue[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkBlue)
         mod_decorator.decorateWords(activeEditor, ["@audit\-ok[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkGreen)
         mod_decorator.decorateWords(activeEditor, ["@audit[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkRed)
         console.log("✓ apply decorations - audit tags")
