@@ -257,6 +257,7 @@ function analyzeSourceUnit(cancellationToken, document){
             var highlightIdentifiers = new Array();
 
             insights.contracts[contract].functions[functionName].identifiers.forEach(function(ident){
+                if(ident.name === undefined) return;  //skip assemblyCall has no attrib .name
                 // all idents in function
                 let is_state_var = typeof insights.contracts[contract].stateVars[ident.name]!="undefined"
                 let is_declared_locally = typeof ident.inFunction.declarations[ident.name]!="undefined"
@@ -368,6 +369,7 @@ function analyzeSourceUnit(cancellationToken, document){
             //all modifiers
             var highlightIdentifiers = new Array();
             insights.contracts[contract].modifiers[functionName].identifiers.forEach(function(ident){
+                if(ident.name === undefined) return;  //skip assemblyCall has no attrib .name
                 // all idents in function
                 let is_state_var = typeof insights.contracts[contract].stateVars[ident.name]!="undefined"
                 let is_declared_locally = typeof ident.inFunction.declarations[ident.name]!="undefined"
@@ -518,7 +520,7 @@ function analyzeSourceUnit(cancellationToken, document){
         }
         console.log("✓ decorate scope (new) - identifier ")
     }
-
+    console.log("✓ decorate scope done ")
     if(cancellationToken.isCancellationRequested){
         //abort - new analysis running already
         return
