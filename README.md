@@ -153,7 +153,7 @@ Scroll down and take the tour.
 
 ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
 
-* surya - flatten source file with [flaterra](https://github.com/cleanunicorn/flaterra) 
+* flatten source file with [tintinweb.vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener) (using [truffle-flattener](https://www.npmjs.com/package/truffle-flattener))
 
 ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
 
@@ -262,6 +262,10 @@ Scroll down and take the tour.
 
 
 # Release Notes
+
+## v0.0.17
+- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues
+- update: contract flattener moved from `flaterra` to `truffle-flattener`
 
 ## v0.0.16
 - fix: enable graph rendering by default

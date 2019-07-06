@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.17
+- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues
+- update: contract flattener moved from `flaterra` to `truffle-flattener`
+
 ## v0.0.16
 - fix: enable graph rendering by default
 - fix: codelenses are sometimes missing (graph)
