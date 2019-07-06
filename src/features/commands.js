@@ -265,7 +265,7 @@ class Commands{
         var dependencies={}
         var contractToFile={}
         if(!scanfiles){
-            await vscode.workspace.findFiles("**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol}', 500)
+            await vscode.workspace.findFiles("**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol,**/flat_*.sol}', 500)
                 .then((solfiles) => {
                     solfiles.forEach(function(solfile){
                         try {
@@ -321,7 +321,6 @@ ${topLevelContractsText}`
     }
 
     async solidityFlattener(files, callback, showErrors){
-        console.log(files)
         vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
                             .catch(error =>{
                                 // command not available
