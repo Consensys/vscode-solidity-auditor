@@ -94,7 +94,6 @@ function runCommand(cmd, args, env, cwd, stdin){
     })
 }
 
-
 class Commands{
 
     constructor(g_parser){
@@ -266,7 +265,7 @@ class Commands{
         var dependencies={}
         var contractToFile={}
         if(!scanfiles){
-            await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+            await vscode.workspace.findFiles("**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol}', 500)
                 .then((solfiles) => {
                     solfiles.forEach(function(solfile){
                         try {
@@ -319,6 +318,15 @@ Top Level Contracts
 ${topLevelContractsText}`
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+
+    async solidityFlattener(files, callback, showErrors){
+        console.log(files)
+        vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
+                            .catch(error =>{
+                                // command not available
+                                vscode.window.showWarningMessage("Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" + error)
+                            })
     }
         
     async flaterra(documentOrUri, noTryInstall){
@@ -380,9 +388,23 @@ ${topLevelContractsText}`
     async flattenCandidates(){
         let topLevelContracts = await this._findTopLevelContracts()
         let content = ""
+
+        
+        this.solidityFlattener(Object.values(topLevelContracts), (filepath, trufflepath, content) => {
+            let outpath = path.parse(filepath)
+        
+            fs.writeFile(path.join(outpath.dir, "flat_" + outpath.base), content, function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+            })
+        })
+        
+
         for(let name in topLevelContracts){
-            this.flaterra(new vscode.Uri(topLevelContracts[name]))
-            content += name + "  =>  " + topLevelContracts[name] + "\n"
+            //this.flaterra(new vscode.Uri(topLevelContracts[name]))
+            let outpath = path.parse(topLevelContracts[name].path)
+            content += name + "  =>  " + vscode.Uri.file(path.join(outpath.dir, "flat_" + outpath.base)) + "\n"
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))

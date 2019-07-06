@@ -532,7 +532,8 @@ function analyzeSourceUnit(cancellationToken, document){
 
     if(solidityVAConfig.audit.tags.enable){
         console.log("apply deco satic words...")
-        mod_decorator.decorateWords(activeEditor, ["@audit\-info[ \\t\\n]", "@audit\-issue[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkBlue)
+        mod_decorator.decorateWords(activeEditor, ["@audit\-info[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkBlue)
+        mod_decorator.decorateWords(activeEditor, ["@audit\-issue[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkIssue)
         mod_decorator.decorateWords(activeEditor, ["@audit\-ok[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkGreen)
         mod_decorator.decorateWords(activeEditor, ["@audit[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkRed)
         console.log("✓ apply decorations - audit tags")
@@ -676,7 +677,8 @@ function onActivate(context) {
             vscode.commands.registerCommand(
                 'solidity-va.tools.flaterra', 
                 function (doc) {
-                    commands.flaterra(doc || vscode.window.activeTextEditor.document)
+                    commands.solidityFlattener([doc.uri || vscode.window.activeTextEditor.document.uri])
+                    //commands.flaterra(doc || vscode.window.activeTextEditor.document)
                 }
             )
         )

@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.16",
+    "version": "0.0.17",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -243,7 +243,8 @@
         }
     },
     "extensionDependencies": [
-        "tintinweb.graphviz-interactive-preview"
+        "tintinweb.graphviz-interactive-preview",
+        "tintinweb.vscode-solidity-flattener"
     ],
     "dependencies": {
         "c3-linearization": "^0.3.0",

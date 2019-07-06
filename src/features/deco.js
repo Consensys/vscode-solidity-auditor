@@ -312,6 +312,7 @@ function init(context, config){
     gutterIcons.red = context.asAbsolutePath("images/bookmark-red.svg");
     gutterIcons.green = context.asAbsolutePath("images/bookmark-green.svg");
     gutterIcons.blue = context.asAbsolutePath("images/bookmark-blue.svg");
+    gutterIcons.issue = context.asAbsolutePath("images/bookmark-issue.svg");
 
     styles.decoStyleBookmarkRed = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.red,
@@ -367,6 +368,32 @@ function init(context, config){
     })
     styles.decoStyleBookmarkBlue = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.blue,
+        light: {
+            // this color will be used in light color themes
+            //color: 'GoldenRod',
+            fontWeight: 'bold',
+            //backgroundColor: 'DarkSlateGray'
+        },
+        dark: {
+            // this color will be used in dark color themes
+            color: 'Chocolate',
+            //backgroundColor: 'Black',
+            //fontWeight: 'bold',
+            //textDecoration: 'underline overline #FF3028',
+            //borderColor: 'GoldenRod',
+            //borderStyle: 'solid',
+            //borderWidth: '0.1px'
+        },
+        /*
+        after: {
+            textDecoration: "underline overline #FF3028",
+            contentText: "<--"
+    
+        }
+        */
+    })
+    styles.decoStyleBookmarkIssue = vscode.window.createTextEditorDecorationType({
+        gutterIconPath: gutterIcons.issue,
         light: {
             // this color will be used in light color themes
             //color: 'GoldenRod',
