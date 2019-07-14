@@ -20,8 +20,6 @@ Found a bug or want to provide feedback? -> [file an issue](https://github.com/t
 
 ![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
 
-<img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">
-
 ---------------------
 
 ## Features
@@ -30,9 +28,13 @@ Semantic highlighting and solidity insights for passive security awareness. Most
 
 ##### Themes (`preferences -> Color Theme`):
 
+![dark_small](https://user-images.githubusercontent.com/2865694/61187950-85a54d00-a678-11e9-8b68-e015ab2c498c.png)
+![light_small](https://user-images.githubusercontent.com/2865694/61187967-d452e700-a678-11e9-8661-7cd7839f88a6.png)
+![solarized_small](https://user-images.githubusercontent.com/2865694/61187948-850cb680-a678-11e9-8b16-9616dfc09046.png)
+
 * Visual Auditor Dark - based on the "Atom One" theme
-* Visual Auditor Light - based on the standard "light (VSCode)" theme
-* Visual Auditor Light - based on the standard "Solarized Light" theme
+* Visual Auditor Light (Visual Studio) - based on the standard "light (VSCode)" theme
+* Visual Auditor Solarized Light - based on the standard "Solarized Light" theme
 
 ##### Syntax Highlighting
 
