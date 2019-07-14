@@ -272,6 +272,7 @@ Scroll down and take the tour.
 - new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
 - update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))
 - new: theme - Solidity Visual auditor light  - the vscode standard light theme with visual auditor highlighting (#25)  
+
 <img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">  
 <img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 - update: updated theme `solarized-light`, split up color-scheme definitions into multiple files. Changed 'light-theme' natspec color highlighting to be less dramatic (black->greyish). (#24)
