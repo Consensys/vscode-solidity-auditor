@@ -1,0 +1,344 @@
+{
+   "$schema": "vscode://schemas/color-theme",
+   "name": "SVA - Light Default Highlights",
+   "tokenColors": [{
+         "name":"visibility: public, memory, ..",
+         "scope":"storage.type.modifier.keyword.solidity",
+         "settings":{
+            "foreground":"#2a9b0e",
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"external visibility",
+         "scope":"storage.type.modifier.keyword.extendedscope.solidity",
+         "settings":{
+            "foreground":"#d65353",
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"emit, new, delete",
+         "scope":"keyword.control.solidity",
+         "settings":{
+            "foreground":"#c200b2ad",
+            "fontStyle":"bold"
+         }
+      },
+      {
+         "name":"function contract",
+         "scope":"entity.name.function.solidity",
+         "settings":{
+            //"foreground":"#fae674d7",
+            "fontStyle":""
+         }
+      },
+      {
+         "name":"transaction vars (inconclusive)",
+         "scope":"variable.language.transaction.solidity",
+         "settings":{
+            "foreground":"#e4a13c",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"transaction vars (sec)",
+         "scope":"variable.language.transaction.security.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"transaction function (sec)",
+         "scope":"support.function.transaction.security.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"transaction function (safe)",
+         "scope":"support.function.transaction.solidity",
+         "settings":{
+            "foreground":"#e4a13c",
+            "fontStyle":"bold"
+         }
+      },
+      {
+         "name":"assembly",
+         "scope":"keyword.control.assembly.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"let",
+         "scope":"keyword.control.let.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"todos and dev notes",
+         "scope":"keyword.comment.todo.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline italic"
+         }
+      },
+      {
+         "name":"assert/require",
+         "scope":"keyword.control.exceptions.solidity",
+         "settings":{
+            "foreground":"#2a9b0e",
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"modifier function",
+         "scope":"entity.name.modifier.solidity",
+         "settings":{
+            "foreground":"#2a9b0e",
+         }
+      },
+      {
+         "name":"this",
+         "scope":"variable.language.this.solidity",
+         "settings":{
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"super",
+         "scope":"variable.language.super.solidity",
+         "settings":{
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"selfdestruct",
+         "scope":"keyword.control.contract.solidity",
+         "settings":{
+            "foreground":"#e05959",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"builtin math",
+         "scope":"support.function.math.solidity",
+         "settings":{
+            "fontStyle":"bold italic"
+         }
+      },
+      {
+         "name":"arithm",
+         "scope":"keyword.operator.arithmetic.solidity",
+         "settings":{
+            "foreground":"#2654d2",
+            "fontStyle":"bold"
+         }
+      },
+      {
+         "name":"assign",
+         "scope":"keyword.operator.assignment.solidity",
+         "settings":{
+            "foreground":"#6bac04",
+            "fontStyle":"bold"
+         }
+      },
+      {
+         "name":"logic",
+         "scope":"keyword.operator.logic.solidity",
+         "settings":{
+            "foreground":"#e09c43",
+            "fontStyle":"bold"
+         }
+      },
+      {
+         "name":"using",
+         "scope":"keyword.control.using.solidity",
+         "settings":{
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"import",
+         "scope":"keyword.control.import.solidity",
+         "settings":{
+            //"foreground":"#fc8a56a6",
+            "fontStyle":"bold italic"
+         }
+      },
+      {
+         "name":"pragma",
+         "scope":"keyword.control.pragma.solidity",
+         "settings":{
+            //"foreground":"#fc8a56a6",
+            "fontStyle":"bold italic"
+         }
+      },
+      {
+         "name":"underscore placeholder",
+         "scope":"constant.other.underscore.solidity",
+         "settings":{
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"const time",
+         "scope":"constant.language.time.solidity",
+         "settings":{
+            "foreground":"#d68661ea",
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"const currency",
+         "scope":"constant.language.currency.solidity",
+         "settings":{
+            "foreground":"#d68661ea",
+            "fontStyle":"underline"
+         }
+      },
+      {
+         "name":"contract",
+         "scope":"storage.type.contract.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"is",
+         "scope":"storage.modifier.is.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"interface",
+         "scope":"storage.type.interface.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"library",
+         "scope":"storage.type.library.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"struct",
+         "scope":"storage.type.struct.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"event",
+         "scope":"storage.type.event.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"constructor",
+         "scope":"storage.type.constructor.solidity",
+         "settings":{
+            "foreground":"#268BD2",
+            "fontStyle":"bold underline"
+         }
+      },
+      {
+         "name":"fallback",
+         "scope":"storage.type.function.fallback.solidity",
+         "settings":{
+            "foreground":"#268BD2",
+            "fontStyle":"underline bold"
+         }
+      },
+      {
+         "name":"enum",
+         "scope":"entity.name.type.enum.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"function",
+         "scope":"storage.type.function.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"visibility: public, memory, ..",
+         "scope":"constant.language.ucase.solidity",
+         "settings":{
+            "foreground":"#6098c0",
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"modifier",
+         "scope":"storage.type.modifier.solidity",
+         "settings":{
+            "fontStyle":"italic"
+         }
+      },
+      {
+         "name":"natspec param",
+         "scope":"storage.type.title.natspec",
+         "settings":{
+            "foreground":"#8c8c8c"
+         }
+      },
+      {
+         "name":"natspec param",
+         "scope":"storage.type.author.natspec",
+         "settings":{
+            "foreground":"#8c8c8c"
+         }
+      },
+      {
+         "name":"natspec param",
+         "scope":"storage.type.dev.natspec",
+         "settings":{
+            "foreground":"#8c8c8c"
+         }
+      },
+      {
+         "name":"natspec param",
+         "scope":"storage.type.return.natspec",
+         "settings":{
+            "foreground":"#8c8c8c"
+         }
+      },
+      {
+         "name":"natspec param",
+         "scope":"storage.type.param.natspec",
+         "settings":{
+            "foreground":"#8c8c8c"
+         }
+      },
+      {
+         "name":"natspec value",
+         "scope":"variable.other.natspec",
+         "settings":{
+            "foreground":"#535353"
+         }
+      },
+      {
+         "name":"block",
+         "scope":"punctuation.block.solidity",
+         "settings":{
+            "foreground":"#0000008f",
+            "fontStyle": "bold"
+         }
+      }
+   ]
+}

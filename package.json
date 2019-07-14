@@ -66,6 +66,11 @@
                 "label": "Solidity Visual Auditor Solarized Light",
                 "uiTheme": "vs",
                 "path": "./src/themes/solarized-light-color-theme.json"
+            },
+            {
+                "label": "Solidity Visual Auditor Light (Visual Studio)",
+                "uiTheme": "vs",
+                "path": "./src/themes/light_vs.json"
             }
         ],
         "keybindings": [

@@ -14,11 +14,13 @@ This extension contributes **security centric** syntax and semantic highlighting
 we suggest using this plugin together with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
 
 
-Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+Found a bug or want to provide feedback? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
 ![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
+
+<img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">
 
 ---------------------
 
@@ -28,8 +30,9 @@ Semantic highlighting and solidity insights for passive security awareness. Most
 
 ##### Themes (`preferences -> Color Theme`):
 
-* Visual Auditor Dark - based on Atom One
-* Visual Auditor Light - based on Solarized Light
+* Visual Auditor Dark - based on the "Atom One" theme
+* Visual Auditor Light - based on the standard "light (VSCode)" theme
+* Visual Auditor Light - based on the standard "Solarized Light" theme
 
 ##### Syntax Highlighting
 
@@ -193,7 +196,9 @@ Scroll down and take the tour.
 ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
 * open remix in external browser
 
+## Theme: Solidity Visual Auditor Light (VSCode)
 
+<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 
 ## Theme: Solidity Visual Auditor Dark
 
@@ -264,8 +269,12 @@ Scroll down and take the tour.
 # Release Notes
 
 ## v0.0.17
-- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues
-- update: contract flattener moved from `flaterra` to `truffle-flattener`
+- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
+- update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))
+- new: theme - Solidity Visual auditor light  - the vscode standard light theme with visual auditor highlighting (#25)  
+<img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">  
+<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
+- update: updated theme `solarized-light`, split up color-scheme definitions into multiple files. Changed 'light-theme' natspec color highlighting to be less dramatic (black->greyish). (#24)
 
 ## v0.0.16
 - fix: enable graph rendering by default
