@@ -43,7 +43,17 @@ class CommentMapperRex{
 
 const createKeccakHash = require('keccak')
 
-function functionSignatureExtractor(content){
+const evmTypeRegex = /(?<type>(uint|int))(?<tail>(\D))/g;
+function normalizeEvmType(evmArg) {
+    function replacer(...groups) {
+        const foundings = groups.pop();
+        return `${foundings.type}256${foundings.tail}`;
+    }
+
+    return evmArg.replace(evmTypeRegex, replacer);
+}
+
+function functionSignatureExtractor(content) {
     const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]+)\)/g
     let match;
     let sighashes = {}
@@ -51,7 +61,7 @@ function functionSignatureExtractor(content){
     while (match = funcSigRegex.exec(content)) {
         let args = []
         match.groups.args.split(",").forEach(item => {
-            args.push(item.trim().split(" ")[0])
+            args.push(normalizeEvmType(item.trim().split(" ")[0]))
         })
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`
         sighashes[createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8)] = fnsig
