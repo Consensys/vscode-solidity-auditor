@@ -197,7 +197,8 @@ class SolidityParser{
                     constructor:null,  // ...
                     events:{},  // event declarations
                     inherited_names: {},  // all names inherited from other contracts
-                    names:{}   // all names in current contract (methods, events, structs, ...)
+                    names:{},   // all names in current contract (methods, events, structs, ...)
+                    usingFor:{} // using XX for YY
                 }
                 current_contract = sourceUnit.contracts[node.name]
                 
@@ -223,6 +224,9 @@ class SolidityParser{
                     StructDefinition(_node){
                         current_contract.structs[_node.name]=_node
                         current_contract.names[_node.name]=_node
+                    },
+                    UsingForDeclaration(_node){
+                        current_contract.usingFor[_node.libraryName]=_node
                     },
                     ConstructorDefinition(_node){
                         current_contract.constructor=_node
