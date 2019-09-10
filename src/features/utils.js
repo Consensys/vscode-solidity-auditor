@@ -41,34 +41,42 @@ class CommentMapperRex{
 }
 
 
+
 const createKeccakHash = require('keccak')
 
-const evmTypeRegex = /(?<type>(uint|int))(?<tail>(\D))/g;
-function normalizeEvmType(evmArg) {
+// https://github.com/ethereum/eth-abi/blob/b02fc85b01a9674add88483b0d6144029c09e0a0/eth_abi/grammar.py#L402-L408
+const TYPE_ALIASES = {
+    'int': 'int256',
+    'uint': 'uint256',
+    'fixed': 'fixed128x18',
+    'ufixed': 'ufixed128x18',
+    'function': 'bytes24',
+}
+const evmTypeRegex = new RegExp(`(?<type>(${Object.keys(TYPE_ALIASES).join('|')}))(?<tail>(\\[[^\\]]*\\])?)$`, 'g')
+
+function canonicalizeEvmType(evmArg) {
     function replacer(...groups) {
         const foundings = groups.pop();
-        return `${foundings.type}256${foundings.tail}`;
+        return `${TYPE_ALIASES[foundings.type]}${foundings.tail}`;
     }
-
     return evmArg.replace(evmTypeRegex, replacer);
 }
 
 function functionSignatureExtractor(content) {
-    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]+)\)/g
+    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g
     let match;
     let sighashes = {}
 
     while (match = funcSigRegex.exec(content)) {
         let args = []
         match.groups.args.split(",").forEach(item => {
-            args.push(normalizeEvmType(item.trim().split(" ")[0]))
+            args.push(canonicalizeEvmType(item.trim().split(" ")[0]))
         })
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`
         sighashes[createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8)] = fnsig
     }
     return sighashes
 }
-
 
 
 module.exports = {
