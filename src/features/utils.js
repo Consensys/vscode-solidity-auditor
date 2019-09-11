@@ -78,8 +78,42 @@ function functionSignatureExtractor(content) {
     return sighashes
 }
 
+function getCanonicalizedArgumentFromAstNode(node){
+    let arraySuffix = '';
+
+    if (typeof node.typeName != "undefined"){
+        if(node.typeName.type=="ArrayTypeName"){ 
+            //is array
+            node = node.typeName.baseTypeName 
+            arraySuffix = "[]"
+        } else 
+            node = node.typeName;
+    }
+    
+    if(node.type=="ElementaryTypeName"){
+        return node.name + arraySuffix;
+    } else if (node.type=="UserDefinedTypeName"){
+        return node.namePath + arraySuffix;
+    } else {
+        return null
+    }
+}
+
+function functionSignatureFromAstNode(item){
+
+    let funcname = item._node.name;
+    let args = item._node.parameters.parameters.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
+
+    let fnsig = `${funcname}(${args.join(',')})`;
+    let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
+
+    let result = {}
+    result[sighash] = fnsig
+    return result;
+}
 
 module.exports = {
     CommentMapperRex : CommentMapperRex,
-    functionSignatureExtractor : functionSignatureExtractor
+    functionSignatureExtractor : functionSignatureExtractor,
+    functionSignatureFromAstNode : functionSignatureFromAstNode
 }
