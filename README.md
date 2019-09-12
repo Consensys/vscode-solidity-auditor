@@ -73,7 +73,8 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotations functions with information about whether they are accessing stateVars
 * 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [Sūrya](https://github.com/ConsenSys/surya)
   * access your favorite Sūrya features from within vscode!
-  * interactive call graphs with call flow highlighting and more!
+  * interactive call graphs with call flow highlighting and more!#
+* 📈🎉 generate UML diagrams 
 * command: suggest top level contracts / find most derived contracts
 * command: flatten most derived contracts
 * command: calculate function signature hashes
