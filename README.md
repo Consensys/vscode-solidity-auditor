@@ -11,7 +11,7 @@
 
 This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
 
-we suggest using this plugin together with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
+This extension is compatible with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
 
 
 We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
@@ -284,7 +284,7 @@ Scroll down and take the tour.
 # Release Notes
 
 ## v0.0.18
-- new: UML diagrams just arrived 🎉 and lets you auto-generate uml for source-units or contracts.
+- new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
 
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
 

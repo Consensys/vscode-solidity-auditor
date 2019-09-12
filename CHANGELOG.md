@@ -2,7 +2,7 @@
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
 ## v0.0.18
-- new: UML diagrams just arrived 🎉 and lets you auto-generate uml for source-units or contracts.
+- new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
 
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
 
