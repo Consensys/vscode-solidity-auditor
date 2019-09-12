@@ -243,6 +243,16 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable all active components of this extension (emergency)."
+                },
+                "solidity-va.uml.options": {
+                    "type": "text",
+                    "default": "",
+                    "description": "Add custom uml options"
+                },
+                "solidity-va.uml.actors.enable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable actors in uml"
                 }
             }
         }

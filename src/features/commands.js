@@ -15,6 +15,7 @@ const settings = require('../settings')
 
 const mod_templates = require('./templates');
 const mod_utils = require('./utils.js')
+const mod_symbols = require('./symbols.js')
 
 const surya = require('surya')
 
@@ -410,7 +411,13 @@ ${topLevelContractsText}`
     }
 
     async listFunctionSignatures(document, asJson){
-        let sighashes = mod_utils.functionSignatureExtractor(document.getText())
+        let sighash_colls = mod_utils.functionSignatureExtractor(document.getText())
+        let sighashes = sighash_colls.sighashes;
+
+        if(sighash_colls.collisions){
+            vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + sighash_colls.collisions.join(","))
+        }
+
         let content
         if(asJson){
             content = JSON.stringify(sighashes)
@@ -418,6 +425,11 @@ ${topLevelContractsText}`
             content = "Sighash   |   Function Signature\n========================\n"
             for(let hash in sighashes){
                 content += hash + "  =>  " + sighashes[hash] + "\n"
+            }
+            if(sighash_colls.collisions){
+                content += "\n\n";
+                content += "collisions 🔥🔥🔥                 \n========================\n"
+                content += sighash_colls.collisions.join("\n");
             }
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
@@ -427,18 +439,48 @@ ${topLevelContractsText}`
     async listFunctionSignaturesForWorkspace(asJson){
 
         let sighashes = {}
+        let collisions = []
 
         await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
                 .then(uris => {
                     uris.forEach(uri => {
                         try {
-                            let currSigs = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.path).toString('utf-8'));
+                            let sig_colls = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.path).toString('utf-8'));
+                            collisions = collisions.concat(sig_colls.collisions)  //we're not yet checking sighash collisions across contracts
+
+                            let currSigs = sig_colls.sighashes;
                             for(let k in currSigs){
                                 sighashes[k]=currSigs[k]
                             }
                         } catch {}
                     })
                 })
+
+        if(collisions){
+            vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + collisions.join(","))
+        }
+
+        let content
+        if(asJson){
+            content = JSON.stringify(sighashes)
+        } else {
+            content = "Sighash   |   Function Signature\n========================  \n"
+            for(let hash in sighashes){
+                content += hash + "  =>  " + sighashes[hash] + "  \n"
+            }
+            if(collisions){
+                content += "\n\n";
+                content += "collisions 🔥🔥🔥                 \n========================\n"
+                content += collisions.join("\n");
+            }
+        }
+        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+
+    async listFunctionSignatureForAstItem(item, asJson){
+
+        let sighashes = mod_utils.functionSignatureFromAstNode(item);
 
         let content
         if(asJson){
@@ -451,6 +493,137 @@ ${topLevelContractsText}`
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
+    }
+
+    async umlContractsOutline(contractObjects){
+        const ENABLE_ACTORS = false;
+
+        const stateMutabilityToIcon = {
+            view:"🔍",
+            pure:"🔍",
+            constant:"🔍",
+            payable:"💰"
+        }
+
+        const functionVisibility = { 
+            "public": '+',
+            "external": '+',  //~
+            "internal": '#',  //mapped to protected; ot
+            "private": '-' ,  
+            "default": '+' // public
+        }
+        const variableVisibility = { 
+            "public": '+',
+            "external": '+',  //~
+            "internal": '#',  //mapped to protected; ot
+            "private": '-' ,  
+            "default": "#"  // internal
+        }
+        const contractNameMapping = {
+            "contract":"class",
+            "interface":"interface",
+            "library":"abstract"
+        }
+
+        function _mapAstFunctionName(name) {
+            switch(name) {
+                case null:
+                    return "**__constructor__**";
+                case "":
+                    return "**__fallback__**";
+                default:
+                    return name;
+            }
+        }
+
+        let content = `@startuml
+' -- for auto-render install: https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml
+' -- options --
+${solidityVAConfig.uml.options}
+${solidityVAConfig.uml.actors.enable ? "allowmixing": ""}
+
+' -- classes --
+`
+
+        content += contractObjects.reduce((umlTxt, contractObj) => {
+
+            return umlTxt + `\n
+${contractNameMapping[contractObj._node.kind] || "class"} ${contractObj.name} {
+    ' -- inheritance --
+${Object.values(contractObj.dependencies).reduce((txt, name) => {
+        return txt + `\t{abstract}${name}\n`
+    },"")
+}
+    ' -- usingFor --
+${Object.values(contractObj.usingFor).reduce((txt, astNode) => {
+        return txt + `\t{abstract}📚${astNode.libraryName} for [[${mod_symbols.getVariableDeclarationType(astNode)}]]\n`
+    },"")
+}
+    ' -- vars --
+${Object.values(contractObj.stateVars).reduce((umlSvarTxt, astNode) => {
+        return umlSvarTxt + `\t${variableVisibility[astNode.visibility] || ""}${astNode.isDeclaredConst?"{static}":""}[[${mod_symbols.getVariableDeclarationType(astNode).replace(/\(/g,"").replace(/\)/g,"")}]] ${astNode.name}\n`
+    }, "")
+}
+    ' -- methods --
+${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
+        return umlFuncTxt + `\t${functionVisibility[funcObj._node.visibility] || ""}${stateMutabilityToIcon[funcObj._node.stateMutability]||""}${_mapAstFunctionName(funcObj._node.name)}()\n`
+    }, "")
+}
+}
+`
+}, "")
+
+        content += "' -- inheritance / usingFor --\n" + contractObjects.reduce((umlTxt, contractObj) => {
+            return umlTxt
+                + Object.values(contractObj.dependencies).reduce((txt, name) => {
+                    return txt + `${contractObj.name} <|--[#DarkGoldenRod] ${name}\n`
+                }, "")
+                +  Object.values(contractObj.usingFor).reduce((txt, astNode) => {
+                    return txt + `${contractObj.name} <|..[#DarkOliveGreen] ${astNode.libraryName} : //for ${mod_symbols.getVariableDeclarationType(astNode)}//\n`
+                }, "")
+        }, "")
+
+
+        if(solidityVAConfig.uml.actors.enable){
+            //lets see if we can get actors as well :)
+
+            let addresses = []
+
+            for (let contractObj of contractObjects) {
+                addresses = addresses.concat(Object.values(contractObj.stateVars).filter(astNode => !astNode.isDeclaredConst && astNode.typeName.name =="address").map(astNode => astNode.name))
+                for (let fidx in contractObj.functions){
+                    let functionObj = contractObj.functions[fidx]
+                    addresses = addresses.concat(Object.values(functionObj.arguments).filter(astNode => astNode.typeName.name =="address").map(astNode => astNode.name))
+                }
+            }
+
+            let actors = [...new Set(addresses)]
+            actors = actors.filter( item => {
+                if (item === null) return false  // no nulls
+                if (item.startsWith("_") && actors.indexOf(item.slice(1))) return false  // no _<name> dupes
+                return true 
+                })
+            console.error(actors)
+
+            content += `
+' -- actors --
+together {
+${actors.reduce((txt, name) => txt + `\tactor ${name}\n`, "")}
+}
+`
+        }
+
+        content += "\n@enduml"
+        
+        vscode.workspace.openTextDocument({content: content, language: "plantuml"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                .then(editor => {
+                    vscode.commands.executeCommand("plantuml.preview")
+                    .catch(error => {
+                        //command does not exist
+                    })
+                })
+            )
     }
 }
 

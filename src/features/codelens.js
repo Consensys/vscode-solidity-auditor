@@ -111,6 +111,13 @@ class SolidityCodeLensProvider  {
             )
         )
 
+        codeLens.push(new vscode.CodeLens(firstLine, {
+            command: 'solidity-va.uml.contract.outline',
+            title: 'uml',
+            arguments: [document, Object.values(parser.contracts)]
+            })
+        )
+
         let annotateContractTypes = ["contract","library"]
         /** all contract decls */
         for(let name in parser.contracts){
@@ -147,6 +154,13 @@ class SolidityCodeLensProvider  {
             arguments: [document, item.name, []]
             })
         )
+
+        lenses.push(new vscode.CodeLens(range, {
+            command: 'solidity-va.uml.contract.outline',
+            title: 'uml',
+            arguments: [document, [item]]
+            })
+        )
         
         return lenses
     }
@@ -161,6 +175,14 @@ class SolidityCodeLensProvider  {
             arguments: [document, contractName+"::"+item._node.name, "all", document.uri.path]
             })
         )
+
+        lenses.push(new vscode.CodeLens(range, {
+            command: 'solidity-va.tools.function.signatureForAstItem',
+            title: 'funcSig',
+            arguments: [item]
+            })
+        )
+
         return lenses
     }
 }

@@ -580,5 +580,6 @@ class SolidityDocumentSymbolProvider{
 
 
 module.exports = {
-    SolidityDocumentSymbolProvider:SolidityDocumentSymbolProvider
+    SolidityDocumentSymbolProvider:SolidityDocumentSymbolProvider,
+    getVariableDeclarationType:getVariableDeclarationType
 }

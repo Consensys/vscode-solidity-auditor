@@ -66,16 +66,22 @@ function functionSignatureExtractor(content) {
     const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g
     let match;
     let sighashes = {}
+    let collisions = [];
 
     while (match = funcSigRegex.exec(content)) {
         let args = []
         match.groups.args.split(",").forEach(item => {
             args.push(canonicalizeEvmType(item.trim().split(" ")[0]))
         })
-        let fnsig = `${match.groups.name.trim()}(${args.join(',')})`
-        sighashes[createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8)] = fnsig
+        let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
+        let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
+
+        if(sighash in sighashes && sighashes[sighash]!==fnsig){
+            collisions.push(sighash)
+        }
+        sighashes[sighash] = fnsig
     }
-    return sighashes
+    return {sighashes:sighashes, collisions:collisions}
 }
 
 function getCanonicalizedArgumentFromAstNode(node){

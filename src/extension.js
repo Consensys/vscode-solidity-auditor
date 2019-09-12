@@ -720,9 +720,27 @@ function onActivate(context) {
 
         context.subscriptions.push(
             vscode.commands.registerCommand(
+                'solidity-va.tools.function.signatureForAstItem', 
+                function (item) {
+                    commands.listFunctionSignatureForAstItem(item)
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
                 'solidity-va.tools.remix.openExternal', 
                 function () {
                     vscode.env.openExternal(vscode.Uri.parse("https://remix.ethereum.org"))
+                }
+            )
+        )
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.uml.contract.outline', 
+                function (doc, contractObjects) {
+                    commands.umlContractsOutline(contractObjects)
                 }
             )
         )
@@ -745,6 +763,12 @@ function onActivate(context) {
         vscode.workspace.onDidSaveTextDocument(document => {
             onDidSave(document);  
         }, null, context.subscriptions);
+
+        /****** OnOpen */
+        vscode.workspace.onDidOpenTextDocument(document => {
+            onDidSave(document);  
+        }, null, context.subscriptions);
+
 
         context.subscriptions.push(
             vscode.languages.registerHoverProvider(type, {
