@@ -16,6 +16,8 @@ we suggest using this plugin together with [vscode-solidity](https://github.com/
 
 We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor): `ext tintinweb.solidity-visual-auditor`
+
 ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
 <img width="1024" alt="visual-auditor-new" src="https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png">
@@ -104,6 +106,7 @@ Scroll down and take the tour.
 * outline view with security annotations and inherited names
 * tooltips (asm instruction signatures, security notes)
 * `@audit` tags
+* graph's and uml
 * generic interface to import issues from external scanners
 
 
@@ -172,6 +175,10 @@ Scroll down and take the tour.
 * UML - auto-generate UML for source-units or specific contracts
 
 <img width="733" alt="vscode-solidity-auditor-uml" src="https://user-images.githubusercontent.com/2865694/64823226-2bacff00-d5b7-11e9-99e0-6790921a9f20.png">
+
+* Function Signature Hashes
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
 
 ## outline view
 
@@ -263,7 +270,7 @@ Scroll down and take the tour.
 
 ## Known Issues
 
-* changing settings may require a vscode restart.
+* changing settings may require a vscode reload.
 * outline view does not always refresh. **TempFix**: modify and save the file to trigger a refresh.
 * codelenses do not appear. **TempFix**: modify and save the file to trigger a refresh.
 * [github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
