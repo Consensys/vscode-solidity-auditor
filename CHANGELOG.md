@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.18
+- new: UML diagrams just arrived 🎉 and lets you auto-generate uml for source-units or contracts.
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
+
+- new: codelense next to functions to generate sighash.
+- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes #27. 
+- new: alert on function sighash collision within the same contract.
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
+
+- new: AST parser now keeps track of `usingFor`'s 
+
 ## v0.0.17
 - new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
 - update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))

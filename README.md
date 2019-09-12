@@ -14,11 +14,13 @@ This extension contributes **security centric** syntax and semantic highlighting
 we suggest using this plugin together with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
 
 
-Found a bug or want to provide feedback? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
-![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
+<img width="1024" alt="visual-auditor-new" src="https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png">
+
+<img width="733" alt="vscode-solidity-auditor-uml" src="https://user-images.githubusercontent.com/2865694/64823226-2bacff00-d5b7-11e9-99e0-6790921a9f20.png">
 
 ---------------------
 
@@ -60,7 +62,7 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
 * generic interface for importing external scanner results - cdili json format (see below)
-* codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes
+* codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes, uml
 
 ##### Code Insights
 
@@ -166,6 +168,9 @@ Scroll down and take the tour.
 
 ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
 
+* UML - auto-generate UML for source-units or specific contracts
+
+<img width="733" alt="vscode-solidity-auditor-uml" src="https://user-images.githubusercontent.com/2865694/64823226-2bacff00-d5b7-11e9-99e0-6790921a9f20.png">
 
 ## outline view
 
@@ -270,25 +275,18 @@ Scroll down and take the tour.
 
 # Release Notes
 
-## v0.0.17
-- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
-- update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))
-- new: theme - Solidity Visual auditor light  - the vscode standard light theme with visual auditor highlighting (#25)  
+## v0.0.18
+- new: UML diagrams just arrived 🎉 and lets you auto-generate uml for source-units or contracts.
 
-<img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">  
-<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
-- update: updated theme `solarized-light`, split up color-scheme definitions into multiple files. Changed 'light-theme' natspec color highlighting to be less dramatic (black->greyish). (#24)
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
 
-## v0.0.16
-- fix: enable graph rendering by default
-- fix: codelenses are sometimes missing (graph)
+- new: codelense next to functions to generate sighash.
+- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes #27. 
+- new: alert on function sighash collision within the same contract.
 
-## v0.0.15 - aka fancy graphs
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
 
-- update to latest surya release. (known issue: ftrace might fail right now and will be fixed with a subsequent release)
-- awesome dark themed call graph.
-- awesome interactive graphs [vscode-interactive-graphviz](https://github.com/tintinweb/vscode-interactive-graphviz)
-  - ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+- new: AST parser now keeps track of `usingFor`'s 
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
