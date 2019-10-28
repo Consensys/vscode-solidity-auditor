@@ -12,7 +12,7 @@ const {CancellationTokenSource} = require('vscode')
 //const mod_codelens = require('./features/codelens');
 const mod_hover = require('./features/hover');
 const mod_decorator = require('./features/deco');
-const {SolidityDocumentSymbolProvider} = require('./features/symbols')
+const {SolidityDocumentSymbolProvider, getAstValueForExpression} = require('./features/symbols')
 const {SolidityParser} = require('./features/parser')
 const mod_parser = require('./features/parser')
 const {DiliDiagnosticCollection} = require('./features/genericDiag')
@@ -183,17 +183,22 @@ function analyzeSourceUnit(cancellationToken, document){
 
             //get occurences from identifiers
             var prefix = "";
+            let knownValue = "";
             var decoStyle = "decoStyleBoxedLightBlue";
 
             //const commentCommandUri = vscode.Uri.parse(`command:editor.action.addCommentLine`);
             //text.push("[Add comment](${commentCommandUri})")
             //var decl_uri = "([Declaration]("+activeEditor.document.fileName+":"+(svar.loc.start.line+1)+":"+svar.loc.start.column+"))"
-            var decl_uri = "([Declaration: #"+(svar.loc.start.line)+"]("+activeEditor.document.uri+":"+(svar.loc.start.line)+":1))"
+            var decl_uri = "([Declaration: #"+(svar.loc.start.line)+"]("+activeEditor.document.uri+"#"+(svar.loc.start.line)+"))"
 
             if(svar.isDeclaredConst){
-                prefix = "**CONST**  "
+                prefix = "**CONST**  " ;
                 decoStyle = "decoStyleLightGreen";
+                knownValue = getAstValueForExpression(svar.expression);
+                knownValue = knownValue ? ` = **${knownValue}** ` : ''
             }
+
+
 
             decorations.push({ 
                     range: new vscode.Range(
@@ -218,7 +223,7 @@ function analyzeSourceUnit(cancellationToken, document){
                                 new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
                                 new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
                                 ),
-                                hoverMessage: prefix + "(*"+ (svar.typeName.type=="ElementaryTypeName"?svar.typeName.name:svar.typeName.namePath) +"*) " +'**StateVar** *' + contract + "*.**"+svar.name + '**' + " "+decl_uri,
+                                hoverMessage: prefix + "(*"+ (svar.typeName.type=="ElementaryTypeName"?svar.typeName.name:svar.typeName.namePath) +"*) " +'**StateVar** *' + contract + "*.**"+svar.name + '**' + knownValue + " "+decl_uri,
                             decoStyle: decoStyle
                         });
                 } else {
@@ -290,7 +295,7 @@ function analyzeSourceUnit(cancellationToken, document){
                         prefix = "**INHERITED**  ❗SHADOWED❗"
                         decoStyle = "decoStyleLightOrange";
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                         decorations.push(
                             { 
@@ -316,7 +321,7 @@ function analyzeSourceUnit(cancellationToken, document){
                         prefix = "**INHERITED**  ❗SHADOWED❗"
                         decoStyle = "decoStyleLightOrange";
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                         decorations.push(
                             { 
@@ -338,7 +343,7 @@ function analyzeSourceUnit(cancellationToken, document){
                     prefix = "**INHERITED**  "
                     decoStyle = "decoStyleLightBlue";
                     let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                    var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                    var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                     decorations.push(
                         { 
@@ -398,7 +403,7 @@ function analyzeSourceUnit(cancellationToken, document){
                         prefix = "**INHERITED**  ❗SHADOWED❗"
                         decoStyle = "decoStyleLightOrange";
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                         decorations.push(
                             { 
@@ -417,7 +422,7 @@ function analyzeSourceUnit(cancellationToken, document){
                         prefix = "**INHERITED**  ❗SHADOWED❗"
                         decoStyle = "decoStyleLightOrange";
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                         decorations.push(
                             { 
@@ -443,7 +448,7 @@ function analyzeSourceUnit(cancellationToken, document){
                         prefix = "**INHERITED**  ❗SHADOWED❗"
                         decoStyle = "decoStyleLightOrange";
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                        var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
 
                         decorations.push(
                             { 
@@ -483,7 +488,7 @@ function analyzeSourceUnit(cancellationToken, document){
                     prefix = "**INHERITED**  "
                     decoStyle = "decoStyleLightBlue";
                     let subcontract =  insights.contracts[contract].inherited_names[ident.name]
-                    var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+":"+(ident.loc.start.line)+":1))"
+                    var decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+activeEditor.document.uri+"#"+(ident.loc.start.line)+"))"
                     
                     decorations.push(
                         { 

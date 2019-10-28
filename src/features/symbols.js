@@ -237,6 +237,22 @@ function getSymbolKindForDeclaration(node){
     return result;
 }  
 
+function getAstValueForExpression(astnode){
+
+    switch(astnode.type) {
+        case "NumberLiteral":
+            return `${astnode.number}${astnode.subdenominator ? astnode.subdenominator : ''}`;
+        case "BooleanLiteral":
+            return astnode.value ? "true":"false";
+        case "StringLiteral":
+        case "HexLiteral":
+        case "HexNumber":
+        case "DecimalNumber":
+            return astnode.value;
+        default:
+            return "";
+    }
+}
 
 
 class SolidityDocumentSymbolProvider{
@@ -581,5 +597,6 @@ class SolidityDocumentSymbolProvider{
 
 module.exports = {
     SolidityDocumentSymbolProvider:SolidityDocumentSymbolProvider,
-    getVariableDeclarationType:getVariableDeclarationType
+    getVariableDeclarationType:getVariableDeclarationType,
+    getAstValueForExpression:getAstValueForExpression
 }
