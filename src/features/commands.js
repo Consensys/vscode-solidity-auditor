@@ -414,7 +414,7 @@ ${topLevelContractsText}`
         let sighash_colls = mod_utils.functionSignatureExtractor(document.getText())
         let sighashes = sighash_colls.sighashes;
 
-        if(sighash_colls.collisions){
+        if(sighash_colls.collisions.length){
             vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + sighash_colls.collisions.join(","))
         }
 
@@ -426,7 +426,7 @@ ${topLevelContractsText}`
             for(let hash in sighashes){
                 content += hash + "  =>  " + sighashes[hash] + "\n"
             }
-            if(sighash_colls.collisions){
+            if(sighash_colls.collisions.length){
                 content += "\n\n";
                 content += "collisions 🔥🔥🔥                 \n========================\n"
                 content += sighash_colls.collisions.join("\n");
@@ -456,7 +456,7 @@ ${topLevelContractsText}`
                     })
                 })
 
-        if(collisions){
+        if(collisions.length){
             vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + collisions.join(","))
         }
 
@@ -468,7 +468,7 @@ ${topLevelContractsText}`
             for(let hash in sighashes){
                 content += hash + "  =>  " + sighashes[hash] + "  \n"
             }
-            if(collisions){
+            if(collisions.length){
                 content += "\n\n";
                 content += "collisions 🔥🔥🔥                 \n========================\n"
                 content += collisions.join("\n");
