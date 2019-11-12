@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.18",
+    "version": "0.0.19",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {

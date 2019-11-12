@@ -283,6 +283,15 @@ Scroll down and take the tour.
 
 # Release Notes
 
+## v0.0.19
+- new: constant values that are not symbols are now shown in hover message
+
+<img width="360" alt="Screenshot 2019-11-12 at 15 41 48" src="https://user-images.githubusercontent.com/2865694/68681269-699cb400-0563-11ea-9ba3-1605c3a5e8c6.png">
+
+- fix: hover message - jump to declaration now works on MacOS
+- fix: function signature output shows 🔥 even though there are no collisions
+
+
 ## v0.0.18
 - new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
 
