@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.19",
+    "version": "0.0.20",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -229,11 +229,6 @@
                     "default": false,
                     "description": "Open markdown output in rendered form (relies on a markdown preview extension to be installed)"
                 },
-                "solidity-va.audit.tags.enable": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether to enable/disable audit tags (@audit/@audit-ok)"
-                },
                 "solidity-va.codelens.enable": {
                     "type": "boolean",
                     "default": true,
@@ -259,7 +254,8 @@
     },
     "extensionDependencies": [
         "tintinweb.graphviz-interactive-preview",
-        "tintinweb.vscode-solidity-flattener"
+        "tintinweb.vscode-solidity-flattener",
+        "tintinweb.vscode-inline-bookmarks"
     ],
     "dependencies": {
         "c3-linearization": "^0.3.0",

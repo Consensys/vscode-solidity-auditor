@@ -283,6 +283,9 @@ Scroll down and take the tour.
 
 # Release Notes
 
+## v0.0.20
+- new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+
 ## v0.0.19
 - new: constant values that are not symbols are now shown in hover message
 

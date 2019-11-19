@@ -90,14 +90,6 @@ const decoStyleBlueBoldForeground= vscode.window.createTextEditorDecorationType(
 });
 
 
-// create a decorator type that we use to decorate large numbers
-const largeNumberDecorationType = vscode.window.createTextEditorDecorationType({
-    cursor: 'crosshair',
-    // use a themable color. See package.json for the declaration and default values.
-    backgroundColor: { id: 'myextension.largeNumberBackground' }
-});
-
-
 var styles = {
     decoStyleBoxedLightBlue:decoStyleBoxedLightBlue,
     decoStyleLightGreen:decoStyleLightGreen,
@@ -107,28 +99,6 @@ var styles = {
     decoStyleBookmarkRed:undefined
 }
 
-function updateDecorations() {
-    if (!activeEditor) {
-        return;
-    }
-    const regEx = /\d+/g;
-    const text = activeEditor.document.getText();
-    const smallNumbers= [];
-    const largeNumbers= [];
-    let match;
-    while (match = regEx.exec(text)) {
-        const startPos = activeEditor.document.positionAt(match.index);
-        const endPos = activeEditor.document.positionAt(match.index + match[0].length);
-        const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Number **' + match[0] + '**' };
-        if (match[0].length < 3) {
-            smallNumbers.push(decoration);
-        } else {
-            largeNumbers.push(decoration);
-        }
-    }
-    activeEditor.setDecorations(decoStyleBoxedLightBlue, smallNumbers);
-    activeEditor.setDecorations(largeNumberDecorationType, largeNumbers);
-}
 
 async function decorateWords(editor, words, decoStyle, commentMapper){
     if (!editor) {
@@ -423,7 +393,6 @@ function init(context, config){
 
 module.exports = {
     init:init,
-    updateDecorations: updateDecorations,
     decoStyleBoxedLightBlue: decoStyleBoxedLightBlue,
     styles:styles,
     doDeco:doDeco,

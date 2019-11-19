@@ -110,7 +110,6 @@ function checkReservedIdentifiers(identifiers){
 }
 
 function analyzeSourceUnit(cancellationToken, document){
-    //mod_decorator.updateDecorations();
     console.log("inspect ...")
     //var insights = inspect(activeEditor.document.getText(), activeEditor.document.fileName);
     var insights = g_parser.inspect(
@@ -534,15 +533,6 @@ function analyzeSourceUnit(cancellationToken, document){
     if (solidityVAConfig.deco.statevars)
         setDecorations(activeEditor, decorations)
         console.log("✓ apply decorations - scope")
-
-    if(solidityVAConfig.audit.tags.enable){
-        console.log("apply deco satic words...")
-        mod_decorator.decorateWords(activeEditor, ["@audit\-info[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkBlue)
-        mod_decorator.decorateWords(activeEditor, ["@audit\-issue[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkIssue)
-        mod_decorator.decorateWords(activeEditor, ["@audit\-ok[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkGreen)
-        mod_decorator.decorateWords(activeEditor, ["@audit[ \\t\\n]"], mod_decorator.styles.decoStyleBookmarkRed)
-        console.log("✓ apply decorations - audit tags")
-    }
 }
 
 /** events */
