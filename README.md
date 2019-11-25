@@ -120,6 +120,8 @@ Scroll down and take the tour.
 
 ## @audit bookmarks
 
+This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+
 * `@audit - <msg>` ... flag lines for security review or start a security review discussion
 * `@audit-ok - <msg>` ... flag that a line was checked for security or a security discussion on that line turned out to be a non-issue 
 
@@ -218,6 +220,7 @@ Scroll down and take the tour.
 ## Theme: Solidity Visual Auditor Dark
 
 **Simple DAO**
+
 <img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
 
 **Vulnerable Contract**
@@ -261,7 +264,6 @@ Scroll down and take the tour.
         "forRule": "State_Variable_Default_Visibility"
     }
     ```
-* `Solidity-va.audit.tags.enable` ... enable/disable audit tags
 * `Solidity-va.codelens.enable` ... enable/disable codelens support (inline code actions)
 * `solidity-va.preview.dot` ... open dot output in graphviz rendered form
 * `solidity-va.preview.markdown` ... open markdown output in rendered form
@@ -285,6 +287,14 @@ Scroll down and take the tour.
 
 ## v0.0.20
 - new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+  - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
+- split up extension dependencies in hard and soft requirements
+  - new: extensionPack - this extension now automatically installs soft dependencies. You can uninstall them at any point in time.
+    - (optional) [Solidity Flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener)
+    - (optional) [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
+    - (optional) [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks)
+  - updated: extensionDependencies
+    - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
 
 ## v0.0.19
 - new: constant values that are not symbols are now shown in hover message
@@ -293,20 +303,6 @@ Scroll down and take the tour.
 
 - fix: hover message - jump to declaration now works on MacOS
 - fix: function signature output shows 🔥 even though there are no collisions
-
-
-## v0.0.18
-- new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
-
-<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
-
-- new: codelense next to functions to generate sighash.
-- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes #27. 
-- new: alert on function sighash collision within the same contract.
-
-<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
-
-- new: AST parser now keeps track of `usingFor`'s 
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)

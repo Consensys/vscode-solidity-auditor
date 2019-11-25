@@ -3,6 +3,14 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 
 ## v0.0.20
 - new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+  - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
+- split up extension dependencies in hard and soft requirements
+  - new: extensionPack - this extension now automatically installs soft dependencies. You can uninstall them at any point in time.
+    - (optional) [Solidity Flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener)
+    - (optional) [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
+    - (optional) [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks)
+  - updated: extensionDependencies
+    - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
 
 ## v0.0.19
 - new: constant values that are not symbols are now shown in hover message

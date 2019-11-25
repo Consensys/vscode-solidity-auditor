@@ -58,10 +58,10 @@ class DiliDiagnosticCollection {
     }
 
     async updateIssues(cancellationToken){
-        return new Promise((reject, resolve) => {
+        return new Promise((resolve, reject) => {
             var that = this;
-            try{
-                
+
+            try {
                 vscode.workspace.findFiles("**/*-issues.json",'**/node_modules', 100, cancellationToken)
                     .then((uris) => {
                         uris.forEach(function(uri){

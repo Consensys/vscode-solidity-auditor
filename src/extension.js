@@ -587,7 +587,6 @@ function onActivate(context) {
         /** module init */
         onInitModules(context, type);
         onDidChange()
-        onDidSave(vscode.window.activeTextEditor.document)
 
         let commands = new Commands(g_parser)
         
