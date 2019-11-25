@@ -13,7 +13,7 @@
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
-        "vscode": "^1.20.2"
+        "vscode": "^1.26.2"
     },
     "categories": [
         "Programming Languages"
