@@ -582,10 +582,10 @@ ${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
         content += "' -- inheritance / usingFor --\n" + contractObjects.reduce((umlTxt, contractObj) => {
             return umlTxt
                 + Object.values(contractObj.dependencies).reduce((txt, name) => {
-                    return txt + `${contractObj.name} <|--[#DarkGoldenRod] ${name}\n`
+                    return txt + `${contractObj.name} --[#DarkGoldenRod]|> ${name}\n`
                 }, "")
                 +  Object.values(contractObj.usingFor).reduce((txt, astNode) => {
-                    return txt + `${contractObj.name} <|..[#DarkOliveGreen] ${astNode.libraryName} : //for ${mod_symbols.getVariableDeclarationType(astNode)}//\n`
+                    return txt + `${contractObj.name} ..[#DarkOliveGreen]|> ${astNode.libraryName} : //for ${mod_symbols.getVariableDeclarationType(astNode)}//\n`
                 }, "")
         }, "")
 
