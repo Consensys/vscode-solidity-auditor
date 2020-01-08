@@ -97,32 +97,64 @@ class SolidityParser{
         }
 
         if (solidityVAConfig.parser.parseImports){
+
             /** parse imports */
             sourceUnit.imports.forEach(function(imp){
-                //try file path
-                let importPath = path.resolve(path.dirname(filepath) +"/./" + imp.path)
-                if (!fs.existsSync(importPath)){
-                    //try relative to workspace root
-                    importPath = path.resolve(vscode.workspace.rootPath +"/./" + imp.path)
-                    if (!fs.existsSync(importPath)){
-                        //try workspacepath node_modules
-                        importPath = path.resolve(vscode.workspace.rootPath +"/node_modules/" + imp.path)
-                        if (!fs.existsSync(importPath)){
-                            //try ../contracts/node_modules/...
-                            let basepath = filepath.split("/contracts/")
 
-                            if (basepath.length==2){ //super dirty
-                                basepath=basepath[0]
-                                importPath = path.resolve(basepath +"/node_modules/" + imp.path)
-                            }
-                        }
+                //basedir
+                let fileWorkspace = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(filepath)).path;
+
+                let relativeNodeModules = function(){
+                    let basepath = filepath.split("/contracts/")
+
+                    if (basepath.length==2){ //super dirty
+                        basepath=basepath[0]
+                        return path.resolve(basepath +"/node_modules/" + imp.path)
                     }
                 }
-                try {
-                    imp.ast = this.inspectFile(importPath, true, cancellationToken)  // this caches automatically
-                } catch (e) {
-                    console.error(e)
+
+                let lastNodeModules = function(){
+                    let basepath = filepath.split("/node_modules/")
+                    if (basepath.length>=2){ //super dirty
+                        basepath=basepath.slice(0,basepath.length-2).join("/")
+                        return path.resolve(basepath +"/node_modules/" + imp.path)
+                    }
                 }
+
+                let firstNodeModules = function(){
+                    let basepath = filepath.split("/node_modules/")
+                    if (basepath.length>=2){ //super dirty
+                        basepath=basepath[0]
+                        return path.resolve(basepath +"/node_modules/" + imp.path)
+                    }
+                }
+
+                let candidates = [
+                    path.resolve(path.dirname(filepath) +"/./" + imp.path),
+                    path.resolve(path.dirname(filepath) +"/node_modules/" + imp.path),
+                    relativeNodeModules(),
+                    lastNodeModules(),
+                    firstNodeModules(),
+                    path.resolve(fileWorkspace +"/./" + imp.path),
+                    path.resolve(fileWorkspace +"/node_modules/" + imp.path)
+                ];
+
+                let importPath = candidates.find(_importPath => _importPath && fs.existsSync(_importPath));
+                if(importPath !==undefined){
+                    this.inspectFile(importPath, true, cancellationToken).then(
+                        (srcUnit) =>{
+                            imp.ast = srcUnit;
+                        },
+                        (error) => {
+                            console.error(`[ERR] ${error}`);
+                        }
+                    ).catch(err =>{
+                        console.error(`[ERR] Exception: ${err}`);
+                    })
+                } else {
+                    console.error(`[ERR] Import not found: '${imp.path}' referenced in '${filepath}'`)
+                }
+
             }, this)
         }
         /** we're done */
