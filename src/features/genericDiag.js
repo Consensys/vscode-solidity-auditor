@@ -65,7 +65,7 @@ class DiliDiagnosticCollection {
                 vscode.workspace.findFiles("**/*-issues.json",'**/node_modules', 100, cancellationToken)
                     .then((uris) => {
                         uris.forEach(function(uri){
-                            let f = uri.path
+                            let f = uri.fsPath
                             let basedir = path.dirname(f)
                             let collectionName = f // path.basename(f)
 
@@ -96,18 +96,18 @@ class DiliDiagnosticCollection {
                                     //abspath or relpath?
                                     let targetFileUri = issue.onInputFile.startsWith("/") ? issue.onInputFile : vscode.Uri.file(path.join(basedir,issue.onInputFile))
                                         
-                                    if(!fs.existsSync(targetFileUri.path)){
+                                    if(!fs.existsSync(targetFileUri.fsPath)){
                                         // skip nonexistent files
                                         // todo: maybe skip node_modules?
-                                        //console.error(targetFileUri.path)
+                                        //console.error(targetFileUri.fsPath)
                                         return
                                     }
 
-                                    if(!pathToIssues.has(targetFileUri.path)){
-                                        pathToIssues.set(targetFileUri.path,new Array())
+                                    if(!pathToIssues.has(targetFileUri.fsPath)){
+                                        pathToIssues.set(targetFileUri.fsPath,new Array())
                                     }
-                                    pathToUri.set(targetFileUri.path, targetFileUri)
-                                    pathToIssues.get(targetFileUri.path).push({
+                                    pathToUri.set(targetFileUri.fsPath, targetFileUri)
+                                    pathToIssues.get(targetFileUri.fsPath).push({
                                         code: '',
                                         message: `${issue.linterName}/${issue.severity}/${issue.ruleType} - ${issue.message}`,
                                         range: new vscode.Range(new vscode.Position(issue.atLineNr - 1, 0), new vscode.Position(issue.atLineNr - 1, 255)),

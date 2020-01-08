@@ -103,7 +103,7 @@ class Commands{
 
     _checkIsSolidity(document){
         if(!document || document.languageId!=settings.languageId){
-            vscode.window.showErrorMessage(`[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.path}`)
+            vscode.window.showErrorMessage(`[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.fsPath}`)
             throw new Error("not a solidity file")
         }
     }
@@ -129,11 +129,11 @@ class Commands{
             await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
                 .then(uris => {
                     files = uris.map(function (uri) {
-                        return uri.path
+                        return uri.fsPath
                     });
                 })
         } else {
-            files = [document.uri.path, ...Object.keys(this.g_parser.sourceUnits)]  //better only add imported files. need to resolve that somehow
+            files = [document.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)]  //better only add imported files. need to resolve that somehow
         } 
 
         switch(command) {
@@ -203,7 +203,7 @@ class Commands{
                 */
                 break;
             case "parse":
-                ret = surya.parse(document.uri.path)
+                ret = surya.parse(document.uri.fsPath)
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                 break;
@@ -350,7 +350,7 @@ ${topLevelContractsText}`
         runCommand(cmd, args)
             .then(
                 (success) =>{
-                    vscode.window.showInformationMessage(`Contract flattened: ${path.basename(docUri.path,".sol")}_flat.sol`)
+                    vscode.window.showInformationMessage(`Contract flattened: ${path.basename(docUri.fsPath,".sol")}_flat.sol`)
                 },
                 (err) => {
                     if(err.code === 'ENOENT'){
@@ -451,7 +451,7 @@ ${topLevelContractsText}`
                 .then(uris => {
                     uris.forEach(uri => {
                         try {
-                            let sig_colls = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.path).toString('utf-8'));
+                            let sig_colls = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.fsPath).toString('utf-8'));
                             collisions = collisions.concat(sig_colls.collisions)  //we're not yet checking sighash collisions across contracts
 
                             let currSigs = sig_colls.sighashes;

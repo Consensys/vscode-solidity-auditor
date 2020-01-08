@@ -67,8 +67,8 @@ function provideHoverHandler(document, position, token, type, g_parser) {
     if(!range || range.length<=0)
         return;
 
-    const sourceUnit = g_parser.sourceUnits[document.uri.path]
-    if(sourceUnit.commentMapper && sourceUnit.commentMapper.isRangeOffsetInComment(document.offsetAt(range.start), document.offsetAt(range.end))){
+    const sourceUnit = g_parser.sourceUnits[document.uri.fsPath]
+    if(!sourceUnit || sourceUnit.commentMapper && sourceUnit.commentMapper.isRangeOffsetInComment(document.offsetAt(range.start), document.offsetAt(range.end))){
         return  // is in comment
     }
 
