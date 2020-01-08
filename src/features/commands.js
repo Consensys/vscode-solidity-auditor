@@ -322,11 +322,17 @@ ${topLevelContractsText}`
     }
 
     async solidityFlattener(files, callback, showErrors){
-        vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
-                            .catch(error =>{
-                                // command not available
-                                vscode.window.showWarningMessage("Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" + error)
-                            })
+
+        vscode.extensions.getExtension("tintinweb.vscode-solidity-flattener").activate().then(
+            (active) => {
+                vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
+                    .catch(error =>{
+                        // command not available
+                        vscode.window.showWarningMessage("Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" + error)
+                    })
+            },
+            (err) => { throw new Error(`Solidity Auditor: Failed to activate "tintinweb.vscode-solidity-flattener". Make sure the extension is installed from the marketplace. Details: ${err}`) }
+        );
     }
         
     async flaterra(documentOrUri, noTryInstall){
@@ -618,10 +624,15 @@ ${actors.reduce((txt, name) => txt + `\tactor ${name}\n`, "")}
         vscode.workspace.openTextDocument({content: content, language: "plantuml"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
                 .then(editor => {
-                    vscode.commands.executeCommand("plantuml.preview")
-                    .catch(error => {
-                        //command does not exist
-                    })
+                    vscode.extensions.getExtension("jebbs.plantuml").activate().then(
+                        (active) => {
+                            vscode.commands.executeCommand("plantuml.preview")
+                                .catch(error => {
+                                    //command does not exist
+                                })
+                        },
+                        (err) => { console.warning(`Solidity Auditor: Failed to activate "jebbs.plantuml". Make sure the extension is installed from the marketplace. Details: ${err}`) }
+                    );
                 })
             )
     }
