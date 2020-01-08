@@ -185,7 +185,7 @@ class SolidityCodeLensProvider  {
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.surya.ftrace',
             title: 'ftrace',
-            arguments: [document, contractName+"::"+item._node.name, "all", document.uri.fsPath]
+            arguments: [document, contractName+"::"+item._node.name, "all"]
             })
         )
 
