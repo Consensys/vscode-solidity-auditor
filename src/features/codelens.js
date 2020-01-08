@@ -30,9 +30,7 @@ class SolidityCodeLensProvider  {
         let firstLine = new vscode.Range(0, 0, 0, 0)
 
         //kick-off analysis even though this might be overlapping :/ we'll fix that later
-        this.cb_analyze(token, document)
-
-        let parser = this.g_parser.sourceUnits[document.uri.path]
+        await this.cb_analyze(token, document)
         
         /** top level lenses */
         codeLens.push(
@@ -111,6 +109,12 @@ class SolidityCodeLensProvider  {
             )
         )
 
+        let parser = this.g_parser.sourceUnits[document.uri.path]
+        if(!parser) {
+            console.warning("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.")
+            return codeLens;
+        }
+
         codeLens.push(new vscode.CodeLens(firstLine, {
             command: 'solidity-va.uml.contract.outline',
             title: 'uml',
@@ -132,6 +136,15 @@ class SolidityCodeLensProvider  {
                 for(let funcName in parser.contracts[name].functions){
                     codeLens = codeLens.concat(this.onFunctionDecl(document, name, parser.contracts[name].functions[funcName]))
                 }
+            } else if (parser.contracts[name]._node.kind == "interface"){
+                // add uml to interface
+                let item = parser.contracts[name];
+                codeLens.push(new vscode.CodeLens(elemLocToRange(item._node), {
+                    command: 'solidity-va.uml.contract.outline',
+                    title: 'uml',
+                    arguments: [document, [item]]
+                    })
+                )
             }
         }
         return codeLens
