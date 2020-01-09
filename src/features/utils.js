@@ -1,4 +1,10 @@
 'use strict';
+/** 
+ * @author github.com/tintinweb
+ * @license MIT
+ * 
+ * 
+ * */
 
 const commentRegex = () => new RegExp(`(?:${commentRegex.line().source})|(?:${commentRegex.block().source})`, 'gm');
 commentRegex.line = () => /(?:^|\s)\/\/(.+?)$/gm;
@@ -6,43 +12,43 @@ commentRegex.block = () => /\/\*([\S\s]*?)\*\//gm;
 
 class CommentMapperRex{
 
-    constructor(input){
-        this.commentIdxs = []
-        this.input = input
-        this.regex = commentRegex()
+    constructor(input) {
+        this.commentIdxs = [];
+        this.input = input;
+        this.regex = commentRegex();
     }
 
-    isRangeOffsetInComment(start, end){
+    isRangeOffsetInComment(start, end) {
         if(typeof this.input!=="undefined" && this.input!==null){
-            this.getComments(this.input)
-            this.input = null  //free space
+            this.getComments(this.input);
+            this.input = null;  //free space
         }
-        for (var i = 0; i < this.commentIdxs.length; i++) {
-            let item = this.commentIdxs[i]
+        for (var i = 0; i < this.commentIdxs.length; i += 1) {
+            let item = this.commentIdxs[i];
             
             if(start>=item[0] && end<=item[1]){
-                return true
+                return true;
             }
         }
-        return false
+        return false;
     }
 
-    getComments(input){
-        var match
+    getComments(input) {
+        var match;
         do {
-            match=this.regex.exec(input)
+            match=this.regex.exec(input);
             if(match){
-                this.commentIdxs.push([match.index, match.index+match[0].length])
+                this.commentIdxs.push([match.index, match.index+match[0].length]);
             }
             
-        } while(match)
+        } while(match);
     }
 
 }
 
 
 
-const createKeccakHash = require('keccak')
+const createKeccakHash = require('keccak');
 
 // https://github.com/ethereum/eth-abi/blob/b02fc85b01a9674add88483b0d6144029c09e0a0/eth_abi/grammar.py#L402-L408
 const TYPE_ALIASES = {
@@ -51,8 +57,8 @@ const TYPE_ALIASES = {
     'fixed': 'fixed128x18',
     'ufixed': 'ufixed128x18',
     'function': 'bytes24',
-}
-const evmTypeRegex = new RegExp(`(?<type>(${Object.keys(TYPE_ALIASES).join('|')}))(?<tail>(\\[[^\\]]*\\])?)$`, 'g')
+};
+const evmTypeRegex = new RegExp(`(?<type>(${Object.keys(TYPE_ALIASES).join('|')}))(?<tail>(\\[[^\\]]*\\])?)$`, 'g');
 
 function canonicalizeEvmType(evmArg) {
     function replacer(...groups) {
@@ -63,37 +69,38 @@ function canonicalizeEvmType(evmArg) {
 }
 
 function functionSignatureExtractor(content) {
-    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g
+    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g;
     let match;
-    let sighashes = {}
+    let sighashes = {};
     let collisions = [];
 
     while (match = funcSigRegex.exec(content)) {
-        let args = []
+        let args = [];
         match.groups.args.split(",").forEach(item => {
-            args.push(canonicalizeEvmType(item.trim().split(" ")[0]))
-        })
+            args.push(canonicalizeEvmType(item.trim().split(" ")[0]));
+        });
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
         let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
 
         if(sighash in sighashes && sighashes[sighash]!==fnsig){
-            collisions.push(sighash)
+            collisions.push(sighash);
         }
-        sighashes[sighash] = fnsig
+        sighashes[sighash] = fnsig;
     }
-    return {sighashes:sighashes, collisions:collisions}
+    return {sighashes:sighashes, collisions:collisions};
 }
 
 function getCanonicalizedArgumentFromAstNode(node){
     let arraySuffix = '';
 
     if (typeof node.typeName != "undefined"){
-        if(node.typeName.type=="ArrayTypeName"){ 
+        if (node.typeName.type=="ArrayTypeName") { 
             //is array
-            node = node.typeName.baseTypeName 
-            arraySuffix = "[]"
-        } else 
+            node = node.typeName.baseTypeName ;
+            arraySuffix = "[]";
+        } else {
             node = node.typeName;
+        }
     }
     
     if(node.type=="ElementaryTypeName"){
@@ -101,7 +108,7 @@ function getCanonicalizedArgumentFromAstNode(node){
     } else if (node.type=="UserDefinedTypeName"){
         return node.namePath + arraySuffix;
     } else {
-        return null
+        return null;
     }
 } 
 
@@ -115,8 +122,8 @@ function functionSignatureFromAstNode(item){
     let fnsig = `${funcname}(${args.join(',')})`;
     let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
 
-    let result = {}
-    result[sighash] = fnsig
+    let result = {};
+    result[sighash] = fnsig;
     return result;
 }
 
@@ -124,4 +131,4 @@ module.exports = {
     CommentMapperRex : CommentMapperRex,
     functionSignatureExtractor : functionSignatureExtractor,
     functionSignatureFromAstNode : functionSignatureFromAstNode
-}
+};

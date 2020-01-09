@@ -1,3 +1,11 @@
+'use strict';
+/** 
+ * @author github.com/tintinweb
+ * @license MIT
+ * 
+ * 
+ * */
+
 const vscode = require('vscode');
 
 let activeEditor = vscode.window.activeTextEditor;
@@ -97,7 +105,7 @@ var styles = {
     decoStyleLightBlue:decoStyleLightBlue,
     decoStyleBookmarkGreen:undefined,
     decoStyleBookmarkRed:undefined
-}
+};
 
 
 async function decorateWords(editor, words, decoStyle, commentMapper){
@@ -113,7 +121,7 @@ async function decorateWords(editor, words, decoStyle, commentMapper){
         let match;
         while (match = regEx.exec(text)) {
             if(commentMapper && commentMapper.indexIsInComment(match.index, match.index + match[0].trim().length)){
-                continue
+                continue;
             }
             var startPos = editor.document.positionAt(match.index);
             var endPos = editor.document.positionAt(match.index + match[0].trim().length);
@@ -126,8 +134,8 @@ async function decorateWords(editor, words, decoStyle, commentMapper){
             };
             smallNumbers.push(decoration);
         }
-    })
-    console.log("✓ decorateWords " + words)
+    });
+    console.log("✓ decorateWords " + words);
     editor.setDecorations(decoStyle, smallNumbers);
 }
 
@@ -146,13 +154,23 @@ function HSLtoRGB(h, s, l) {
     };
     
     const hueToRGB = (m, n, o) => {
-      if (o < 0) o += 1;
-      if (o > 1) o -= 1;
-      if (o < 1/6) return m + (n - m) * 6 * o;
-      if (o < 1/2) return n;
-      if (o < 2/3) return m + (n - m) * (2/3 - o) * 6;
+      if (o < 0) {
+          o += 1;
+      }
+      if (o > 1) {
+          o -= 1;
+      }
+      if (o < 1/6) {
+          return m + (n - m) * 6 * o;
+      }
+      if (o < 1/2) {
+          return n;
+      }
+      if (o < 2/3) {
+          return m + (n - m) * (2/3 - o) * 6;
+      }
       return m;
-    }
+    };
     
     const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     const p = 2 * l - q;
@@ -161,7 +179,7 @@ function HSLtoRGB(h, s, l) {
     g = hueToRGB(p, q, h);
     b = hueToRGB(p, q, h - 1/3);
   
-    return [rd(r), rd(g), rd(b)]
+    return [rd(r), rd(g), rd(b)];
   }
   
   function RGBtoHex(r, g, b) {
@@ -172,19 +190,20 @@ var gutterIcons = {};
 
 
 function varDecIsArray(node){
-    return node.typeName.type=="ArrayTypeName"
+    return node.typeName.type=="ArrayTypeName";
 }
 
 function varDecIsUserDefined(node){
-    return node.typeName.type=="UserDefinedTypeName"
+    return node.typeName.type=="UserDefinedTypeName";
 }
 
 function getVariableDeclarationType(node){
     if (typeof node.typeName != "undefined"){
-        if(varDecIsArray(node)){
-            node = node.typeName.baseTypeName 
-        } else 
+        if (varDecIsArray(node)) {
+            node = node.typeName.baseTypeName;
+        } else {
             node = node.typeName;
+        }
     }
     
     if(node.type=="ElementaryTypeName"){
@@ -195,29 +214,30 @@ function getVariableDeclarationType(node){
         node.namePath = "mapping( " + getVariableDeclarationType(node.keyType)+ "=>" +getVariableDeclarationType(node.valueType)+ " )";
         return node.namePath;
     } else {
-        return null
+        return null;
     }
 }
 
 function semanticHighlightFunctionParameters(arrIdents){
     
-    if(arrIdents.length<=0)
-        return []
+    if (arrIdents.length<=0) {
+        return [];
+    }
     
     let index = 0;
     let colorAssign = {};
 
     let funcNode = arrIdents[0].inFunction;  // just take the first items ref to function
-    var decorations = new Array();
+    var decorations = [];
 
     for(let name in funcNode.arguments){
-        colorAssign[name]="styleArgument" +(index++%15);
+        colorAssign[name]="styleArgument" +((index += 1)%15);
         let ident = funcNode.arguments[name];
         if(ident.name===null){
-            continue //skip unnamed arguments (solidity allows function a(bytes,bytes))
+            continue; //skip unnamed arguments (solidity allows function a(bytes,bytes))
         }
         let typeName = getVariableDeclarationType(ident);
-        typeName = typeName?typeName:""
+        typeName = typeName?typeName:"";
         decorations.push(
             { 
                 range: new vscode.Range(
@@ -243,9 +263,9 @@ function semanticHighlightFunctionParameters(arrIdents){
             });
 
 
-    })
+    });
     console.log("✓ semantic highlight - " + funcNode._node.name);
-    return decorations
+    return decorations;
 }
 
 function init(context, config){
@@ -277,7 +297,7 @@ function init(context, config){
                 color: RGBtoHex(...HSLtoRGB(((6+idx)*19)%255/255, 0.85, 0.75))+"95"
             }
         });
-    })
+    });
 
     gutterIcons.red = context.asAbsolutePath("images/bookmark-red.svg");
     gutterIcons.green = context.asAbsolutePath("images/bookmark-green.svg");
@@ -309,7 +329,7 @@ function init(context, config){
     
         }
         */
-    })
+    });
     styles.decoStyleBookmarkGreen = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.green,
         light: {
@@ -335,7 +355,7 @@ function init(context, config){
     
         }
         */
-    })
+    });
     styles.decoStyleBookmarkBlue = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.blue,
         light: {
@@ -361,7 +381,7 @@ function init(context, config){
     
         }
         */
-    })
+    });
     styles.decoStyleBookmarkIssue = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.issue,
         light: {
@@ -387,7 +407,7 @@ function init(context, config){
     
         }
         */
-    })
+    });
 }
 
 
@@ -398,4 +418,4 @@ module.exports = {
     doDeco:doDeco,
     decorateWords:decorateWords,
     semanticHighlightFunctionParameters:semanticHighlightFunctionParameters
-}
+};
