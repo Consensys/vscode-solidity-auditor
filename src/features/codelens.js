@@ -1,3 +1,4 @@
+'use strict';
 /** 
  * @author github.com/tintinweb
  * @license MIT
