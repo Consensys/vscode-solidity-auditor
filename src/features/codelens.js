@@ -47,7 +47,7 @@ class SolidityCodeLensProvider  {
                 firstLine, {
                     command: 'solidity-va.surya.describe',
                     title: 'describe',
-                    arguments: [document.uri.path]
+                    arguments: [document.uri.fsPath]
                 }
             )
         )
@@ -57,7 +57,7 @@ class SolidityCodeLensProvider  {
                 firstLine, {
                     command: 'solidity-va.surya.graph',
                     title: 'graph (this)',
-                    arguments: [document, [document.uri.path]]
+                    arguments: [document, [document.uri.fsPath]]
                 }
             )
         )
@@ -109,9 +109,9 @@ class SolidityCodeLensProvider  {
             )
         )
 
-        let parser = this.g_parser.sourceUnits[document.uri.path]
+        let parser = this.g_parser.sourceUnits[document.uri.fsPath];
         if(!parser) {
-            console.warning("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.")
+            console.warn("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.")
             return codeLens;
         }
 
@@ -185,7 +185,7 @@ class SolidityCodeLensProvider  {
         lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.surya.ftrace',
             title: 'ftrace',
-            arguments: [document, contractName+"::"+item._node.name, "all", document.uri.path]
+            arguments: [document, contractName+"::"+item._node.name, "all"]
             })
         )
 

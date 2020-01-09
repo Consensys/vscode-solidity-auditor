@@ -103,12 +103,14 @@ function getCanonicalizedArgumentFromAstNode(node){
     } else {
         return null
     }
-}
+} 
 
 function functionSignatureFromAstNode(item){
 
     let funcname = item._node.name;
-    let args = item._node.parameters.parameters.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
+
+    let argsItem = item._node.parameters.type === "ParameterList" ? item._node.parameters.parameters : item._node.parameters;
+    let args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
 
     let fnsig = `${funcname}(${args.join(',')})`;
     let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
