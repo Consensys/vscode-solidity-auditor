@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.21
+- fix: Support VSCode for Windows (#38, #35)
+- fix: UML arrows (#34)
+- code cleanup (#39)
+
 ## v0.0.20
 - new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
   - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
