@@ -135,7 +135,7 @@ class DiliDiagnosticCollection {
                 resolve();
             } catch (err) {
                 reject(err);
-                if (typeof err !=="CancellationToken"){
+                if (typeof err !=="object"){ //CancellationToken
                     throw err;
                 }
             }

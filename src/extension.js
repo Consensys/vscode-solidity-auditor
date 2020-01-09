@@ -575,7 +575,7 @@ function onDidChange(event){
     try{
         analyzeSourceUnit(currentCancellationTokens.onDidChange.token);
     } catch (err){
-        if (typeof err !== "CancellationToken"){
+        if (typeof err !== "object"){ //CancellationToken
             throw err;
         }
     }
