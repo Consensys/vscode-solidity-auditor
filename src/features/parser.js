@@ -70,12 +70,12 @@ class SolidityParser{
             filepath = vscode.window.activeTextEditor.document.fileName;
         }
 
-        parseImports = (typeof parseImports == "undefined" || parseImports== false) ? false : true;
+        parseImports = (typeof parseImports == "undefined" || parseImports == false) ? false : true;
 
         console.log("→ inspect:   " + filepath);
         if (!fs.existsSync(filepath)){
-            console.error("[ERR] file does not exist! --> " + filepath);
-            return;
+            console.warn("[ERR] file does not exist! --> " + filepath);
+            //return;  // no need to abort. file is likely open in an unsaved editor.
         }
         /** cachelookup first */
         let hash = crypto.createHash('sha1').update(input).digest('base64');

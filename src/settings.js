@@ -7,8 +7,7 @@
 /** globals - const */
 const languageId = "solidity";
 const docSelector = {
-    language: languageId,
-    scheme: 'file',
+    language: languageId
 };
 
 module.exports = {

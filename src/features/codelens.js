@@ -26,7 +26,6 @@ class SolidityCodeLensProvider  {
     }
 
     async provideCodeLenses(document, token) {
-        
         let codeLens = [];
         let firstLine = new vscode.Range(0, 0, 0, 0);
 

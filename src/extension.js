@@ -114,8 +114,8 @@ function analyzeSourceUnit(cancellationToken, document){
     console.log("inspect ...");
     //var insights = inspect(activeEditor.document.getText(), activeEditor.document.fileName);
     var insights = g_parser.inspect(
-        document?document.getText():activeEditor.document.getText(), 
-        document?document.fileName:activeEditor.document.fileName, 
+        document ? document.getText() : activeEditor.document.getText(), 
+        document ? document.fileName : activeEditor.document.fileName, 
         false, 
         cancellationToken);
     console.log("✓ inspect");
@@ -549,7 +549,7 @@ function analyzeSourceUnit(cancellationToken, document){
     if (solidityVAConfig.deco.statevars) {
         setDecorations(activeEditor, decorations);
     }
-        console.log("✓ apply decorations - scope");
+    console.log("✓ apply decorations - scope");
 }
 
 /** events */
