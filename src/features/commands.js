@@ -503,8 +503,6 @@ ${topLevelContractsText}`;
     }
 
     async umlContractsOutline(contractObjects) {
-        const ENABLE_ACTORS = false;
-
         const stateMutabilityToIcon = {
             view:"🔍",
             pure:"🔍",
@@ -614,7 +612,6 @@ ${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
                 }  // no _<name> dupes
                 return true; 
                 });
-            console.error(actors);
 
             content += `
 ' -- actors --
