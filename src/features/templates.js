@@ -1,3 +1,4 @@
+'use strict';
 /** 
  * @author github.com/tintinweb
  * @license MIT
@@ -11,17 +12,17 @@ function generateUnittestStubForContract(document, g_parser, contractName){
     let contract = {
         name: contractName,
         path: document.uri.fsPath
-    }
+    };
 
     if(!contractName){
         //take first
-        let sourceUnit = g_parser.sourceUnits[document.uri.fsPath]
+        let sourceUnit = g_parser.sourceUnits[document.uri.fsPath];
         if(!sourceUnit || Object.keys(sourceUnit.contracts).length<=0){
-            vscode.window.showErrorMessage(`[Solidity VA] unable to create unittest stub for current contract. missing analysis for source-unit: ${active.document.uri.fsPath}`)
-            return
+            vscode.window.showErrorMessage(`[Solidity VA] unable to create unittest stub for current contract. missing analysis for source-unit: ${document.uri.fsPath}`);
+            return;
         }
 
-        contract.name = Object.keys(sourceUnit.contracts)[0]
+        contract.name = Object.keys(sourceUnit.contracts)[0];
     }
     
     let content = `
@@ -95,7 +96,7 @@ contract('${contract.name}', (accounts) => {
 
 module.exports = {
     generateUnittestStubForContract:generateUnittestStubForContract
-}
+};
 
 
 
