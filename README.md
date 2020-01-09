@@ -289,6 +289,7 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 - fix: Support VSCode for Windows (#38, #35)
 - fix: UML arrows (#34)
 - code cleanup (#39)
+- allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
 
 ## v0.0.20
 - new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
