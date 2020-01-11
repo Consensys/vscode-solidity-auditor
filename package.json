@@ -263,7 +263,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "solidity-parser-antlr": "^0.4.2",
-        "surya": "^0.2.12-dev.12"
+        "solidity-parser-diligence": "0.4.14",
+        "surya": "0.3.1"
     }
 }
