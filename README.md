@@ -1,17 +1,28 @@
-# Solidity language support for Visual Studio Code - `Auditors Edition`
+[<img width="200" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
+<sup>
+[[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
+</sup><br/><br/>
 
-**DISCLAIMER** This is an experimental extension but it should be quite stable - [feedback](https://github.com/tintinweb/vscode-solidity-auditor/issues) highly appreciated ❤
+
+# Solidity Visual Auditor
+
+* Solidity Language Support
+* Solidity Source Exploration and Visual Security Auditing
 
 This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
 
-we suggest using this plugin together with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
+This extension is compatible with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
 
 
-Found a bug? -> [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
-![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor): `ext tintinweb.solidity-visual-auditor`
 
-![visual_auditor_new](https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png)
+![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+
+<img width="1024" alt="visual-auditor-new" src="https://user-images.githubusercontent.com/2865694/55153942-f9682c00-5153-11e9-9e88-b3958c134c88.png">
+
+<img width="733" alt="vscode-solidity-auditor-uml" src="https://user-images.githubusercontent.com/2865694/64823226-2bacff00-d5b7-11e9-99e0-6790921a9f20.png">
 
 ---------------------
 
@@ -21,8 +32,13 @@ Semantic highlighting and solidity insights for passive security awareness. Most
 
 ##### Themes (`preferences -> Color Theme`):
 
-* Visual Auditor Dark - based on Atom One
-* Visual Auditor Light - based on Solarized Light
+![dark_small](https://user-images.githubusercontent.com/2865694/61187950-85a54d00-a678-11e9-8b68-e015ab2c498c.png)
+![light_small](https://user-images.githubusercontent.com/2865694/61187967-d452e700-a678-11e9-8661-7cd7839f88a6.png)
+![solarized_small](https://user-images.githubusercontent.com/2865694/61187948-850cb680-a678-11e9-8b16-9616dfc09046.png)
+
+* Visual Auditor Dark - based on the "Atom One" theme
+* Visual Auditor Light (Visual Studio) - based on the standard "light (VSCode)" theme
+* Visual Auditor Solarized Light - based on the standard "Solarized Light" theme
 
 ##### Syntax Highlighting
 
@@ -44,11 +60,11 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 * highlights **function arguments** in the function body
 
 
-##### Audit Featues
+##### Audit Features
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
 * generic interface for importing external scanner results - cdili json format (see below)
-* codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes
+* codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes, uml
 
 ##### Code Insights
 
@@ -57,7 +73,10 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
-* [Sūrya](https://github.com/ConsenSys/surya/) integration
+* 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [Sūrya](https://github.com/ConsenSys/surya)
+  * access your favorite Sūrya features from within vscode!
+  * interactive call graphs with call flow highlighting and more!#
+* 📈🎉 generate UML diagrams 
 * command: suggest top level contracts / find most derived contracts
 * command: flatten most derived contracts
 * command: calculate function signature hashes
@@ -87,6 +106,7 @@ Scroll down and take the tour.
 * outline view with security annotations and inherited names
 * tooltips (asm instruction signatures, security notes)
 * `@audit` tags
+* graph's and uml
 * generic interface to import issues from external scanners
 
 
@@ -99,6 +119,8 @@ Scroll down and take the tour.
 <img width="722" alt="semantic-arg-light" src="https://user-images.githubusercontent.com/2865694/55149264-257eaf80-514a-11e9-8779-8cdd60b9ab22.png">
 
 ## @audit bookmarks
+
+This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
 
 * `@audit - <msg>` ... flag lines for security review or start a security review discussion
 * `@audit-ok - <msg>` ... flag that a line was checked for security or a security discussion on that line turned out to be a non-issue 
@@ -134,6 +156,31 @@ Scroll down and take the tour.
 
 <img width="624" alt="code_inherited" src="https://user-images.githubusercontent.com/2865694/53698887-cfd11480-3de2-11e9-8374-a022b4fdaa33.png">
 
+## codelenses
+
+* surya - interactive graph
+
+![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+
+* surya - generate report, show inheritance, show AST
+
+![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
+
+* flatten source file with [tintinweb.vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener) (using [truffle-flattener](https://www.npmjs.com/package/truffle-flattener))
+
+![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+
+* surya - ftrace
+
+![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+
+* UML - auto-generate UML for source-units or specific contracts
+
+<img width="733" alt="vscode-solidity-auditor-uml" src="https://user-images.githubusercontent.com/2865694/64823226-2bacff00-d5b7-11e9-99e0-6790921a9f20.png">
+
+* Function Signature Hashes
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
 
 ## outline view
 
@@ -157,10 +204,23 @@ Scroll down and take the tour.
 
 <img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
 
+## commands
+
+* suggest top level contracts aka "entrypoint contracts" (most derived)
+* flatten current (codelens) or all suggested top level contracts (command)
+![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
+* list all function signatures (human readable or json format)  
+![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+* open remix in external browser
+
+## Theme: Solidity Visual Auditor Light (VSCode)
+
+<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 
 ## Theme: Solidity Visual Auditor Dark
 
 **Simple DAO**
+
 <img width="981" alt="screenshot 2019-02-09 at 12 30 30" src="https://user-images.githubusercontent.com/2865694/52521879-58deab00-2c7e-11e9-9621-1afc73c918d8.png">
 
 **Vulnerable Contract**
@@ -204,7 +264,6 @@ Scroll down and take the tour.
         "forRule": "State_Variable_Default_Visibility"
     }
     ```
-* `Solidity-va.audit.tags.enable` ... enable/disable audit tags
 * `Solidity-va.codelens.enable` ... enable/disable codelens support (inline code actions)
 * `solidity-va.preview.dot` ... open dot output in graphviz rendered form
 * `solidity-va.preview.markdown` ... open markdown output in rendered form
@@ -213,8 +272,9 @@ Scroll down and take the tour.
 
 ## Known Issues
 
-* changing settings may require a vscode restart.
-* outline view does not always refresh. **TempFix**: modify the file to trigger a refresh.
+* changing settings may require a vscode reload.
+* outline view does not always refresh. **TempFix**: modify and save the file to trigger a refresh.
+* codelenses do not appear. **TempFix**: modify and save the file to trigger a refresh.
 * [github issues](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 # Acknowledgements
@@ -225,36 +285,30 @@ Scroll down and take the tour.
 
 # Release Notes
 
-## v0.0.14 - aka big surya wedding
-- feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
-- feature: codelens (inline code actions)
-  - file
-    - surya - graph  
-    ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
-    - surya - generate report
-    - surya - inheritance
-    - surya - parse file (show AST) 
-    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
-    - flatten sourceUnit using [flaterra](https://github.com/cleanunicorn/flaterra) 
-  - contracts
-    - create unittest stub for contract (e.g. for verifying vulnerabilities)  
-     ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+## v0.0.21
+- fix: Support VSCode for Windows (#38, #35)
+- fix: UML arrows (#34)
+- code cleanup (#39)
+- allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
 
-    - surya - dependencies 
-  - functions
-    - surya - ftrace  
-    ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
-- feature: command - suggest top level contracts aka "entrypoint contracts" (most derived)
-- feature: command - flatten current (codelens) or all suggested top level contracts (command)
-![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
-- feature: command - list all function signatures (human readable or json format)  
-![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
-- feature: command - open remix in external browser
+## v0.0.20
+- new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+  - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
+- split up extension dependencies in hard and soft requirements
+  - new: extensionPack - this extension now automatically installs soft dependencies. You can uninstall them at any point in time.
+    - (optional) [Solidity Flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener)
+    - (optional) [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
+    - (optional) [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks)
+  - updated: extensionDependencies
+    - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
 
-- Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
-- Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
-- outline - added assembly functions  
-  <img width="360" alt="assembly" src="https://user-images.githubusercontent.com/2865694/55646137-b56fc980-57da-11e9-8fab-e24b5ef5e46b.png">
+## v0.0.19
+- new: constant values that are not symbols are now shown in hover message
+
+<img width="360" alt="Screenshot 2019-11-12 at 15 41 48" src="https://user-images.githubusercontent.com/2865694/68681269-699cb400-0563-11ea-9ba3-1605c3a5e8c6.png">
+
+- fix: hover message - jump to declaration now works on MacOS
+- fix: function signature output shows 🔥 even though there are no collisions
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)

@@ -9,11 +9,11 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.14",
+    "version": "0.0.21",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
-        "vscode": "^1.20.2"
+        "vscode": "^1.26.2"
     },
     "categories": [
         "Programming Languages"
@@ -66,6 +66,11 @@
                 "label": "Solidity Visual Auditor Solarized Light",
                 "uiTheme": "vs",
                 "path": "./src/themes/solarized-light-color-theme.json"
+            },
+            {
+                "label": "Solidity Visual Auditor Light (Visual Studio)",
+                "uiTheme": "vs",
+                "path": "./src/themes/light_vs.json"
             }
         ],
         "keybindings": [
@@ -126,11 +131,15 @@
                 "category": "Solidity Visual Auditor"
             },
             {
+                "command": "solidity-va.tools.function.signatures.forWorkspace.json",
+                "title": "Tools - list function signatures for all solidity files in workspace (json)",
+                "category": "Solidity Visual Auditor"
+            },
+            {
                 "command": "solidity-va.tools.remix.openExternal",
                 "title": "Tools - launch Remix-IDE",
                 "category": "Solidity Visual Auditor"
             }
-            
         ],
         "configuration": {
             "type": "object",
@@ -203,24 +212,22 @@
                 },
                 "solidity-va.tools.surya.input.contracts": {
                     "type": "string",
-                    "enum": ["cached", "workspace"],
+                    "enum": [
+                        "cached",
+                        "workspace"
+                    ],
                     "default": "cached",
                     "description": "Define whether surya should take cached files or all contracts in the workspace as input"
                 },
                 "solidity-va.preview.dot": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Open dot output in graphviz rendered form (relies on a graphviz preview extension to be installed)"
                 },
                 "solidity-va.preview.markdown": {
                     "type": "boolean",
                     "default": false,
                     "description": "Open markdown output in rendered form (relies on a markdown preview extension to be installed)"
-                },
-                "solidity-va.audit.tags.enable": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether to enable/disable audit tags (@audit/@audit-ok)"
                 },
                 "solidity-va.codelens.enable": {
                     "type": "boolean",
@@ -231,15 +238,32 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable all active components of this extension (emergency)."
+                },
+                "solidity-va.uml.options": {
+                    "type": "text",
+                    "default": "",
+                    "description": "Add custom uml options"
+                },
+                "solidity-va.uml.actors.enable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable actors in uml"
                 }
             }
         }
     },
+    "extensionDependencies": [
+        "tintinweb.graphviz-interactive-preview"
+    ],
+    "extensionPack": [
+        "tintinweb.vscode-solidity-flattener",
+        "jebbs.plantuml",
+        "tintinweb.vscode-inline-bookmarks"
+    ],
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "sabre-mythx": "^0.1.5",
         "solidity-parser-antlr": "^0.4.2",
-        "surya": "^0.2.11"
+        "surya": "^0.2.12-dev.12"
     }
 }

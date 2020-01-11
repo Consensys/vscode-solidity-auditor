@@ -1,6 +1,64 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.21
+- fix: Support VSCode for Windows (#38, #35)
+- fix: UML arrows (#34)
+- code cleanup (#39)
+- allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
+
+## v0.0.20
+- new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
+  - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
+- split up extension dependencies in hard and soft requirements
+  - new: extensionPack - this extension now automatically installs soft dependencies. You can uninstall them at any point in time.
+    - (optional) [Solidity Flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener)
+    - (optional) [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
+    - (optional) [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks)
+  - updated: extensionDependencies
+    - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
+
+## v0.0.19
+- new: constant values that are not symbols are now shown in hover message
+
+<img width="360" alt="Screenshot 2019-11-12 at 15 41 48" src="https://user-images.githubusercontent.com/2865694/68681269-699cb400-0563-11ea-9ba3-1605c3a5e8c6.png">
+
+- fix: hover message - jump to declaration now works on MacOS
+- fix: function signature output shows 🔥 even though there are no collisions
+
+## v0.0.18
+- new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
+
+- new: codelense next to functions to generate sighash.
+- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes #27. 
+- new: alert on function sighash collision within the same contract.
+
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
+
+- new: AST parser now keeps track of `usingFor`'s 
+
+## v0.0.17
+- new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
+- update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))
+- new: theme - Solidity Visual auditor light  - the vscode standard light theme with visual auditor highlighting (#25)  
+
+<img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">  
+<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
+- update: updated theme `solarized-light`, split up color-scheme definitions into multiple files. Changed 'light-theme' natspec color highlighting to be less dramatic (black->greyish). (#24)
+
+## v0.0.16
+- fix: enable graph rendering by default
+- fix: codelenses are sometimes missing (graph)
+
+## v0.0.15 - aka fancy graphs
+
+- update to latest surya release. (known issue: ftrace might fail right now and will be fixed with a subsequent release)
+- awesome dark themed call graph.
+- awesome interactive graphs [vscode-interactive-graphviz](https://github.com/tintinweb/vscode-interactive-graphviz)
+  - ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
+
 ## v0.0.14 - aka big surya wedding
 - feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
 - feature: codelens (inline code actions)
