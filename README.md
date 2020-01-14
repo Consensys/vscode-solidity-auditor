@@ -287,6 +287,7 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 ## v0.0.21
 - fix: Support VSCode for Windows (#38, #35)
+- update: solidity parser, surya (#41 #42)
 - fix: UML arrows (#34)
 - code cleanup (#39)
 - allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
