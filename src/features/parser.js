@@ -7,7 +7,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
-const parser = require('solidity-parser-antlr');
+const parser = require('solidity-parser-diligence');
 const parserHelpers = require("./parser/parserHelpers");
 const { linearize } = require('c3-linearization');
 const crypto = require('crypto');
@@ -202,7 +202,7 @@ class SolidityParser{
             }
         }
         if(typeof ast==="undefined"){
-            console.error("solidity-parser-antlr - failed to parse input");
+            console.error("solidity-parser-diligence - failed to parse input");
         }
 
         var sourceUnit = {
