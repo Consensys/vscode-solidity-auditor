@@ -282,14 +282,14 @@ class SolidityParser{
                         // parse function body to get all function scope params.
                         // first get declarations
                         parser.visit(_node.parameters, {
-                            Parameter: function(__node){
+                            VariableDeclaration: function(__node){
                                 current_function.arguments[__node.name]=__node;
                                 current_function.declarations[__node.name]=__node;
                             }
                         });
                         parser.visit(_node.returnParameters, {
-                            Parameter: function(__node){
-                                current_function.returns[__node.name]=__node;
+                            VariableDeclaration: function(__node){
+                                current_function.arguments[__node.name]=__node;
                                 current_function.declarations[__node.name]=__node;
                             }
                         });
@@ -356,14 +356,14 @@ class SolidityParser{
                         // parse function body to get all function scope params.
                         // first get declarations
                         parser.visit(_node.parameters, {
-                            Parameter: function(__node){
+                            VariableDeclaration: function(__node){
                                 current_function.arguments[__node.name]=__node;
                                 current_function.declarations[__node.name]=__node;
                             }
                         });
                         parser.visit(_node.returnParameters, {
-                            Parameter: function(__node){
-                                current_function.returns[__node.name]=__node;
+                            VariableDeclaration: function(__node){
+                                current_function.arguments[__node.name]=__node;
                                 current_function.declarations[__node.name]=__node;
                             }
                         });
