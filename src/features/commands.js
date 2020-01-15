@@ -231,7 +231,13 @@ class Commands{
                 break;
             case "ftrace":
                 //  contract::func, all, files 
-                ret = surya.ftrace(args[0], args[1] || 'all', files, {}, true);
+                if (args[1] === null){
+                    args[1] =  "<Constructor>";
+                } else if (args[1] === ""){
+                    args[1] = "<Fallback>";
+                }
+
+                ret = surya.ftrace(args[0] + "::" + args[1], args[2] || 'all', files, {}, true);
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
                 break;

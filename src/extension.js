@@ -671,8 +671,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.ftrace', 
-                function (doc, functionName, mode) {
-                    commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [functionName, mode]);
+                function (doc, contractName, functionName, mode) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [contractName, functionName, mode]);
                 }
             )
         );
