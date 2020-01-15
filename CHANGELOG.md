@@ -1,9 +1,12 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.22
+- update: solidity parser, surya (#41 #42)
+- fix: linter warnings (#40)
+
 ## v0.0.21
 - fix: Support VSCode for Windows (#38, #35)
-- update: solidity parser, surya (#41 #42)
 - fix: UML arrows (#34)
 - code cleanup (#39)
 - allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)

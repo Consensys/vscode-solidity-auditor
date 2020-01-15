@@ -285,6 +285,10 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 # Release Notes
 
+## v0.0.22
+- update: solidity parser, surya (#41 #42)
+- fix: linter warnings (#40)
+
 ## v0.0.21
 - fix: Support VSCode for Windows (#38, #35)
 - update: solidity parser, surya (#41 #42)
