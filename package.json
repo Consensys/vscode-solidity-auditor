@@ -73,12 +73,6 @@
                 "path": "./src/themes/light_vs.json"
             }
         ],
-        "keybindings": [
-            {
-                "key": "cmd+alt+shift+i",
-                "command": "editor.action.inspectTMScopes"
-            }
-        ],
         "commands": [
             {
                 "command": "solidity-va.test.createTemplate",
@@ -264,6 +258,6 @@
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
         "solidity-parser-diligence": "0.4.15",
-        "surya": "0.3.3"
+        "surya": "0.3.5"
     }
 }
