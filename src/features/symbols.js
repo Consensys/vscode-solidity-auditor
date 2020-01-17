@@ -7,7 +7,7 @@
  * */
 
 const vscode = require('vscode');
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
+const settings = require('../settings.js');
 
 function getFakeNode(name, line){
     return {
@@ -149,7 +149,7 @@ function getSymbolKindForDeclaration(node){
 
             result.prefix += "Ⓜ ";
 
-            if (solidityVAConfig.outline.decorations){
+            if (settings.extensionConfig().outline.decorations){
                 result.prefix += getVisibilityToIcon(astnode.visibility);
                 result.prefix += getStateMutabilityToIcon(astnode.stateMutability);
             }
@@ -164,12 +164,12 @@ function getSymbolKindForDeclaration(node){
             } else {
                 result.symbol = vscode.SymbolKind.Function;
             }
-            if (solidityVAConfig.outline.decorations){
+            if (settings.extensionConfig().outline.decorations){
                 result.prefix += getVisibilityToIcon(astnode.visibility);
                 result.prefix += getStateMutabilityToIcon(astnode.stateMutability);
             }
 
-            if (solidityVAConfig.outline.extras){
+            if (settings.extensionConfig().outline.extras){
                 result.suffix += " ( ",
                 result.suffix += " complex: " + node.complexity;
                 result.suffix += " state: " + (node.accesses_svar?"☑":"☐");
@@ -183,7 +183,7 @@ function getSymbolKindForDeclaration(node){
             result.symbol = vscode.SymbolKind.Struct;
             break;
         case "VariableDeclaration":
-            if(solidityVAConfig.outline.var.storage_annotations){
+            if(settings.extensionConfig().outline.var.storage_annotations){
                 if(astnode.storageLocation=="memory"){
                     result.prefix +="💾";
                     result.details += astnode.storageLocation;
@@ -205,7 +205,7 @@ function getSymbolKindForDeclaration(node){
             result.symbol = getVariableDeclarationTypeAsSymbolKind(astnode, vscode.SymbolKind.Variable);
             break;
         case "Parameter":
-            if(solidityVAConfig.outline.var.storage_annotations){
+            if(settings.extensionConfig().outline.var.storage_annotations){
                 if(astnode.storageLocation=="memory"){
                     result.prefix +="💾";
                     result.details += astnode.storageLocation;
@@ -286,7 +286,7 @@ class SolidityDocumentSymbolProvider{
 
             var topLevelNode;
 
-            if(solidityVAConfig.outline.pragmas.show){
+            if(settings.extensionConfig().outline.pragmas.show){
                 topLevelNode = astNodeAsDocumentSymbol(
                     document, 
                     getFakeNode("pragma",1),
@@ -305,7 +305,7 @@ class SolidityDocumentSymbolProvider{
                 console.log("✓ pragmas ");
             }
             
-            if(solidityVAConfig.outline.imports.show){
+            if(settings.extensionConfig().outline.imports.show){
                 topLevelNode = astNodeAsDocumentSymbol(
                     document, 
                     getFakeNode("imports",1),
@@ -515,7 +515,7 @@ class SolidityDocumentSymbolProvider{
                 }
                 console.log("✓ events");
                  /** functions - may include constructor / fallback */
-                if(solidityVAConfig.outline.inheritance.show){
+                if(settings.extensionConfig().outline.inheritance.show){
 
                     var inheritedLevelNode = astNodeAsDocumentSymbol(
                         document, 
