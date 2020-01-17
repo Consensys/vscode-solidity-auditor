@@ -12,8 +12,7 @@ const parserHelpers = require("./parser/parserHelpers");
 const { linearize } = require('c3-linearization');
 const crypto = require('crypto');
 const {CommentMapperRex} = require('./utils');
-
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
+const settings = require('../settings.js');
 
 //https://github.com/ethereum/solidity/blob/c5879589af646bee899745c1a21d065537ad0ea5/test/libsolidity/SolidityParser.cpp#L509
 const reservedKeywords = [ 
@@ -98,7 +97,7 @@ class SolidityParser{
             this.contracts[contractName] = sourceUnit.contracts[contractName];
         }
 
-        if (solidityVAConfig.parser.parseImports){
+        if (settings.extensionConfig().parser.parseImports){
 
             /** parse imports */
             sourceUnit.imports.forEach(function(imp){
