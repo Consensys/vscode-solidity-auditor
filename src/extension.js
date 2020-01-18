@@ -24,7 +24,6 @@ const settings = require('./settings');
 /** globals - const */
 const languageId = settings.languageId;
 const docSelector = settings.docSelector;
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
 const g_parser = new SolidityParser();
 var activeEditor;
@@ -71,8 +70,7 @@ async function setDecorations(editor, decorations){
 /*** EVENTS *********************************************** */
 
 function onInitModules(context, type){
-    //mod_codelens.init(context, type, solidityVAConfig);
-    mod_decorator.init(context, solidityVAConfig);
+    mod_decorator.init(context);
 
     //globals init
     g_diagnostics = new DiliDiagnosticCollection(context, vscode.workspace.rootPath);
@@ -369,11 +367,11 @@ function analyzeSourceUnit(cancellationToken, document){
                 }
                 //annotate external calls?
             });
-            if (solidityVAConfig.deco.arguments) {
+            if (settings.extensionConfig().deco.arguments) {
                 decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
             }
 
-            if (solidityVAConfig.deco.warn.reserved){
+            if (settings.extensionConfig().deco.warn.reserved){
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].identifiers));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].arguments));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].functions[functionName].returns));
@@ -519,11 +517,11 @@ function analyzeSourceUnit(cancellationToken, document){
                 }
                 //annotate external calls?
             });
-            if (solidityVAConfig.deco.arguments) {
+            if (settings.extensionConfig().deco.arguments) {
                 decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
             }
 
-            if (solidityVAConfig.deco.warn.reserved){
+            if (settings.extensionConfig().deco.warn.reserved){
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].identifiers));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].arguments));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].modifiers[functionName].returns));
@@ -532,7 +530,7 @@ function analyzeSourceUnit(cancellationToken, document){
         }
         //decorate events
         for (var functionName in insights.contracts[contract].events){
-            if (solidityVAConfig.deco.warn.reserved){
+            if (settings.extensionConfig().deco.warn.reserved){
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].identifiers));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].arguments));
                 decorations = decorations.concat(checkReservedIdentifiers(insights.contracts[contract].events[functionName].returns));
@@ -546,7 +544,7 @@ function analyzeSourceUnit(cancellationToken, document){
         return;
     }
 
-    if (solidityVAConfig.deco.statevars) {
+    if (settings.extensionConfig().deco.statevars) {
         setDecorations(activeEditor, decorations);
     }
     console.log("✓ apply decorations - scope");
@@ -558,7 +556,7 @@ function onDidSave(document){
     currentCancellationTokens.onDidSave.dispose();
     currentCancellationTokens.onDidSave = new CancellationTokenSource();
     // check if there are any 
-    if(solidityVAConfig.diagnostics.cdili_json.import && g_diagnostics){
+    if(settings.extensionConfig().diagnostics.cdili_json.import && g_diagnostics){
         g_diagnostics.updateIssues(currentCancellationTokens.onDidSave.token);
     }
 
@@ -599,7 +597,7 @@ function onActivate(context) {
             vscode.languages.reg
         );
         
-        if(!solidityVAConfig.mode.active){
+        if(!settings.extensionConfig().mode.active){
             console.log("ⓘ activate extension: entering passive mode. not registering any active code augmentation support.");
             return;
         }
@@ -671,8 +669,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.ftrace', 
-                function (doc, functionName, mode) {
-                    commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [functionName, mode]);
+                function (doc, contractName, functionName, mode) {
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "ftrace", [contractName, functionName, mode]);
                 }
             )
         );
@@ -793,7 +791,7 @@ function onActivate(context) {
         
         /** experimental */
         //onDidChange() // forces inspection and makes sure data is ready for symbolprovider
-        if(solidityVAConfig.outline.enable){
+        if(settings.extensionConfig().outline.enable){
             context.subscriptions.push(
                 vscode.languages.registerDocumentSymbolProvider(
                     docSel, 
@@ -802,7 +800,7 @@ function onActivate(context) {
             );
         }
         
-        if(solidityVAConfig.codelens.enable){
+        if(settings.extensionConfig().codelens.enable){
             context.subscriptions.push(
                 vscode.languages.registerCodeLensProvider(
                     docSel,

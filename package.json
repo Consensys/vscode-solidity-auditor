@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.21",
+    "version": "0.0.22",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -71,12 +71,6 @@
                 "label": "Solidity Visual Auditor Light (Visual Studio)",
                 "uiTheme": "vs",
                 "path": "./src/themes/light_vs.json"
-            }
-        ],
-        "keybindings": [
-            {
-                "key": "cmd+alt+shift+i",
-                "command": "editor.action.inspectTMScopes"
             }
         ],
         "commands": [
@@ -263,7 +257,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "solidity-parser-diligence": "0.4.14",
-        "surya": "0.3.2"
+        "solidity-parser-diligence": "0.4.15",
+        "surya": "0.3.5"
     }
 }

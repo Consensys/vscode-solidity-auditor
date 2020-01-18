@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.22
+- update: solidity parser, surya (#41 #42)
+- fix: linter warnings (#40)
+- fix: configuration changes now take effect immediately (#43)
+
 ## v0.0.21
 - fix: Support VSCode for Windows (#38, #35)
 - fix: UML arrows (#34)

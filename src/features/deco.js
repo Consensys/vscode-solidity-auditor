@@ -268,7 +268,7 @@ function semanticHighlightFunctionParameters(arrIdents){
     return decorations;
 }
 
-function init(context, config){
+function init(context){
     [...Array(15).keys()].forEach(function(idx){
         styles["styleArgument"+idx] = vscode.window.createTextEditorDecorationType({
             //cursor: 'crosshair',

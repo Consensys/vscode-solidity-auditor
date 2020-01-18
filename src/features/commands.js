@@ -19,7 +19,6 @@ const mod_symbols = require('./symbols.js');
 
 const surya = require('surya');
 
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
 
 const suryaDefaultColorSchemeDark = {
     digraph : {
@@ -125,7 +124,7 @@ class Commands{
 
         let files;
 
-        if(solidityVAConfig.tools.surya.input.contracts=="workspace"){
+        if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
             await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
                 .then(uris => {
                     files = uris.map(function (uri) {
@@ -147,7 +146,7 @@ class Commands{
                 //solidity-va.preview.render.markdown
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
-                        if(solidityVAConfig.preview.dot){
+                        if(settings.extensionConfig().preview.dot){
                             vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
                             .catch(error =>{
                                 vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
@@ -176,7 +175,7 @@ class Commands{
                 ret = surya.inheritance(files,{draggable:false});
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
-                        if(solidityVAConfig.preview.dot){
+                        if(settings.extensionConfig().preview.dot){
                             vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
                             .catch(error =>{
                                 vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
@@ -231,7 +230,13 @@ class Commands{
                 break;
             case "ftrace":
                 //  contract::func, all, files 
-                ret = surya.ftrace(args[0], args[1] || 'all', files, {}, true);
+                if (args[1] === null){
+                    args[1] =  "<Constructor>";
+                } else if (args[1] === ""){
+                    args[1] = "<Fallback>";
+                }
+
+                ret = surya.ftrace(args[0] + "::" + args[1], args[2] || 'all', files, {}, true);
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
                 break;
@@ -239,7 +244,7 @@ class Commands{
                 ret = surya.mdreport(files);
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => {
-                        if(solidityVAConfig.preview.markdown){
+                        if(settings.extensionConfig().preview.markdown){
                             vscode.commands.executeCommand("markdown-preview-enhanced.openPreview", doc.uri)
                                 .catch(error => {
                                     //command does not exist
@@ -544,8 +549,8 @@ ${topLevelContractsText}`;
         let content = `@startuml
 ' -- for auto-render install: https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml
 ' -- options --
-${solidityVAConfig.uml.options}
-${solidityVAConfig.uml.actors.enable ? "allowmixing": ""}
+${settings.extensionConfig().uml.options}
+${settings.extensionConfig().uml.actors.enable ? "allowmixing": ""}
 
 ' -- classes --
 `;
@@ -589,7 +594,7 @@ ${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
         }, "");
 
 
-        if(solidityVAConfig.uml.actors.enable){
+        if(settings.extensionConfig().uml.actors.enable){
             //lets see if we can get actors as well :)
 
             let addresses = [];

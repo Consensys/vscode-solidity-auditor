@@ -9,8 +9,7 @@ const vscode = require('vscode');
 
 const builtinsArr = require('./hover/builtins.json');
 const asmArr = require('./hover/asm.json');
-
-const solidityVAConfig = vscode.workspace.getConfiguration('solidity-va');
+const settings = require('../settings.js');
 
 function createHover(name, snippet, type) {
     var text = [];
@@ -79,7 +78,7 @@ function createHover(name, snippet, type) {
 }
 
 function provideHoverHandler(document, position, token, type, g_parser) {
-    if (solidityVAConfig.hover === false) {
+    if (settings.extensionConfig().hover === false) {
         return;
     }
     const range = document.getWordRangeAtPosition(position, /(tx\.gasprice|tx\.origin|msg\.data|msg\.sender|msg\.sig|msg\.value|block\.coinbase|block\.difficulty|block\.gaslimit|block\.number|block\.timestamp|abi\.encodePacked|abi\.encodeWithSelector|abi\.encodeWithSignature|abi\.decode|abi\.encode|\.?[0-9_\w>]+)/);
