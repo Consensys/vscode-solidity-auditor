@@ -258,6 +258,6 @@
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
         "solidity-parser-diligence": "0.4.15",
-        "surya": "0.3.5"
+        "surya": "0.3.6-dev.7"
     }
 }
