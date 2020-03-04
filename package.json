@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.22",
+    "version": "0.0.23",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -27,7 +27,26 @@
     },
     "activationEvents": [
         "onLanguage:solidity",
-        "onCommand:solidity-va.whatsNew.show"
+        "onCommand:solidity-va.whatsNew.show",
+        "onCommand:solidity-va.surya.graph",
+        "onCommand:solidity-va.surya.inheritance",
+        "onCommand:solidity-va.insights.topLevelContracts",
+        "onCommand:solidity-va.tools.flaterra",
+        "onCommand:solidity-va.cockpit.explorer.context.flatten",
+        "onCommand:solidity-va.tools.flattenCandidates",
+        "onCommand:solidity-va.tools.function.signatures",
+        "onCommand:solidity-va.tools.function.signatures.json",
+        "onCommand:solidity-va.tools.function.signatures.forWorkspace.json",
+        "onCommand:solidity-va.tools.remix.openExternal",
+        "onCommand:solidity-va.cockpit.explorer.refresh",
+        "onCommand:solidity-va.cockpit.topLevelContracts.refresh",
+        "onCommand:solidity-va.cockpit.settings.toggle",
+        "onView:solidity-va-cockpit-explorer",
+        "onView:solidity-va-cockpit-topLevelContracts",
+        "onView:solidity-va-cockpit-settings",
+        "onView:solidity-va-cockpit-ftrace",
+        "onView:solidity-va-cockpit-publicMethods",
+        "onView:solidity-va-cockpit"
     ],
     "main": "./src/extension",
     "capabilities": {
@@ -74,6 +93,91 @@
                 "path": "./src/themes/light_vs.json"
             }
         ],
+        "keybindings": [
+            {
+                "key": "cmd+alt+shift+i",
+                "command": "editor.action.inspectTMScopes"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "solidity-va-cockpit",
+                    "title": "Visual Auditor - Cockpit",
+                    "icon": "images/panel-cockpit-icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "solidity-va-cockpit": [
+                {
+                    "id": "solidity-va-cockpit-explorer",
+                    "name": "Workspace: Explorer"
+                },
+                {
+                    "id": "solidity-va-cockpit-topLevelContracts",
+                    "name": "Workspace: Top Level Contracts"
+                },
+                {
+                    "id": "solidity-va-cockpit-settings",
+                    "name": "Settings"
+                },
+                {
+                    "id": "solidity-va-cockpit-ftrace",
+                    "name": "Context: Function Call Trace"
+                },
+                {
+                    "id": "solidity-va-cockpit-publicMethods",
+                    "name": "Context: Public StateChanging Methods"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "solidity-va.cockpit.explorer.refresh",
+                    "when": "view == solidity-va-cockpit-explorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "solidity-va.cockpit.topLevelContracts.refresh",
+                    "when": "view == solidity-va-cockpit-topLevelContracts",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.cockpit.topLevelContracts.refresh",
+                    "when": "view == solidity-va-cockpit-explorer && viewItem =~ /^((?!\\.sol).)*$/"
+                },
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.cockpit.explorer.context.flatten",
+                    "when": "view == solidity-va-cockpit-explorer && viewItem =~ /\\.sol/"
+                },
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.surya.mdreport",
+                    "when": "view == solidity-va-cockpit-explorer"
+                },
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.surya.graph",
+                    "when": "view == solidity-va-cockpit-explorer"
+                },
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.surya.inheritance",
+                    "when": "view == solidity-va-cockpit-explorer"
+                },
+                {
+                    "group": "solidity",
+                    "command": "solidity-va.uml.contextMenu.outline",
+                    "when": "view == solidity-va-cockpit-explorer"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "solidity-va.test.createTemplate",
@@ -111,6 +215,11 @@
                 "category": "Solidity Visual Auditor"
             },
             {
+                "command": "solidity-va.cockpit.explorer.context.flatten",
+                "title": "Solidity: flatten selected file(s)",
+                "category": "Solidity Visual Auditor"
+            },
+            {
                 "command": "solidity-va.tools.flattenCandidates",
                 "title": "Tools - flatten all suggested top level contracts",
                 "category": "Solidity Visual Auditor"
@@ -133,6 +242,34 @@
             {
                 "command": "solidity-va.tools.remix.openExternal",
                 "title": "Tools - launch Remix-IDE",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.cockpit.explorer.refresh",
+                "title": "Scan Workspace",
+                "category": "Solidity Visual Auditor",
+                "icon": {
+                    "light": "images/refresh-light.svg",
+                    "dark": "images/refresh-dark.svg"
+                }
+            },
+            {
+                "command": "solidity-va.cockpit.topLevelContracts.refresh",
+                "title": "Find Top Level Contracts",
+                "category": "Solidity Visual Auditor",
+                "icon": {
+                    "light": "images/refresh-light.svg",
+                    "dark": "images/refresh-dark.svg"
+                }
+            },
+            {
+                "command": "solidity-va.cockpit.settings.toggle",
+                "title": "Toggle Setting",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.uml.contextMenu.outline",
+                "title": "UML",
                 "category": "Solidity Visual Auditor"
             },
             {
@@ -248,6 +385,15 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable actors in uml"
+                },
+                "solidity-va.cockpit.view.topLevelContracts.listStyle": {
+                    "type": "string",
+                    "enum": [
+                        "flat",
+                        "tree"
+                    ],
+                    "default": "flat",
+                    "description": "Select TopLevelContracts view list style."
                 },
                 "solidity-va.whatsNew.disabled": {
                     "type": "boolean",

@@ -52,6 +52,57 @@ const reservedKeywords = [
     "typeof",
     "unchecked"];
 
+class SourceUnit {
+    constructor(parser){
+        this.parser = parser;
+        this.contracts = {};
+        this.pragmas = [];
+        this.imports = [];
+        this.hash = undefined;
+        this.filepath = undefined;
+        this.commentMapper = undefined;
+    }
+
+    getContractAtLocation(line, column){
+        for(let c of Object.keys(this.contracts)){
+            let loc = this.contracts[c]._node.loc;
+            if(line < loc.start.line){
+                continue;
+            } else if (line == loc.start.line && column < loc.start.column) {
+                continue;
+            } else if (line == loc.end.line && column > loc.end.column) {
+                continue;
+            } else if (line > loc.end.line){
+                continue;
+            }
+
+            return this.contracts[c];
+        }
+    }
+
+    getFunctionAtLocation(line, column){
+        let contract = this.getContractAtLocation(line, column);
+        if(!contract){
+            return;
+        }
+        for(let c of Object.keys(contract.functions)){
+            let loc = contract.functions[c]._node.loc;
+            if(line < loc.start.line){
+                continue;
+            } else if (line == loc.start.line && column < loc.start.column) {
+                continue;
+            } else if (line == loc.end.line && column > loc.end.column) {
+                continue;
+            } else if (line > loc.end.line){
+                continue;
+            }
+
+            return {contract, function:contract.functions[c]};
+        }
+        return {contract};
+    }
+}
+
 class SolidityParser{
 
     constructor() {
@@ -103,7 +154,7 @@ class SolidityParser{
             sourceUnit.imports.forEach(function(imp){
 
                 //basedir
-                let fileWorkspace = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(filepath)).path;
+                let fileWorkspace = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(filepath)).uri.fsPath;
 
                 let relativeNodeModules = function(){
                     let basepath = filepath.split("/contracts/");
@@ -204,12 +255,7 @@ class SolidityParser{
             console.error("solidity-parser-diligence - failed to parse input");
         }
 
-        var sourceUnit = {
-            contracts:{},
-            pragmas:[],
-            imports:[],
-            hash:null
-        };
+        let sourceUnit = new SourceUnit(this);
         /** AST rdy */
         
         var current_contract=null;

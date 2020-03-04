@@ -5,12 +5,12 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 - new: Update notifications! - can be disabled of course :) 
 
 ## v0.0.22
-- update: solidity parser, surya (#41 #42)
+- update: solidity parser, surya (#41 [#42](https://github.com/tintinweb/vscode-solidity-auditor/issues/42))
 - fix: linter warnings (#40)
 - fix: configuration changes now take effect immediately (#43)
 
 ## v0.0.21
-- fix: Support VSCode for Windows (#38, #35)
+- fix: Support VSCode for Windows (#38, [#35](https://github.com/tintinweb/vscode-solidity-auditor/issues/35))
 - fix: UML arrows (#34)
 - code cleanup (#39)
 - allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
@@ -40,7 +40,7 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
 
 - new: codelense next to functions to generate sighash.
-- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes #27. 
+- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes [#27](https://github.com/tintinweb/vscode-solidity-auditor/issues/27). 
 - new: alert on function sighash collision within the same contract.
 
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  

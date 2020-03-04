@@ -116,24 +116,44 @@ class Commands{
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
     }
 
-    async surya(document, command, args) {
-        // run surya and maybe return output in new window
-        this._checkIsSolidity(document);  // throws
-    
-        let ret;
+    async surya(documentOrListItem, command, args) {
+        //check if input was document or listItem
+        if(!documentOrListItem){
+            throw new Error("not a file or list item");
+        }
 
+        let ret;
         let files;
 
-        if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
-            await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
-                .then(uris => {
-                    files = uris.map(function (uri) {
-                        return uri.fsPath;
+        if(documentOrListItem.hasOwnProperty("children")){
+            // is a list item -> item.resource.fsPath
+            if(!!path.extname(documentOrListItem.resource.fsPath)){
+                //file
+                files = [documentOrListItem.resource.fsPath];
+            } else {
+                //folder
+                await vscode.workspace.findFiles(`${documentOrListItem.path}/**/*.sol`,'**/node_modules', 500)
+                    .then(uris => {
+                        files = uris.map(function (uri) {
+                            return uri.fsPath;
+                        });
                     });
-                });
+            }
         } else {
-            files = [document.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)];  //better only add imported files. need to resolve that somehow
-        } 
+            //single document mode
+            this._checkIsSolidity(documentOrListItem);  // throws
+
+            if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
+                await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+                    .then(uris => {
+                        files = uris.map(function (uri) {
+                            return uri.fsPath;
+                        });
+                    });
+            } else {
+                files = [document.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)];  //better only add imported files. need to resolve that somehow
+            } 
+        }
 
         switch(command) {
             case "describe":
@@ -242,6 +262,9 @@ class Commands{
                 break;
             case "mdreport":
                 ret = surya.mdreport(files);
+                if(!ret) {
+                    return;
+                }
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => {
                         if(settings.extensionConfig().preview.markdown){
@@ -267,16 +290,19 @@ class Commands{
         }
     }
 
-    async _findTopLevelContracts(files, scanfiles) {
+    async _findTopLevelContracts(files, scanfiles, workspaceRelativeBaseDir) {
+        workspaceRelativeBaseDir = workspaceRelativeBaseDir === undefined ? "" : workspaceRelativeBaseDir + path.sep;
         var that = this;
         var dependencies={};
         var contractToFile={};
         if(!scanfiles){
-            await vscode.workspace.findFiles("**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol,**/flat_*.sol}', 500)
+            console.log(workspaceRelativeBaseDir + "**/*.sol")
+            await vscode.workspace.findFiles(workspaceRelativeBaseDir + "**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol,**/flat_*.sol}', 500)
                 .then((solfiles) => {
+                    console.log(solfiles)
                     solfiles.forEach(function(solfile){
                         try {
-                            let content = fs.readFileSync(solfile.path).toString('utf-8');
+                            let content = fs.readFileSync(solfile.fsPath).toString('utf-8');
                             let sourceUnit = that.g_parser.parseSourceUnit(content);
                             for(let contractName in sourceUnit.contracts){
                                 dependencies[contractName] = sourceUnit.contracts[contractName].dependencies;
@@ -415,7 +441,7 @@ ${topLevelContractsText}`;
 
         for(let name in topLevelContracts){
             //this.flaterra(new vscode.Uri(topLevelContracts[name]))
-            let outpath = path.parse(topLevelContracts[name].path);
+            let outpath = path.parse(topLevelContracts[name].fsPath);
             content += name + "  =>  " + vscode.Uri.file(path.join(outpath.dir, "flat_" + outpath.base)) + "\n";
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
