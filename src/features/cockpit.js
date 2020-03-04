@@ -286,10 +286,7 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     /** other methods */
     refresh(workspaceRelativeBaseDir){
         return new Promise((resolve, reject) => {
-            console.log(workspaceRelativeBaseDir)
             this.treeView.cockpit.commands._findTopLevelContracts(undefined, undefined, workspaceRelativeBaseDir).then(data => {
-                console.log("a-")
-                console.log(Object.values(data))
                 this.load(Object.values(data));
                 this._onDidChangeTreeData.fire();
                 resolve();
@@ -406,7 +403,7 @@ class FTraceView extends BaseView {
         this.cockpit = cockpit;
         this.id = "ftrace";
         this.dataProvider = new FTraceViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
         this.treeView.message = "click into the editor to update view...";
     }
 
@@ -442,7 +439,7 @@ class FTraceView extends BaseView {
 
         let files;
         if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
-            await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+            await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
                 .then(uris => {
                     files = uris.map(function (uri) {
                         return uri.fsPath;
@@ -629,7 +626,7 @@ class ExplorerViewDataProvider extends FilePathTreeDataProvider {
     /** other methods */
     refresh(){
         return new Promise((resolve, reject) => {
-            vscode.workspace.findFiles("{**/*.sol}",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol}', 5000)
+            vscode.workspace.findFiles("{**/*.sol}", settings.DEFAULT_FINDFILES_EXCLUDES_ALLOWFLAT, 5000)
                 .then((solfiles) => {
                     this.load(solfiles);
                     this._onDidChangeTreeData.fire();
@@ -645,7 +642,68 @@ class ExplorerView extends BaseView {
         this.cockpit = cockpit;
         this.id = "explorer";
         this.dataProvider = new ExplorerViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true, canSelectMany:true });
+    }    
+}
+
+class FlatFilesDataProvider extends FilePathTreeDataProvider {
+    constructor(treeView){
+        super("tree");
+        this.treeView = treeView;
+        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+        this.data = null;
+    }
+
+    async dataGetRoot(){
+        if(this.data === null){
+            this.refresh();
+        }
+        return this.data || [];
+    }
+
+    /** events */
+
+    /** tree methods */
+    // inherited.
+
+    getTreeItem(element){
+        let ret = {
+            resourceUri: element.resource,
+            contextValue: element.resource.fsPath,
+            label: element.label,
+            iconPath: element.iconPath,
+            collapsibleState: element.collapsibleState,
+            command: element.type === FilePathTreeDataProvider.TYPE_FILE ? {
+                command: 'solidity-va.cockpit.jumpToRange',
+                arguments: [element.resource],
+                title: 'JumpTo'
+            } : 0,
+        };
+        return ret;
+    }
+
+    /** other methods */
+    refresh(){
+        return new Promise((resolve, reject) => {
+            vscode.workspace.findFiles("{**/*_flat.sol,**/flat_*.sol}", settings.DEFAULT_FINDFILES_EXCLUDES_ALLOWFLAT, 500)
+                .then((solfiles) => {
+                    this.load(solfiles);
+                    this._onDidChangeTreeData.fire();
+                resolve();
+                });
+        });
+    }
+}
+
+class FlatFilesView extends BaseView {
+    constructor(cockpit) {
+        super();
+        this.cockpit = cockpit;
+        this.id = "flatFiles";
+        this.dataProvider = new FlatFilesDataProvider(this);
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
     }    
 }
 
@@ -724,7 +782,7 @@ class SettingsView extends BaseView {
         this.cockpit = cockpit;
         this.id = "settings";
         this.dataProvider = new SettingsViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
     }    
 }
 
@@ -737,6 +795,7 @@ class Cockpit {
 
         this.registerView(new ExplorerView(this));
         this.registerView(new TopLevelContractsView(this));
+        this.registerView(new FlatFilesView(this));
         this.registerView(new FTraceView(this));
         this.registerView(new SettingsView(this));
         this.registerView(new PublicMethodsView(this));

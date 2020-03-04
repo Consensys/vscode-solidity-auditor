@@ -116,42 +116,54 @@ class Commands{
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
     }
 
-    async surya(documentOrListItem, command, args) {
+    async surya(documentOrListItems, command, args) {
         //check if input was document or listItem
-        if(!documentOrListItem){
+        if(!documentOrListItems){
             throw new Error("not a file or list item");
         }
 
         let ret;
-        let files;
+        let files = [];
 
-        if(documentOrListItem.hasOwnProperty("children")){
-            // is a list item -> item.resource.fsPath
-            if(!!path.extname(documentOrListItem.resource.fsPath)){
-                //file
-                files = [documentOrListItem.resource.fsPath];
-            } else {
-                //folder
-                await vscode.workspace.findFiles(`${documentOrListItem.path}/**/*.sol`,'**/node_modules', 500)
-                    .then(uris => {
-                        files = uris.map(function (uri) {
-                            return uri.fsPath;
-                        });
-                    });
+        if(documentOrListItems.hasOwnProperty("children")){
+            //hack ;)
+            documentOrListItems = [documentOrListItems];  //allow non array calls
+        }
+
+        if(Array.isArray(documentOrListItems)){
+
+            for(let documentOrListItem of documentOrListItems){
+
+                if(documentOrListItem.hasOwnProperty("children")){
+                    // is a list item -> item.resource.fsPath
+                    if(!!path.extname(documentOrListItem.resource.fsPath)){
+                        //file
+                        files = [...files, documentOrListItem.resource.fsPath];
+                    } else {
+                        //folder
+                        await vscode.workspace.findFiles(`${documentOrListItem.path}/**/*.sol`, settings.DEFAULT_FINDFILES_EXCLUDES, 500)
+                            .then(uris => {
+                                files = files.concat(uris.map(function (uri) {
+                                    return uri.fsPath;
+                                }));
+                            });
+                    }
+                }
+
             }
         } else {
             //single document mode
-            this._checkIsSolidity(documentOrListItem);  // throws
+            this._checkIsSolidity(documentOrListItems);  // throws
 
             if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
-                await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+                await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
                     .then(uris => {
                         files = uris.map(function (uri) {
                             return uri.fsPath;
                         });
                     });
             } else {
-                files = [document.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)];  //better only add imported files. need to resolve that somehow
+                files = [documentOrListItems.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)];  //better only add imported files. need to resolve that somehow
             } 
         }
 
@@ -290,21 +302,26 @@ class Commands{
         }
     }
 
-    async _findTopLevelContracts(files, scanfiles, workspaceRelativeBaseDir) {
-        workspaceRelativeBaseDir = workspaceRelativeBaseDir === undefined ? "" : workspaceRelativeBaseDir + path.sep;
+    async _findTopLevelContracts(files, scanfiles, workspaceRelativeBaseDirs) {
         var that = this;
         var dependencies={};
         var contractToFile={};
         if(!scanfiles){
-            console.log(workspaceRelativeBaseDir + "**/*.sol")
-            await vscode.workspace.findFiles(workspaceRelativeBaseDir + "**/*.sol",'{**/node_modules,**/mock*,**/test*,**/migrations,**/Migrations.sol,**/flat_*.sol}', 500)
+
+            workspaceRelativeBaseDirs = Array.isArray(workspaceRelativeBaseDirs) ? workspaceRelativeBaseDirs : [workspaceRelativeBaseDirs];
+
+            let searchFileString = "{" +workspaceRelativeBaseDirs.map(d => d === undefined ?  "**/*.sol" : d + path.sep +  "**/*.sol").join(",") + "}";
+
+            await vscode.workspace.findFiles(searchFileString, settings.DEFAULT_FINDFILES_EXCLUDES, 500)
                 .then((solfiles) => {
-                    console.log(solfiles)
                     solfiles.forEach(function(solfile){
                         try {
                             let content = fs.readFileSync(solfile.fsPath).toString('utf-8');
                             let sourceUnit = that.g_parser.parseSourceUnit(content);
                             for(let contractName in sourceUnit.contracts){
+                                if(sourceUnit.contracts[contractName]._node.kind == "interface") {  //ignore interface contracts
+                                    continue;
+                                }
                                 dependencies[contractName] = sourceUnit.contracts[contractName].dependencies;
                                 contractToFile[contractName] = solfile;
                             }
@@ -317,6 +334,9 @@ class Commands{
             //files not set: take loaded sourceUnits from this.g_parser
             //files set: only take these sourceUnits
             for(let contractName in this.g_parser.contracts){
+                if(this.g_parser.contracts[contractName]._node.kind == "interface") {
+                    continue;
+                }
                 dependencies[contractName] = this.g_parser.contracts[contractName].dependencies;
             }
         }
@@ -423,9 +443,11 @@ ${topLevelContractsText}`;
             });    
     }
 
-    async flattenCandidates() {
-        let topLevelContracts = await this._findTopLevelContracts();
+    async flattenCandidates(candidates) {
+        // takes object key=contractName value=fsPath
+        let topLevelContracts = candidates || await this._findTopLevelContracts();
         let content = "";
+        let trufflepath = undefined;
 
         
         this.solidityFlattener(Object.values(topLevelContracts), (filepath, trufflepath, content) => {
@@ -442,7 +464,8 @@ ${topLevelContractsText}`;
         for(let name in topLevelContracts){
             //this.flaterra(new vscode.Uri(topLevelContracts[name]))
             let outpath = path.parse(topLevelContracts[name].fsPath);
-            content += name + "  =>  " + vscode.Uri.file(path.join(outpath.dir, "flat_" + outpath.base)) + "\n";
+            let outpath_flat = vscode.Uri.file(path.join(outpath.dir, "flat_" + outpath.base));
+            content += `${!fs.existsSync(outpath_flat.fsPath)?"[ERR]   ":""}${name}  =>  ${outpath_flat} \n`;
         }
         vscode.workspace.openTextDocument({content: content, language: "markdown"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
@@ -479,7 +502,7 @@ ${topLevelContractsText}`;
         let sighashes = {};
         let collisions = [];
 
-        await vscode.workspace.findFiles("**/*.sol",'**/node_modules', 500)
+        await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
                 .then(uris => {
                     uris.forEach(uri => {
                         try {

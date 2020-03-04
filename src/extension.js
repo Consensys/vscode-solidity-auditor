@@ -8,6 +8,7 @@
 /** imports */
 const vscode = require('vscode');
 const {CancellationTokenSource} = require('vscode');
+const path = require('path');
 
 //const mod_codelens = require('./features/codelens');
 const mod_hover = require('./features/hover');
@@ -646,8 +647,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.mdreport', 
-                function (doc) {
-                    console.log(doc)
+                function (doc, multiSelectTreeItems) {
+                    doc = multiSelectTreeItems || doc;
                     commands.surya(doc || vscode.window.activeTextEditor.document, "mdreport");
                 }
             )
@@ -657,6 +658,11 @@ function onActivate(context) {
             vscode.commands.registerCommand(
                 'solidity-va.surya.graph', 
                 function (doc, files) {
+                    if(files && typeof files[0] === "object" && files[0].hasOwnProperty("children")){
+                        //treeItem or fspaths
+                        doc = files;
+                        files = undefined;
+                    }
                     commands.surya(doc || vscode.window.activeTextEditor.document, "graph", files);
                 }
             )
@@ -664,7 +670,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.inheritance', 
-                function (doc) {
+                function (doc, multiSelectTreeItems) {
+                    doc = multiSelectTreeItems || doc;
                     commands.surya(doc || vscode.window.activeTextEditor.document, "inheritance");
                 }
             )
@@ -715,16 +722,19 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.cockpit.explorer.context.flatten', 
-                async function (treeItem) {
-                    await vscode.extensions
-                    .getExtension('tintinweb.vscode-solidity-flattener')
-                    .activate()
-                    .then(
-                        async () => {
-                            vscode.commands
-                                .executeCommand('vscode-solidity-flattener.contextMenu.flatten', [], [treeItem.resource])
-                                .then(async (done) => {});
-                        });
+                async function (treeItem, multiSelectTreeItems) {
+                    multiSelectTreeItems = multiSelectTreeItems || [];
+                    [...multiSelectTreeItems, treeItem].forEach(async treeItem => {
+                        await vscode.extensions
+                        .getExtension('tintinweb.vscode-solidity-flattener')
+                        .activate()
+                        .then(
+                            async () => {
+                                vscode.commands
+                                    .executeCommand('vscode-solidity-flattener.contextMenu.flatten', [], [treeItem.resource])
+                                    .then(async (done) => {});
+                            });
+                    });
                 }
             )
         );
@@ -734,6 +744,20 @@ function onActivate(context) {
                 'solidity-va.tools.flattenCandidates', 
                 function () {
                     commands.flattenCandidates();
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.cockpit.topLevelContracts.flatten', 
+                function () {
+                    let sourceFiles = cockpit.views.topLevelContracts.dataProvider.data.reduce(function (obj, item) { 
+                        obj[path.basename(item.path,".sol")] = vscode.Uri.file(item.path);
+                        return obj;
+                    }, {});
+                    commands.flattenCandidates(sourceFiles);
+                    cockpit.views.flatFiles.refresh();
                 }
             )
         );
@@ -793,41 +817,24 @@ function onActivate(context) {
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand(
-                'solidity-va.uml.contextMenu.outline', 
-                function (treeItem) {
-                    if(!treeItem){
-                        return;
-                    }
-                   
-                    let files;
-                    files = vscode.workspace.findFiles(`${treeItem.fsPath}/**/*.sol`,'**/node_modules', 500)
-                    .then(uris => {
-                        files = uris.map(function (uri) {
-                            console.log(uri)
-                            console.log(Object.keys(g_parser.sourceUnits))
-                            g_parser.inspectFile(uri.fsPath).then((success) => {
-                                console.log(g_parser.sourceUnits[uri.fsPath]);
-                            });
-                            console.log(g_parser.sourceUnits[uri.fsPath])
-                            return g_parser.sourceUnits[uri.fsPath];
-                        });
-                    });
-
-                    commands.umlContractsOutline(files);
+            vscode.commands.registerCommand("solidity-va.cockpit.topLevelContracts.refresh", async (treeItem, multiSelectTreeItems) => {
+                if(multiSelectTreeItems){
+                    cockpit.views.topLevelContracts.refresh(multiSelectTreeItems.filter(t => !t.path.endsWith(".sol")).map(t => t.path));
+                } else {
+                    cockpit.views.topLevelContracts.refresh(treeItem && treeItem.path);
                 }
-            )
-        );
-
-        context.subscriptions.push(
-            vscode.commands.registerCommand("solidity-va.cockpit.topLevelContracts.refresh", async (treeItem) => {
-                cockpit.views.topLevelContracts.refresh(treeItem && treeItem.fsPath);
             })
         );
 
         context.subscriptions.push(
             vscode.commands.registerCommand("solidity-va.cockpit.explorer.refresh", async () => {
                 cockpit.views.explorer.refresh();
+            })
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.flatFiles.refresh", async () => {
+                cockpit.views.flatFiles.refresh();
             })
         );
 
