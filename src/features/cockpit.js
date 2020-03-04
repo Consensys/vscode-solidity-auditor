@@ -414,7 +414,7 @@ class FTraceView extends BaseView {
         let commands = this.cockpit.commands;
 
         let contractObj = commands.g_parser.sourceUnits[documentUri.fsPath];
-        let knownFiles = Object.keys(commands.g_parser.sourceUnits)
+        let knownFiles = Object.keys(commands.g_parser.sourceUnits).filter(f => f.endsWith(".sol"));
         
 
         if(!contractObj){
@@ -455,7 +455,7 @@ class FTraceView extends BaseView {
         } else if (functionName === ""){
             functionName = "<Fallback>";
         }
-    
+
         let ret = surya.ftrace(contractName + "::" + functionName, 'all', files, {}, true).trim();
         let lines = ret.match(/^.*((\r\n|\n|\r)|$)/gm);
         this.dataProvider.documentUri = documentUri;
@@ -703,7 +703,7 @@ class FlatFilesView extends BaseView {
         this.cockpit = cockpit;
         this.id = "flatFiles";
         this.dataProvider = new FlatFilesDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true, canSelectMany:true });
     }    
 }
 
