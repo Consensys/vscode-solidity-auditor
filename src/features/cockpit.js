@@ -123,7 +123,7 @@ class FilePathTreeDataProvider extends BaseDataProvider {
                     type: _type,
                     workspace: workspacePath,
                     collapsibleState: _type === FilePathTreeDataProvider.TYPE_DIRECTORY ? vscode.TreeItemCollapsibleState.Collapsed : 0,
-                }
+                };
                 parent.push(pathObj);
             }
             parent = pathObj.children;
@@ -196,7 +196,7 @@ class VirtualPathTreeDataProvider extends FilePathTreeDataProvider {
                     parent: parent,
                     type: _type,
                     collapsibleState: _type == VirtualPathTreeDataProvider.TYPE_LEAF ? 0 : vscode.TreeItemCollapsibleState.Collapsed,
-                }
+                };
                 parent.push(pathObj);
             }
             parent = pathObj.children;
@@ -478,7 +478,7 @@ class PublicMethodsViewDataProvider extends FTraceViewDataProvider {
                     .reduce((ret, key) => {
                         let element = this.data[key];
                         let range = new vscode.Range(element._node.loc.start.line, element._node.loc.start.column, element._node.loc.end.line, element._node.loc.end.column);
-                        let modifiers = Object.keys(element.modifiers)
+                        let modifiers = Object.keys(element.modifiers);
                         let item = {
                             resource: element.resource,
                             contextValue: element.resource.fsPath,
@@ -499,7 +499,7 @@ class PublicMethodsViewDataProvider extends FTraceViewDataProvider {
                                         arguments: [element.resource, range],
                                         title: 'JumpTo'
                                     }
-                                } 
+                                };
                             }),
                             command: {
                                 command: 'solidity-va.cockpit.jumpToRange',
