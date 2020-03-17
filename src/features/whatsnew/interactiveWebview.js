@@ -130,10 +130,10 @@ class InteractiveWebviewGenerator {
             enableFindWidget: false,
             enableScripts: true,
             retainContextWhenHidden: true,
-            localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, "content"))]
+            localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, this.content_folder))]
         });
 
-        webViewPanel.iconPath = vscode.Uri.file(this.context.asAbsolutePath(path.join("content","icon.png")));
+        webViewPanel.iconPath = vscode.Uri.file(this.context.asAbsolutePath(path.join(this.content_folder, "icon.png")));
 
         return new PreviewPanel(this, doc.uri, webViewPanel);
     }

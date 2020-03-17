@@ -32,7 +32,7 @@ class WhatsNewHandler {
 
         let doc = {
             uri:"unknown",
-        }
+        };
 
         let webview = new InteractiveWebviewGenerator(context, "whats_new");
         webview.revealOrCreatePreview(vscode.ViewColumn.Beside, doc);

@@ -4,88 +4,45 @@
 	<title>Welcome: Solidity Auditor</title>
     <script src="js/showdown.js"></script>
     <link rel="stylesheet" href="css/github-markdown.css" type="text/css">
+    <style>
+        body { background-color: white; }
+    </style>
 
 </head>
-<body>
+<body bgcolor="#000000">
     <div class=content id="preview"></div>
 
     <script>
         let preview = document.getElementById('preview');
         let sd = new showdown.Converter();
     
-        var sampleMarkdown = `
-    [<img width="200" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
-    <sup>
-    [[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
-    </sup><br/><br/>
-    
-    
-    
-    # Solidity Metrics for XXX
-    
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis feugiat odio tempor suscipit. Suspendisse pretium aliquam nisl eget imperdiet. Praesent aliquet consequat semper. Aliquam massa nibh, blandit at ultricies sit amet, ornare cursus est. Phasellus suscipit, nisl vitae porttitor porttitor, mauris enim vulputate diam, venenatis suscipit velit mi a erat. 
-    
-    ## Scope
-    
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis feugiat odio tempor suscipit. Suspendisse pretium aliquam nisl eget imperdiet. Praesent aliquet consequat semper. Aliquam massa nibh, blandit at ultricies sit amet, ornare cursus est. Phasellus suscipit, nisl vitae porttitor porttitor, mauris enim vulputate diam, venenatis suscipit velit mi a erat. 
-    
-    This section lists files that are in scope for the metrics report. 
-    
-    - **Project:** \`xxx\`
-    - **Included Files:** \`xxxx\`
-    - **Excluded Paths:** \`xxxx\`
-    - **File Limit:** \`xxx\`
-    
-    ### Source Units in Scope
-    
-    Source Units Analyzed: **xxxx** 
-    
-    \`\`\`json
+    var sampleMarkdown = `
+[<img width="200" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
+<sup>
+[[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
+</sup><br/><br/>
+
+
+
+## Updated: Solidity Visual Auditor
+
+Visual Auditor just got better! 🙌 Check out what we've been working on below.
+
+<sub>
+Info: want disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
+</sub>
+
+### What's New?
+
+[Changelog](https://marketplace.visualstudio.com/items/tintinweb.solidity-visual-auditor/changelog)
+
+#### v0.0.22
+- update: solidity parser, surya (#41 #42)
+- fix: linter warnings (#40)
+- fix: configuration changes now take effect immediately (#43)
+`;
         
-    \`\`\`
-    
-    
-    #### Out of Scope - Duplicate Source Units
-    
-    \`\`\`json
-        
-    \`\`\`
-    
-    ## Report
-    
-    The analysis finished with *xxx* errors and *xxx* duplicate files.
-    
-    <div class="wrapper" style="max-width: 512px; margin: auto">
-                <canvas id="chart-risk-summary"></canvas>
-    </div>
-    
-    <div class="wrapper" style="max-width: 512px; margin: auto">
-        <canvas id="chart-nsloc-total"></canvas>
-    </div>
-    
-    <div class="wrapper" style="max-width: 512px; margin: auto">
-        <canvas id="chart-num-bar"></canvas>
-    </div>
-    
-    
-    \`\`\`json
-        
-    \`\`\`
-    
-    ### Total
-    
-    \`\`\`json
-        
-    \`\`\`
-    
-    #### Source Units
-    
-    \`\`\`json
-        
-    \`\`\`
-        `
-        
-        preview.innerHTML = sd.makeHtml(sampleMarkdown);
+    preview.innerHTML = sd.makeHtml(sampleMarkdown);
     </script>
 </body>
 </html>
