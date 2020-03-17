@@ -1,0 +1,91 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<title>Welcome: Solidity Auditor</title>
+    <script src="js/showdown.js"></script>
+    <link rel="stylesheet" href="css/github-markdown.css" type="text/css">
+
+</head>
+<body>
+    <div class=content id="preview"></div>
+
+    <script>
+        let preview = document.getElementById('preview');
+        let sd = new showdown.Converter();
+    
+        var sampleMarkdown = `
+    [<img width="200" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
+    <sup>
+    [[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
+    </sup><br/><br/>
+    
+    
+    
+    # Solidity Metrics for XXX
+    
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis feugiat odio tempor suscipit. Suspendisse pretium aliquam nisl eget imperdiet. Praesent aliquet consequat semper. Aliquam massa nibh, blandit at ultricies sit amet, ornare cursus est. Phasellus suscipit, nisl vitae porttitor porttitor, mauris enim vulputate diam, venenatis suscipit velit mi a erat. 
+    
+    ## Scope
+    
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis feugiat odio tempor suscipit. Suspendisse pretium aliquam nisl eget imperdiet. Praesent aliquet consequat semper. Aliquam massa nibh, blandit at ultricies sit amet, ornare cursus est. Phasellus suscipit, nisl vitae porttitor porttitor, mauris enim vulputate diam, venenatis suscipit velit mi a erat. 
+    
+    This section lists files that are in scope for the metrics report. 
+    
+    - **Project:** \`xxx\`
+    - **Included Files:** \`xxxx\`
+    - **Excluded Paths:** \`xxxx\`
+    - **File Limit:** \`xxx\`
+    
+    ### Source Units in Scope
+    
+    Source Units Analyzed: **xxxx** 
+    
+    \`\`\`json
+        
+    \`\`\`
+    
+    
+    #### Out of Scope - Duplicate Source Units
+    
+    \`\`\`json
+        
+    \`\`\`
+    
+    ## Report
+    
+    The analysis finished with *xxx* errors and *xxx* duplicate files.
+    
+    <div class="wrapper" style="max-width: 512px; margin: auto">
+                <canvas id="chart-risk-summary"></canvas>
+    </div>
+    
+    <div class="wrapper" style="max-width: 512px; margin: auto">
+        <canvas id="chart-nsloc-total"></canvas>
+    </div>
+    
+    <div class="wrapper" style="max-width: 512px; margin: auto">
+        <canvas id="chart-num-bar"></canvas>
+    </div>
+    
+    
+    \`\`\`json
+        
+    \`\`\`
+    
+    ### Total
+    
+    \`\`\`json
+        
+    \`\`\`
+    
+    #### Source Units
+    
+    \`\`\`json
+        
+    \`\`\`
+        `
+        
+        preview.innerHTML = sd.makeHtml(sampleMarkdown);
+    </script>
+</body>
+</html>

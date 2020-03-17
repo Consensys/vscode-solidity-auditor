@@ -242,6 +242,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable actors in uml"
+                },
+                "solidity-va.whatsNew.disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable update notifications"
                 }
             }
         }

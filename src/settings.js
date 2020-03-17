@@ -15,8 +15,13 @@ function extensionConfig() {
     return vscode.workspace.getConfiguration('solidity-va');
 }
 
+function extension() {
+    return vscode.extensions.getExtension('tintinweb.solidity-visual-auditor');
+}
+
 module.exports = {
     extensionConfig: extensionConfig,
     languageId: languageId,
-    docSelector: docSelector
+    docSelector: docSelector,
+    extension: extension
 };

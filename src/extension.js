@@ -20,6 +20,8 @@ const {Commands} = require('./features/commands');
 const {SolidityCodeLensProvider} = require('./features/codelens');
 const settings = require('./settings');
 
+const {WhatsNewHandler} = require('./features/whatsnew/whatsNew');
+
 
 /** globals - const */
 const languageId = settings.languageId;
@@ -582,6 +584,9 @@ function onDidChange(event){
 }
 
 function onActivate(context) {
+
+    new WhatsNewHandler().show(context);
+
     const active = vscode.window.activeTextEditor;
     if (!active || !active.document) {
         return;
