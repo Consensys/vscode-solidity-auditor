@@ -26,7 +26,8 @@
         "url": "https://github.com/tintinweb/vscode-solidity-auditor"
     },
     "activationEvents": [
-        "onLanguage:solidity"
+        "onLanguage:solidity",
+        "onCommand:solidity-va.whatsNew.show"
     ],
     "main": "./src/extension",
     "capabilities": {
@@ -132,6 +133,11 @@
             {
                 "command": "solidity-va.tools.remix.openExternal",
                 "title": "Tools - launch Remix-IDE",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.whatsNew.show",
+                "title": "Extension - What's New",
                 "category": "Solidity Visual Auditor"
             }
         ],
@@ -242,6 +248,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable actors in uml"
+                },
+                "solidity-va.whatsNew.disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable update notifications"
                 }
             }
         }

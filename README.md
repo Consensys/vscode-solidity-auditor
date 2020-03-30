@@ -284,36 +284,8 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 # Release Notes
 
-## v0.0.22
-- update: solidity parser, surya (#41 #42)
-- fix: linter warnings (#40)
-- fix: configuration changes now take effect immediately (#43)
-
-## v0.0.21
-- fix: Support VSCode for Windows (#38, #35)
-- update: solidity parser, surya (#41 #42)
-- fix: UML arrows (#34)
-- code cleanup (#39)
-- allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
-
-## v0.0.20
-- new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
-  - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
-- split up extension dependencies in hard and soft requirements
-  - new: extensionPack - this extension now automatically installs soft dependencies. You can uninstall them at any point in time.
-    - (optional) [Solidity Flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener)
-    - (optional) [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
-    - (optional) [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks)
-  - updated: extensionDependencies
-    - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
-
-## v0.0.19
-- new: constant values that are not symbols are now shown in hover message
-
-<img width="360" alt="Screenshot 2019-11-12 at 15 41 48" src="https://user-images.githubusercontent.com/2865694/68681269-699cb400-0563-11ea-9ba3-1605c3a5e8c6.png">
-
-- fix: hover message - jump to declaration now works on MacOS
-- fix: function signature output shows 🔥 even though there are no collisions
+## v0.0.23
+- new: Update notifications! - can be disabled of course :) 
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
