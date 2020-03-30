@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.23
+- new: Update notifications! - can be disabled of course :) 
+
 ## v0.0.22
 - update: solidity parser, surya (#41 #42)
 - fix: linter warnings (#40)
