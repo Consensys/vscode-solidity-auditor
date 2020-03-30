@@ -585,8 +585,6 @@ function onDidChange(event){
 
 function onActivate(context) {
 
-    new WhatsNewHandler().show(context);
-
     const active = vscode.window.activeTextEditor;
     if (!active || !active.document) {
         return;
@@ -596,6 +594,8 @@ function onActivate(context) {
     console.log("onActivate");
 
     registerDocType(languageId, docSelector);
+
+    new WhatsNewHandler().show(context); 
 
     async function registerDocType(type, docSel) {
         context.subscriptions.push(
@@ -615,6 +615,15 @@ function onActivate(context) {
         /** command setup */
         context.subscriptions.push(
             vscode.commands.registerCommand(
+                'solidity-va.whatsNew.show', 
+                function () {
+                    new WhatsNewHandler().showMessage(context);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
                 'solidity-va.test.createTemplate', 
                 function (doc, contractName) {
                     commands.generateUnittestStubForContract(doc || vscode.window.activeTextEditor.document, contractName);
@@ -629,16 +638,7 @@ function onActivate(context) {
                 }
             )
         );
-        /*  does not yet return the values but writes to console
-        context.subscriptions.push(
-            vscode.commands.registerCommand(
-                'solidity-va.surya.describe', 
-                function () {
-                    commands.surya(vscode.window.activeTextEditor.document, "describe")
-                }
-            )
-        )
-        */
+
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.graph', 
@@ -694,7 +694,6 @@ function onActivate(context) {
                 'solidity-va.tools.flaterra', 
                 function (doc) {
                     commands.solidityFlattener([doc.uri || vscode.window.activeTextEditor.document.uri]);
-                    //commands.flaterra(doc || vscode.window.activeTextEditor.document)
                 }
             )
         );
