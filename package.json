@@ -93,12 +93,6 @@
                 "path": "./src/themes/light_vs.json"
             }
         ],
-        "keybindings": [
-            {
-                "key": "cmd+alt+shift+i",
-                "command": "editor.action.inspectTMScopes"
-            }
-        ],
         "viewsContainers": {
             "activitybar": [
                 {
