@@ -60,7 +60,7 @@ The complete changelog can be found [here](https://github.com/ConsenSys/vscode-s
     - Show the function call trace for the current method
 
 <sub>
-Hint: disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
+Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
 </sub>
 ___
 <sub>
