@@ -285,7 +285,15 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 # Release Notes
 
 ## v0.0.23
-- new: Update notifications! - can be disabled of course :) 
+- new: Update notifications have arrived!
+- updated: solidity parser and surya
+- new: 🔥 Solidity Visual Auditor Cockpit panel
+    - Workspace Explorer
+    - Quick-access to extension settings
+    - Find Top Level Contracts
+    - Keep track of flattened files
+    - List public state-changing methods from the current contract
+    - Show the function call trace for the current method
 
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)

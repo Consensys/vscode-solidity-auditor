@@ -8,6 +8,7 @@
 /** imports */
 const vscode = require('vscode');
 const {CancellationTokenSource} = require('vscode');
+const path = require('path');
 
 //const mod_codelens = require('./features/codelens');
 const mod_hover = require('./features/hover');
@@ -19,6 +20,7 @@ const {DiliDiagnosticCollection} = require('./features/genericDiag');
 const {Commands} = require('./features/commands');
 const {SolidityCodeLensProvider} = require('./features/codelens');
 const settings = require('./settings');
+const {Cockpit} = require('./features/cockpit.js');
 
 const {WhatsNewHandler} = require('./features/whatsnew/whatsNew');
 
@@ -46,6 +48,17 @@ const ScopeEnum = {
 };
 
 /** helper */
+
+function editorJumptoRange(editor, range) {
+    let revealType = vscode.TextEditorRevealType.InCenter;
+    let selection = new vscode.Selection(range.start.line, range.start.character, range.end.line, range.end.character);
+    if (range.start.line === editor.selection.active.line) {
+        revealType = vscode.TextEditorRevealType.InCenterIfOutsideViewport;
+    }
+
+    editor.selection = selection;
+    editor.revealRange(selection, revealType);
+}
 
 async function setDecorations(editor, decorations){
     if (!editor) {
@@ -611,6 +624,7 @@ function onActivate(context) {
         onDidChange();
 
         let commands = new Commands(g_parser);
+        let cockpit = new Cockpit(commands);
         
         /** command setup */
         context.subscriptions.push(
@@ -633,7 +647,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.mdreport', 
-                function (doc) {
+                function (doc, multiSelectTreeItems) {
+                    doc = multiSelectTreeItems || doc;
                     commands.surya(doc || vscode.window.activeTextEditor.document, "mdreport");
                 }
             )
@@ -643,6 +658,11 @@ function onActivate(context) {
             vscode.commands.registerCommand(
                 'solidity-va.surya.graph', 
                 function (doc, files) {
+                    if(files && typeof files[0] === "object" && files[0].hasOwnProperty("children")){
+                        //treeItem or fspaths
+                        doc = files;
+                        files = undefined;
+                    }
                     commands.surya(doc || vscode.window.activeTextEditor.document, "graph", files);
                 }
             )
@@ -650,7 +670,8 @@ function onActivate(context) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.inheritance', 
-                function (doc) {
+                function (doc, multiSelectTreeItems) {
+                    doc = multiSelectTreeItems || doc;
                     commands.surya(doc || vscode.window.activeTextEditor.document, "inheritance");
                 }
             )
@@ -697,11 +718,46 @@ function onActivate(context) {
                 }
             )
         );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.cockpit.explorer.context.flatten', 
+                async function (treeItem, multiSelectTreeItems) {
+                    multiSelectTreeItems = multiSelectTreeItems || [];
+                    [...multiSelectTreeItems, treeItem].forEach(async treeItem => {
+                        await vscode.extensions
+                        .getExtension('tintinweb.vscode-solidity-flattener')
+                        .activate()
+                        .then(
+                            async () => {
+                                vscode.commands
+                                    .executeCommand('vscode-solidity-flattener.contextMenu.flatten', [], [treeItem.resource])
+                                    .then(async (done) => {});
+                            });
+                    });
+                }
+            )
+        );
+
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.tools.flattenCandidates', 
                 function () {
                     commands.flattenCandidates();
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.cockpit.topLevelContracts.flatten', 
+                function () {
+                    let sourceFiles = cockpit.views.topLevelContracts.dataProvider.data.reduce(function (obj, item) { 
+                        obj[path.basename(item.path,".sol")] = vscode.Uri.file(item.path);
+                        return obj;
+                    }, {});
+                    commands.flattenCandidates(sourceFiles);
+                    cockpit.views.flatFiles.refresh();
                 }
             )
         );
@@ -760,6 +816,49 @@ function onActivate(context) {
             )
         );
 
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.topLevelContracts.refresh", async (treeItem, multiSelectTreeItems) => {
+                if(multiSelectTreeItems){
+                    cockpit.views.topLevelContracts.refresh(multiSelectTreeItems.filter(t => !t.path.endsWith(".sol")).map(t => t.path));
+                } else {
+                    cockpit.views.topLevelContracts.refresh(treeItem && treeItem.path);
+                }
+            })
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.explorer.refresh", async () => {
+                cockpit.views.explorer.refresh();
+            })
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.flatFiles.refresh", async () => {
+                cockpit.views.flatFiles.refresh();
+            })
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.jumpToRange", (documentUri, range) => {
+                vscode.workspace.openTextDocument(documentUri).then(doc => {
+                    vscode.window.showTextDocument(doc).then(editor => {
+                        if(range) {
+                            editorJumptoRange(editor, range);
+                        }
+                    });
+                });
+            })
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("solidity-va.cockpit.settings.toggle", async (treeItem) => {
+                let cfg = vscode.workspace.getConfiguration(treeItem.metadata.extension);
+                let current = cfg.get(treeItem.metadata.section);
+                await cfg.update(treeItem.metadata.section, !current);
+                cockpit.views.settings.refresh();
+            })
+        );
+
         /** event setup */
         /***** DidChange */
         vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -782,6 +881,11 @@ function onActivate(context) {
         /****** OnOpen */
         vscode.workspace.onDidOpenTextDocument(document => {
             onDidSave(document);  
+        }, null, context.subscriptions);
+
+        /****** onDidChangeTextEditorSelection */
+        vscode.window.onDidChangeTextEditorSelection(event /* TextEditorVisibleRangesChangeEvent */ => {
+            cockpit.onDidSelectionChange(event); // let cockpit handle the event
         }, null, context.subscriptions);
 
 

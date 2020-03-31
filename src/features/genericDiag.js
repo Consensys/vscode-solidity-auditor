@@ -128,7 +128,8 @@ class DiliDiagnosticCollection {
                                 });
 
                             } catch (err) {
-                                console.error(err);
+                                console.warn(f);
+                                console.warn(err);
                             }
                         });
                 });
