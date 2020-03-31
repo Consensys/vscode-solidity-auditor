@@ -103,8 +103,8 @@
             "activitybar": [
                 {
                     "id": "solidity-va-cockpit",
-                    "title": "Visual Auditor - Cockpit",
-                    "icon": "images/panel-cockpit-icon.svg"
+                    "title": "Solidity Visual Auditor",
+                    "icon": "images/glass3.png"
                 }
             ]
         },
@@ -120,7 +120,8 @@
                 },
                 {
                     "id": "solidity-va-cockpit-flatFiles",
-                    "name": "Workspace: */flat_* Files"
+                    "name": "Workspace: */flat_* Files",
+                    "when": "ONLY_BETA"
                 },
                 {
                     "id": "solidity-va-cockpit-publicMethods",
@@ -128,7 +129,8 @@
                 },
                 {
                     "id": "solidity-va-cockpit-ftrace",
-                    "name": "Context: Function Call Trace"
+                    "name": "Context: Function Call Trace",
+                    "when": "ONLY_BETA"
                 },
                 {
                     "id": "solidity-va-cockpit-settings",
