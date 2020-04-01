@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.24
+- new: Solidity Visual Auditor Cockpit panel additions
+    - Context: show surya ftrace when clicking at a method in the editor
+    - Flatfiles: List files prefixed `**/flat_*.sol`
+  
 ## v0.0.23
 - new: Update notifications have arrived!
 - updated: solidity parser and surya

@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.23",
+    "version": "0.0.24",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -114,8 +114,7 @@
                 },
                 {
                     "id": "solidity-va-cockpit-flatFiles",
-                    "name": "Workspace: */flat_* Files",
-                    "when": "ONLY_BETA"
+                    "name": "Workspace: */flat_* Files"
                 },
                 {
                     "id": "solidity-va-cockpit-publicMethods",
@@ -123,8 +122,7 @@
                 },
                 {
                     "id": "solidity-va-cockpit-ftrace",
-                    "name": "Context: Function Call Trace",
-                    "when": "ONLY_BETA"
+                    "name": "Context: Function Call Trace"
                 },
                 {
                     "id": "solidity-va-cockpit-settings",
