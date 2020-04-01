@@ -375,7 +375,7 @@ class FTraceViewDataProvider extends BaseDataProvider {
             return [];
         }
         return Object.keys(this.data).map(k => {
-            let children = this.data[k];
+            let children = typeof this.data[k] === "object" ? this.data[k] : {};
             return { 
                 children: children,
                 resource: this.documentUri, //uri
@@ -399,13 +399,16 @@ class FTraceViewDataProvider extends BaseDataProvider {
         }
         // element provided? - 
         return Object.keys(element.children).map(k => {
+            let children = typeof element.children[k] === "object" ? element.children[k] : {};
             return { 
+                children: children,
                 resource: this.documentUri, //uri
                 label: k,
                 tooltip: k,
                 name: k, 
-                parent: element,
+                parent: null,
                 iconPath: vscode.ThemeIcon.File,
+                collapsibleState: children && Object.keys(children).length > 0 ? vscode.TreeItemCollapsibleState.Expanded : 0,
             };
         });
     }
@@ -460,8 +463,6 @@ class FTraceView extends BaseView {
 
         let functionName = focusSolidityElement.function._node.name;
         
-
-
         let files;
         if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
             await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
