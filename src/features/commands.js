@@ -234,7 +234,7 @@ class Commands{
                 */
                 break;
             case "parse":
-                ret = surya.parse(document.uri.fsPath);
+                ret = surya.parse(documentOrListItems.uri.fsPath);
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
                 break;
