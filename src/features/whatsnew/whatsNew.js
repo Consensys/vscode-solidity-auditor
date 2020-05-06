@@ -48,6 +48,12 @@ The cockpit view is fully customizable. You can hide both the sidebar menu or an
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
+#### v0.0.24
+- new: Solidity Visual Auditor Cockpit panel additions
+    - Context: show surya ftrace when clicking into a contract method in the editor
+    - Flatfiles: List flat files produced by the extension (matches: \`**/flat_*.sol\`)
+- updated: surya (fixes multiple issues when parsing certain files)
+
 #### v0.0.23
 - new: Update notifications have arrived!
 - updated: solidity parser and surya
