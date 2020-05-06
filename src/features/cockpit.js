@@ -366,7 +366,7 @@ class FTraceViewDataProvider extends BaseDataProvider {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
 
-        this.data = null;
+        this.data = null;  //json {item: {a:object, b:object, c:object}}
         this.documentUri = null;
     }
 
@@ -374,20 +374,48 @@ class FTraceViewDataProvider extends BaseDataProvider {
         if(this.data === null || this.documentUri === null){
             return [];
         }
-        return this.data.map(k => {
+        return Object.keys(this.data).map(k => {
+            let children = typeof this.data[k] === "object" ? this.data[k] : {};
             return { 
+                children: children,
                 resource: this.documentUri, //uri
                 label: k,
                 tooltip: k,
                 name: k, 
                 parent: null,
                 iconPath: vscode.ThemeIcon.File,
+                collapsibleState: children && Object.keys(children).length > 0 ? vscode.TreeItemCollapsibleState.Expanded : 0,
             };
         });
     }
 
-    dataGetChildren(){
-        return null; //no children :)
+    dataGetChildren(element){
+        if(!element) {
+            return this.data;
+        }
+
+        if(!element.children){
+            return [];
+        }
+        // element provided? - 
+        return Object.keys(element.children).map(k => {
+            let children = typeof element.children[k] === "object" ? element.children[k] : {};
+            return { 
+                children: children,
+                resource: this.documentUri, //uri
+                label: k,
+                tooltip: k,
+                name: k, 
+                parent: null,
+                iconPath: vscode.ThemeIcon.File,
+                collapsibleState: children && Object.keys(children).length > 0 ? vscode.TreeItemCollapsibleState.Expanded : 0,
+            };
+        });
+    }
+
+
+    dataGetParent(element){
+        return element.parent;
     }
 
     /** events */
@@ -435,8 +463,6 @@ class FTraceView extends BaseView {
 
         let functionName = focusSolidityElement.function._node.name;
         
-
-
         let files;
         if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
             await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
@@ -456,10 +482,9 @@ class FTraceView extends BaseView {
             functionName = "<Fallback>";
         }
 
-        let ret = surya.ftrace(contractName + "::" + functionName, 'all', files, {}, true).trim();
-        let lines = ret.match(/^.*((\r\n|\n|\r)|$)/gm);
+        let retj = surya.ftrace(contractName + "::" + functionName, 'all', files, {jsonOutput: true}, true);
         this.dataProvider.documentUri = documentUri;
-        this.dataProvider.data = lines;
+        this.dataProvider.data = retj;
         this.refresh();
     }
 }
@@ -467,7 +492,17 @@ class FTraceView extends BaseView {
 /* Methods View */
 
 
-class PublicMethodsViewDataProvider extends FTraceViewDataProvider {
+class PublicMethodsViewDataProvider extends BaseDataProvider {
+
+    constructor(treeView){
+        super();
+        this.treeView = treeView;
+        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+        this.data = null;
+        this.documentUri = null;
+    }
 
     async dataGetRoot(){
         if(this.data === null || this.documentUri === null){
