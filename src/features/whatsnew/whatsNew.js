@@ -21,6 +21,25 @@ Hey there 🙌 **Solidity Visual Auditor** just got better! Find out more below.
 
 ### What's New?
 
+The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
+
+#### v0.0.24
+- new: Solidity Visual Auditor Cockpit panel views
+    - Context - Function Call Trace: shows function call trace when clicking into a contract method in the editor
+    - Flatfiles: List flat files produced by the extension (matches: \`**/flat_*.sol\`)
+- updated: surya (fixed multiple issues when parsing certain smart contracts with \`usingFor\` statements)
+
+#### v0.0.23
+- new: Update notifications have arrived!
+- updated: solidity parser and surya
+- new: 🔥 Solidity Visual Auditor Cockpit panel
+    - Workspace Explorer
+    - Quick-access to extension settings
+    - Find Top Level Contracts
+    - Keep track of flattened files
+    - List public state-changing methods from the current contract
+    - Show the function call trace for the current method
+
 We've been working on a new cockpit view that allows you to navigate large codebases more efficiently. Check out the new &nbsp;<img width="32" alt="sidebar-logo" src="https://user-images.githubusercontent.com/2865694/78054647-acc8b980-7382-11ea-9542-ee8bcfaae175.png">&nbsp; icon in the activity bar to your left.
 
 So, what can you do with it?
@@ -45,25 +64,6 @@ And there is more to come 🙌 stay tuned!
 <sub>
 The cockpit view is fully customizable. You can hide both the sidebar menu or any view in the cockpit that you do not need (right-click → hide). 
 </sub>
-
-The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
-
-#### v0.0.24
-- new: Solidity Visual Auditor Cockpit panel additions
-    - Context: show surya ftrace when clicking into a contract method in the editor
-    - Flatfiles: List flat files produced by the extension (matches: \`**/flat_*.sol\`)
-- updated: surya (fixes multiple issues when parsing certain files)
-
-#### v0.0.23
-- new: Update notifications have arrived!
-- updated: solidity parser and surya
-- new: 🔥 Solidity Visual Auditor Cockpit panel
-    - Workspace Explorer
-    - Quick-access to extension settings
-    - Find Top Level Contracts
-    - Keep track of flattened files
-    - List public state-changing methods from the current contract
-    - Show the function call trace for the current method
 
 <sub>
 Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`

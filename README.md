@@ -286,9 +286,9 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 ## v0.0.24
 - new: Solidity Visual Auditor Cockpit panel additions
-  - Context: show surya ftrace when clicking into a contract method in the editor
-  - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
-- updated: surya (fixes multiple issues when parsing certain files)
+    - Context: show function call trace when clicking into a contract method in the editor
+    - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
+- updated: surya (fixed multiple issues when parsing certain smart contracts with `usingFor` statements)
 
 ## v0.0.23
 - new: Update notifications have arrived!
