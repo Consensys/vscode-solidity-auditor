@@ -10,6 +10,12 @@ const settings = require('../../settings');
 
 var semver = require('semver');
 
+const SKIP_VERSIONS = {
+    "0.0.25":function(lastSeenVersion){                         //extensionversion is 0.0.25
+        return semver.satisfies(lastSeenVersion, ">=0.0.24");    //skip if last seen version was 0.0.24 or greater
+    }
+}
+
 const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
 <sup>
 [[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
@@ -22,6 +28,9 @@ Hey there 🙌 **Solidity Visual Auditor** just got better! Find out more below.
 ### What's New?
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
+
+#### v0.0.25
+- updated: breaking interface with \`vscode-interactive-graphviz@v0.0.8\`: the render command was renamed from \`interactive-graphviz.preview.beside\` to \`graphviz-interactive-preview.preview.beside\`
 
 #### v0.0.24
 - new: Solidity Visual Auditor Cockpit panel views
@@ -83,14 +92,24 @@ class WhatsNewHandler {
         let config = settings.extensionConfig();
 
         let lastSeenVersion = context.globalState.get("solidity-va.whatsNew.lastSeenVersion");
-
         if(config.whatsNew.disabled){ 
             return;
         }
 
-        if(lastSeenVersion && semver.satisfies(lastSeenVersion, ">=" + extensionVersion)){
-            console.log(">=" + extensionVersion);
-            return;
+        if(lastSeenVersion){
+            // what's new msg seen before
+            if(semver.satisfies(lastSeenVersion, ">=" + extensionVersion)){
+                // msg seen
+                console.log(">=" + extensionVersion);
+                return;
+            }
+
+             //skip if previous version what's new has been seen
+            let check_skip_fn = SKIP_VERSIONS[extensionVersion];
+            if(check_skip_fn && check_skip_fn(lastSeenVersion)){
+                console.log("Skipping what's new for:" +extensionVersion);
+                return;
+            }
         }
 
         await this.showMessage(context);
