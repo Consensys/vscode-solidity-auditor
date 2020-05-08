@@ -179,18 +179,21 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(settings.extensionConfig().preview.dot){
-                            vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
+                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null})
                             .catch(error =>{
-                                vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
-                                .catch(error => {
-                                    //command not available. fallback open as text and try graphviz.showPreview
-                                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                                        .then(editor => {
-                                            vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                                .catch(error => {
-                                                    //command not available - do nothing
-                                                });
-                                        });
+                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null}) //TODO: remove this in future version. only for transition to new command
+                                .catch(error =>{
+                                    vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                                    .catch(error => {
+                                        //command not available. fallback open as text and try graphviz.showPreview
+                                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                            .then(editor => {
+                                                vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                                    .catch(error => {
+                                                        //command not available - do nothing
+                                                    });
+                                            });
+                                    });
                                 });
                             });
                         } else {
@@ -208,18 +211,21 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(settings.extensionConfig().preview.dot){
-                            vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})
+                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null})
                             .catch(error =>{
-                                vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
-                                .catch(error => {
-                                    //command not available. fallback open as text and try graphviz.showPreview
-                                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-                                        .then(editor => {
-                                            vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
-                                                .catch(error => {
-                                                    //command not available - do nothing
-                                                });
-                                        });
+                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null})  //TODO: remove this in future version. only for transition to new command
+                                .catch(error =>{
+                                    vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
+                                    .catch(error => {
+                                        //command not available. fallback open as text and try graphviz.showPreview
+                                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
+                                            .then(editor => {
+                                                vscode.commands.executeCommand("graphviz.showPreview", editor)  // creates new pane
+                                                    .catch(error => {
+                                                        //command not available - do nothing
+                                                    });
+                                            });
+                                    });
                                 });
                             });
                         } else {
