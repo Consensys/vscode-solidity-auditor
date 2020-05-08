@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.25
+- updated: breaking interface with `vscode-interactive-graphviz@v0.0.8`: the render command was renamed from `interactive-graphviz.preview.beside` to `graphviz-interactive-preview.preview.beside`
+
 ## v0.0.24
 - new: Solidity Visual Auditor Cockpit panel additions
     - Context: show function call trace when clicking into a contract method in the editor
