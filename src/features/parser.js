@@ -7,7 +7,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
-const parser = require('solidity-parser-diligence');
+const parser = require('@solidity-parser/parser');
 const parserHelpers = require("./parser/parserHelpers");
 const { linearize } = require('c3-linearization');
 const crypto = require('crypto');
