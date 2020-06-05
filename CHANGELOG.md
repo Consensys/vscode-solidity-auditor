@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "solidity-visual-auditor" extension will be documented in this file.
 
+## v0.0.26
+- new: support for solidity `0.6.x` via #53
+- new: `cockpit → Workspace: Explorer → Surya: Contract interaction graph` aka `surya.graphSimple` #49
+- updated: surya to 0.4.0 #49
+- updated: `solidity-parser-diligence` to community maintained `@solidity-parser/parser` #53
+
 ## v0.0.25
 - updated: breaking interface with `vscode-interactive-graphviz@v0.0.8`: the render command was renamed from `interactive-graphviz.preview.beside` to `graphviz-interactive-preview.preview.beside`
 
