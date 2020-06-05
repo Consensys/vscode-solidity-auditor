@@ -669,6 +669,19 @@ function onActivate(context) {
         );
         context.subscriptions.push(
             vscode.commands.registerCommand(
+                'solidity-va.surya.graphSimple', 
+                function (doc, files) {
+                    if(files && typeof files[0] === "object" && files[0].hasOwnProperty("children")){
+                        //treeItem or fspaths
+                        doc = files;
+                        files = undefined;
+                    }
+                    commands.surya(doc || vscode.window.activeTextEditor.document, "graphSimple", files);
+                }
+            )
+        );
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
                 'solidity-va.surya.inheritance', 
                 function (doc, multiSelectTreeItems) {
                     doc = multiSelectTreeItems || doc;
