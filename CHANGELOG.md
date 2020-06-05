@@ -3,7 +3,9 @@ All notable changes to the "solidity-visual-auditor" extension will be documente
 
 ## v0.0.26
 - new: support for solidity `0.6.x` via #53
-- new: `cockpit → Workspace: Explorer → Surya: Contract interaction graph` aka `surya.graphSimple` #49
+- new: `cockpit → Workspace: Explorer → Surya: Contract interaction graph` aka `surya.graphSimple` #49</br>
+    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"></br>
+    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
 - updated: surya to 0.4.0 #49
 - updated: `solidity-parser-diligence` to community maintained `@solidity-parser/parser` #53
 

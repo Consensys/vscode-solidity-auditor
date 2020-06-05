@@ -29,46 +29,13 @@ Hey there 🙌 **Solidity Visual Auditor** just got better! Find out more below.
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.25
-- updated: breaking interface with \`vscode-interactive-graphviz@v0.0.8\`: the render command was renamed from \`interactive-graphviz.preview.beside\` to \`graphviz-interactive-preview.preview.beside\`
-
-#### v0.0.24
-- new: Solidity Visual Auditor Cockpit panel views
-    - Context - Function Call Trace: shows function call trace when clicking into a contract method in the editor
-    - Flatfiles: List flat files produced by the extension (matches: \`**/flat_*.sol\`)
-- updated: surya (fixed multiple issues when parsing certain smart contracts with \`usingFor\` statements)
-
-#### v0.0.23
-- new: Update notifications have arrived!
-- updated: solidity parser and surya
-- new: 🔥 Solidity Visual Auditor Cockpit panel
-    - Workspace Explorer
-    - Quick-access to extension settings
-    - Find Top Level Contracts
-    - Keep track of flattened files
-    - List public state-changing methods from the current contract
-    - Show the function call trace for the current method
-
-We've been working on a new cockpit view that allows you to navigate large codebases more efficiently. Check out the new &nbsp;<img width="32" alt="sidebar-logo" src="https://user-images.githubusercontent.com/2865694/78054647-acc8b980-7382-11ea-9542-ee8bcfaae175.png">&nbsp; icon in the activity bar to your left.
-
-So, what can you do with it?
-
-- Explore .sol files with the new workspace explorer
-- Generate report/graphs for any files/folders selected in the explorer views
-- Conveniently flatten selected files (selected folders or all files in the top-level view) (Note: \`truffle-flattener\` may require an \`npm install\` of the project for flattening to work)
-- Search for contracts that are likely to be deployed in the system (complete workspace or selected folders)
-
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017640-d666ee00-734c-11ea-8d16-fbf393ad4804.png">   
-
-- Context-sensitive views: click into a contract in the editor to list public state-changing methods
-
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017716-fc8c8e00-734c-11ea-8e04-0e9ed0a71471.png">
-
-- Get quick access to extension settings
-
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78018038-7ae93000-734d-11ea-8303-a4366e231217.png">
-
-And there is more to come 🙌 stay tuned!
+#### v0.0.26
+- new: support for solidity \`>= 0.6.0\`
+- new: \`cockpit → Workspace: Explorer → Surya: Contract interaction graph\` aka \`surya.graphSimple\` </br>
+    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"></br>
+    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
+- updated: surya to 0.4.0 
+- updated: \`solidity-parser-diligence\` to community maintained \`@solidity-parser/parser\` 
 
 <sub>
 The cockpit view is fully customizable. You can hide both the sidebar menu or any view in the cockpit that you do not need (right-click → hide). 
