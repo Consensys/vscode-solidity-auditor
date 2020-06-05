@@ -252,7 +252,7 @@ class SolidityParser{
             }
         }
         if(typeof ast==="undefined"){
-            console.error("solidity-parser-diligence - failed to parse input");
+            console.error("solidity-parser - failed to parse input");
         }
 
         let sourceUnit = new SourceUnit(this);
