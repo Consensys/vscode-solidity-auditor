@@ -173,8 +173,13 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "markdown"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
                 break;
+            case "graphSimple":
             case "graph":
-                ret = surya.graph(args || files, {colorScheme: suryaDefaultColorSchemeDark});
+                if(command=="graphSimple"){
+                    ret = surya.graphSimple(args || files, {colorScheme: suryaDefaultColorSchemeDark});
+                } else {
+                    ret = surya.graph(args || files, {colorScheme: suryaDefaultColorSchemeDark});
+                }
                 //solidity-va.preview.render.markdown
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {

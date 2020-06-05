@@ -176,6 +176,11 @@
                 },
                 {
                     "group": "solidity",
+                    "command": "solidity-va.surya.graphSimple",
+                    "when": "view == solidity-va-cockpit-explorer || view == solidity-va-cockpit-topLevelContracts || view == solidity-va-cockpit-flatFiles"
+                },
+                {
+                    "group": "solidity",
                     "command": "solidity-va.surya.inheritance",
                     "when": "view == solidity-va-cockpit-explorer || view == solidity-va-cockpit-topLevelContracts || view == solidity-va-cockpit-flatFiles"
                 }
@@ -199,7 +204,12 @@
             },
             {
                 "command": "solidity-va.surya.graph",
-                "title": "Surya - graph",
+                "title": "Surya - call graph",
+                "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.surya.graphSimple",
+                "title": "Surya - contract interaction graph",
                 "category": "Solidity Visual Auditor"
             },
             {
