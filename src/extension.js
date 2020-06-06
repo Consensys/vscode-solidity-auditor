@@ -598,11 +598,7 @@ function onDidChange(event){
 
 function onActivate(context) {
 
-    const active = vscode.window.activeTextEditor;
-    if (!active || !active.document) {
-        return;
-    }
-    activeEditor = active;
+    activeEditor = vscode.window.activeTextEditor;
 
     console.log("onActivate");
 
