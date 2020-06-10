@@ -81,6 +81,39 @@ function provideHoverHandler(document, position, token, type, g_parser) {
     if (settings.extensionConfig().hover === false) {
         return;
     }
+
+    let ret = builtInsHoverHandler(document, position, token, type, g_parser);
+    if(!ret){
+        return addressHoverProvider(document, position, token, type, g_parser);
+    }
+}
+
+function addressHoverProvider(document, position, token, type, g_parser) {
+    
+    const range = document.getWordRangeAtPosition(position, /(0x[a-fA-F0-9]{40})/);
+    if (!range || range.length<=0) {
+        return;
+    }
+
+    const word = document.getText(range);
+
+    if(token.isCancellationRequested){
+        return token;
+    }
+    
+    let addressHover = `🌎 [GoTo](${settings.extensionConfig().utils.address.lookupUrl.replace("{address}",word)})
+    |  [ByteCode](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"byteCode"}))})
+    |  [VerifiedContract](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"sourceCode"}))})
+    |  [Decompile](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"byteCodeDecompiled"}))})
+    `;
+
+    const contents = new vscode.MarkdownString(addressHover);
+    contents.isTrusted = true;
+    return new vscode.Hover(contents);
+}
+
+function builtInsHoverHandler(document, position, token, type, g_parser) {
+    
     const range = document.getWordRangeAtPosition(position, /(tx\.gasprice|tx\.origin|msg\.data|msg\.sender|msg\.sig|msg\.value|block\.coinbase|block\.difficulty|block\.gaslimit|block\.number|block\.timestamp|abi\.encodePacked|abi\.encodeWithSelector|abi\.encodeWithSignature|abi\.decode|abi\.encode|\.?[0-9_\w>]+)/);
     if (!range || range.length<=0) {
         return;

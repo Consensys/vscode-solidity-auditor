@@ -9,7 +9,7 @@
         "compiler",
         "security"
     ],
-    "version": "0.0.26",
+    "version": "0.0.27",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -41,6 +41,7 @@
         "onCommand:solidity-va.cockpit.explorer.refresh",
         "onCommand:solidity-va.cockpit.topLevelContracts.refresh",
         "onCommand:solidity-va.cockpit.settings.toggle",
+        "onCommand:solidity-va.etherscan.getSource",
         "onView:solidity-va-cockpit-explorer",
         "onView:solidity-va-cockpit-topLevelContracts",
         "onView:solidity-va-cockpit-settings",
@@ -302,6 +303,11 @@
                 "command": "solidity-va.whatsNew.show",
                 "title": "Extension - What's New",
                 "category": "Solidity Visual Auditor"
+            },
+            {
+                "command": "solidity-va.etherscan.getSource",
+                "title": "EtherScan - get contract source for address",
+                "category": "Solidity Visual Auditor"
             }
         ],
         "configuration": {
@@ -425,6 +431,16 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable update notifications"
+                },
+                "solidity-va.utils.address.lookupUrl": {
+                    "type": "string",
+                    "description": "Service used to lookup ethereum addresses. Note: placeholder {address}",
+                    "default": "https://etherscan.io/address/{address}"
+                },
+                "solidity-va.utils.etherscan.apikey": {
+                    "type": "string",
+                    "description": "Your etherscan.io API key used when fetching Contract Source or Bytecode from etherscan.io.",
+                    "default": "YourApiKeyToken"
                 }
             }
         }
