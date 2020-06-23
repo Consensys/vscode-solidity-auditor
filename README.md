@@ -4,7 +4,7 @@
 </sup><br/><br/>
 
 
-# Solidity Visual Auditor
+# Solidity Visual Developer
 
 * Solidity Language Support
 * Solidity Source Exploration and Visual Security Auditing
@@ -28,7 +28,7 @@ We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb
 
 ## Features
 
-Semantic highlighting and solidity insights for passive security awareness. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
+Semantic highlighting and solidity insights for passive security awareness. Most features are configurable (`preferences -> Settings -> Solidity Visual Developer`)
 
 ##### Themes (`preferences -> Color Theme`):
 
@@ -89,12 +89,12 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 
 **Method 1:** Install by going to [Visual Studio Market Place](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor#overview) and click  `Install`. 
 
-**Method 2:** Bring up the Extension view in VS Code and search for  `Solidity Visual Auditor` and click `Install`
+**Method 2:** Bring up the Extension view in VS Code and search for  `Solidity Visual Developer` and click `Install`
 
 **Method 3 (Manual)**: 
 1. Download the [latest compiled extension as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
 2. Fire up Terminal and install the extension by running `code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
-3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
+3. vscode --> preferences --> color scheme --> **Solidity Visual Developer Dark**
 
 # Tour
 
@@ -213,11 +213,11 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
 * open remix in external browser
 
-## Theme: Solidity Visual Auditor Light (VSCode)
+## Theme: Solidity Visual Developer Light (VSCode)
 
 <img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 
-## Theme: Solidity Visual Auditor Dark
+## Theme: Solidity Visual Developer Dark
 
 **Simple DAO**
 
@@ -228,7 +228,7 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 ![highlight](https://user-images.githubusercontent.com/2865694/52523502-4bcbb700-2c92-11e9-9ef1-085e3a244cda.png)
 
 
-## Theme: Solidity Visual Auditor Solarized Light
+## Theme: Solidity Visual Developer Solarized Light
 
 **Simple DAO**
 
@@ -283,27 +283,6 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 
 # Release Notes
-
-## v0.0.25
-- updated: breaking interface with `vscode-interactive-graphviz@v0.0.8`: the render command was renamed from `interactive-graphviz.preview.beside` to `graphviz-interactive-preview.preview.beside`
-
-## v0.0.24
-- new: Solidity Visual Auditor Cockpit panel additions
-    - Context: show function call trace when clicking into a contract method in the editor
-    - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
-- updated: surya (fixed multiple issues when parsing certain smart contracts with `usingFor` statements)
-
-## v0.0.23
-- new: Update notifications have arrived!
-- updated: solidity parser and surya
-- new: 🔥 Solidity Visual Auditor Cockpit panel
-    - Workspace Explorer
-    - Quick-access to extension settings
-    - Find Top Level Contracts
-    - Keep track of flattened files
-    - List public state-changing methods from the current contract
-    - Show the function call trace for the current method
-
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 
