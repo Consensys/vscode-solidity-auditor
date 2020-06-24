@@ -287,7 +287,7 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     refresh(workspaceRelativeBaseDir){
         return new Promise((resolve, reject) => {
             this.treeView.cockpit.commands._findTopLevelContracts(undefined, undefined, workspaceRelativeBaseDir).then(data => {
-                this.load(Object.values(data));
+                this.load(Object.values(data).sort());
                 this._onDidChangeTreeData.fire();
                 resolve();
             });
