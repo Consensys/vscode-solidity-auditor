@@ -381,9 +381,6 @@ Please refer to the extension's contribution section to show an up-to-date list 
 </details>
 
 
-<details>
-  <summary style='font-size:14pt'><b>FAQ:</b>Known Issues</summary>
-
 ## Known Issues
 
 * outline view does not always refresh. **TempFix**: modify and save the file to trigger a refresh.
