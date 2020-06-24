@@ -23,7 +23,7 @@ const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" s
 
 
 
-**Solidity Visual Auditor** is now **Solidity Visual Developer** 🎉
+Thanks for using **Solidity Visual Developer** 🤜🤛
 
 ### What's New?
 

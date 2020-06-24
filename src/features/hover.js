@@ -82,22 +82,16 @@ function provideHoverHandler(document, position, token, type, g_parser) {
         return;
     }
 
-    let ret = builtInsHoverHandler(document, position, token, type, g_parser);
-    if(!ret){
-        return addressHoverProvider(document, position, token, type, g_parser);
-    }
+    return builtInsHoverHandler(document, position, token, type, g_parser) || addressHoverProvider(document, position, token, type, g_parser);
 }
 
 function addressHoverProvider(document, position, token, type, g_parser) {
     
     let range = document.getWordRangeAtPosition(position, /(0x[a-fA-F0-9]{40})(?:[^a-zA-Z0-9]|$)/);
 
-    console.log(range);
     if (!range) {
         return;
     }
-
-    console.log(range.end)
 
     //fix range to 40+2 bytes (first capture group)
     range = range.with({end: new vscode.Position(range.end.line, range.start.character + 42)})

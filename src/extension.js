@@ -952,7 +952,7 @@ ${sourceFiles[current].content}
                         EtherScanIO.byteCodeForAddress(args.address).then(content => {
                             vscode.commands.executeCommand("vscode-decompiler.decompileShowContent", `${args.address}.evm`, content)
                             .catch(err => {
-                                vscode.window.showErrorMessage(`Please install and configure 'tintinweb.vscode-decompiler' to use this feature.`);
+                                vscode.window.showWarningMessage(`Please install and configure 'tintinweb.vscode-decompiler' to use this feature.`);
                             });
                         });
                     break;
