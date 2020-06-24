@@ -134,9 +134,9 @@ Scroll down and take the tour.
 
 
 <details>
-  <summary style='font-size:14pt'><b>Feature:</b> Ethereum Account Address augmentation</summary>
+  <summary style='font-size:14pt'><b>Feature:</b> Ethereum Account Address Actions</summary>
 
-## Ethereum Account Address augmentation
+## Ethereum Account Address Actions
 
 -  `open` the account on etherscan.io
 - show the contract `code`
