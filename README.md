@@ -6,12 +6,12 @@
 
 # Solidity Visual Developer
 
-* Solidity Language Support
+* Advanced Solidity Language Support
 * Code Augmentation
 * Source Exploration
 * Visual Security Linting
 
-> supporting developers to write secure and well documented code
+> An extension that supports developers in writing secure and well understood code
 
 This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline, specialized views, advanced Solidity code insights and augmentation to Visual Studio Code.
 
