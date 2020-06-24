@@ -908,7 +908,11 @@ function onActivate(context) {
 `;
                                 //etherscan.io api may return a json object in SourceCode if multiple files were submitted. let's try to decode it.
                                 try {
-                                    let sourceStruct = JSON.parse(sourceCode.replace("{{","{").replace("}}","}"));
+                                    sourceCode = sourceCode.trim();
+                                    if(sourceCode.startsWith("{{") && sourceCode.endsWith("}}")){
+                                        sourceCode = sourceCode.substring(1, sourceCode.length-1);
+                                    }
+                                    let sourceStruct = JSON.parse(sourceCode);
                                     let libs = "";
                                     if(sourceStruct.settings && sourceStruct.settings.libraries && sourceStruct.settings.libraries[""]){
                                         libs = `/**                                   

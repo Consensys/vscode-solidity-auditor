@@ -4,19 +4,28 @@
 </sup><br/><br/>
 
 
-# Solidity Visual Auditor
+# Solidity Visual Developer
 
-* Solidity Language Support
-* Solidity Source Exploration and Visual Security Auditing
+* Advanced Solidity Language Support
+* Code Augmentation
+* Source Exploration
+* Visual Security Linting
 
-This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline and advanced Solidity code insights to Visual Studio Code ([Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor)).
+> An extension that supports developers in writing secure and well understood code
 
-This extension is compatible with [vscode-solidity](https://github.com/juanfranblanco/vscode-solidity).
+This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline, specialized views, advanced Solidity code insights and augmentation to Visual Studio Code.
 
 
-We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+We ❤ feedback → [get in touch!](https://github.com/tintinweb/vscode-solidity-auditor/issues)
+
+____
+
 
 [Marketplace](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor): `ext tintinweb.solidity-visual-auditor`
+
+____ 
+
+<img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 
 ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
@@ -28,7 +37,7 @@ We ❤ feedback! Bug or Feature → [file an issue](https://github.com/tintinweb
 
 ## Features
 
-Semantic highlighting and solidity insights for passive security awareness. Most features are configurable (`preferences -> Settings -> Solidity Visual Auditor`)
+Semantic highlighting and solidity insights for passive security awareness. Most features are configurable (`preferences -> Settings -> Solidity Visual Developer`)
 
 ##### Themes (`preferences -> Color Theme`):
 
@@ -43,15 +52,15 @@ Semantic highlighting and solidity insights for passive security awareness. Most
 ##### Syntax Highlighting
 
 * **access modifiers** (`external`, `public`, `payable`, ...)
-* security relevant built-ins, globals, methods and user/miner-tainted information (`address.call()`,`tx.origin`,`msg.data`, `block.*`, `now`) 
+* security relevant built-ins, globals, methods and user/miner-tainted information (`address.call()`, `tx.origin`, `msg.data`, `block.*`, `now`) 
 * storage access modifiers (`memory`, `storage`)
-* developer notes in comments (`TODO`,`FIXME`,`HACK`, ...)
+* developer notes in comments (`TODO`, `FIXME`, `HACK`, ...)
 * custom function modifiers 
 * contract creation / event invocations
 * easily differentiate between arithmetics vs. logical operations
 * make **Constructor** and **Fallback** function more prominent
 
-Code fragments are highlighted to draw your attention to <span style="color:green">*Secure code* (![#c5f015](https://placehold.it/15/c5f015/000000?text=+))</span> and <span style="color:red">*Insecure code* (![#f03c15](https://placehold.it/15/f03c15/000000?text=+))</span>.
+Code fragments passively draw your attention to statements that typically <span style="color:green">*reduce risk* (![#c5f015](https://placehold.it/15/c5f015/000000?text=+))</span> or <span style="color:red">*need your attention* (![#f03c15](https://placehold.it/15/f03c15/000000?text=+))</span>.
 
 ##### Semantic Highlighting
 
@@ -60,41 +69,54 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 * highlights **function arguments** in the function body
 
 
-##### Audit Features
+##### Review Features
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
 * generic interface for importing external scanner results - cdili json format (see below)
 * codelens inline action: graph, report, dependencies, inheritance, parse, ftrace, flatten, generate unittest stub, function signature hashes, uml
 
-##### Code Insights
+##### Graph- and Reporting Features
 
-* populates VS Code outline view with sourceUnit and contract layout
+* 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [Sūrya](https://github.com/ConsenSys/surya)
+  * access your favorite Sūrya features from within vscode!
+  * interactive call graphs with call flow highlighting and more!
+* 📈🎉 auto-generate UML diagrams from code to support your threat modelling exercises or documentation!
+
+##### Code Augmentation
+* Hover over Ethereum Account addresses to download the byte-code, source-code or open it in the browser
+* Hover over ASM instructions to show their signatures
+* Hover over keywords to show basic Security Notes
+* Hover over StateVar's to show declaration information
+
+##### Views
+
+* Cockpit View
+  * Explor and focus on solidity files in your workspace
+  * Generate report/graphs for any files/folders selected in the explorer views
+  * Selectively flatten files
+  * Search for contracts that are likely to be deployed in the system
+  * Context-sensitive views: click into a contract in the editor to list public state-changing method
+  * Get quick access to extension settings
+* Outline View
+  * populates VS Code outline view with sourceUnit and contract layout
   * contracts, stateVars, methods, inherited names
   * annotates security relevant information (visibility, ...)
   * calculates complexity rating
   * annotations functions with information about whether they are accessing stateVars
-* 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [Sūrya](https://github.com/ConsenSys/surya)
-  * access your favorite Sūrya features from within vscode!
-  * interactive call graphs with call flow highlighting and more!#
-* 📈🎉 generate UML diagrams 
-* command: suggest top level contracts / find most derived contracts
-* command: flatten most derived contracts
-* command: calculate function signature hashes
-* command: open Remix-IDE in external browser window
-* onHover ASM instruction signatures
-* onHover Security Notes for certain keywords
-* onHover StateVar declaration information, including the line of declaration
+
 
 # Installation
 
+
 **Method 1:** Install by going to [Visual Studio Market Place](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor#overview) and click  `Install`. 
 
-**Method 2:** Bring up the Extension view in VS Code and search for  `Solidity Visual Auditor` and click `Install`
+**Method 2:** Bring up the Extension view in VS Code and search for  `Solidity Visual Developer` and click `Install`
 
 **Method 3 (Manual)**: 
 1. Download the [latest compiled extension as *.vsix](https://github.com/tintinweb/vscode-solidity-auditor/releases)
 2. Fire up Terminal and install the extension by running `code --install-extension "solidity-visual-auditor-0.0.x.vsix"`
-3. vscode --> preferences --> color scheme --> **Solidity Visual Auditor Dark**
+3. vscode --> preferences --> color scheme --> **Solidity Visual Developer Dark**
+
 
 # Tour
 
@@ -108,17 +130,39 @@ Scroll down and take the tour.
 * `@audit` tags
 * graph's and uml
 * generic interface to import issues from external scanners
+* Cockpit View
 
 
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Ethereum Account Address Actions</summary>
 
-## semantic function argument highlighting
+## Ethereum Account Address Actions
+
+-  `open` the account on etherscan.io
+- show the contract `code`
+- show the `VerifiedContract` source code
+- `decompile` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)
+  
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
+
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Semantic function argument highlighting</summary>
+
+## Semantic function argument highlighting
 
 * arguments are assigned different colors in the scope of the function
 
 <img width="722" alt="semantic-arg-dark" src="https://user-images.githubusercontent.com/2865694/55149233-1bf54780-514a-11e9-827e-d0816a9c2ac8.png">
 <img width="722" alt="semantic-arg-light" src="https://user-images.githubusercontent.com/2865694/55149264-257eaf80-514a-11e9-8779-8cdd60b9ab22.png">
 
-## @audit bookmarks
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Inline Bookmarks</summary>
+
+## Inline Bookmarks: @audit tags
 
 This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
 
@@ -127,8 +171,12 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="722" alt="audit-tags" src="https://user-images.githubusercontent.com/2865694/55152445-b3f62f80-5150-11e9-85df-de84023467c0.png">
 
+</details>
 
-## code annotations / hover / tooltip
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Code Augmentation / Annotations / Hover / Tooltip</summary>
+
+## Code Augmentation / Annotations / Hover / Tooltip
 
 * additional information for various keywords (including security notes)
 
@@ -138,7 +186,18 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="713" alt="code_asm_tooltip" src="https://user-images.githubusercontent.com/2865694/53698881-c34cbc00-3de2-11e9-97ae-3b7145430c27.png">
 
-## stateVar tracing
+* Etherscan.io integration
+
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
+
+</details>
+
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> State Variable Highlighting</summary>
+
+
+## State Variable Highlighting
 
 * highlight contract local stateVars (golden box)
 
@@ -156,7 +215,13 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="624" alt="code_inherited" src="https://user-images.githubusercontent.com/2865694/53698887-cfd11480-3de2-11e9-8374-a022b4fdaa33.png">
 
-## codelenses
+</details>
+
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> CodeLenses</summary>
+
+## CodeLenses
 
 * surya - interactive graph
 
@@ -182,7 +247,12 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
 
-## outline view
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Outline View</summary>
+
+## Outline View
 
 * library with function parameters `T` and declarations
 
@@ -204,7 +274,38 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
 
-## commands
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Cockpit View</summary>
+
+## Cockpit View
+
+We've been working on a new cockpit view that allows you to navigate large codebases more efficiently. Check out the new &nbsp;<img width="32" alt="sidebar-logo" src="https://user-images.githubusercontent.com/2865694/78054647-acc8b980-7382-11ea-9542-ee8bcfaae175.png">&nbsp; icon in the activity bar to your left.
+
+So, what can you do with it?
+
+- Explore .sol files with the new workspace explorer
+- Generate report/graphs for any files/folders selected in the explorer views
+  <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
+- Conveniently flatten selected files (selected folders or all files in the top-level view) (Note: `truffle-flattener` may require an `npm install` of the project for flattening to work)
+- Search for contracts that are likely to be deployed in the system (complete workspace or selected folders)
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017640-d666ee00-734c-11ea-8d16-fbf393ad4804.png">  
+- Context-sensitive views: click into a contract in the editor to list public state-changing methods
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017716-fc8c8e00-734c-11ea-8e04-0e9ed0a71471.png">
+- Get quick access to extension settings
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78018038-7ae93000-734d-11ea-8303-a4366e231217.png">
+
+And there is more to come 🙌 stay tuned!
+
+**Note**: The cockpit view is fully customizable. You can hide both the sidebar menu or any view in the cockpit that you do not need (right-click → hide).
+
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>BuiltIn:</b> Commands</summary>
+
+## Commands
 
 * suggest top level contracts aka "entrypoint contracts" (most derived)
 * flatten current (codelens) or all suggested top level contracts (command)
@@ -213,11 +314,23 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
 * open remix in external browser
 
-## Theme: Solidity Visual Auditor Light (VSCode)
+Please refer to the extension's contribution section to show an up-to-date list of commands.
+
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Light (VSCode)</summary>
+
+## Theme: Solidity Visual Developer Light (VSCode)
 
 <img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 
-## Theme: Solidity Visual Auditor Dark
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Dark</summary>
+
+## Theme: Solidity Visual Developer Dark
 
 **Simple DAO**
 
@@ -227,15 +340,22 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 ![highlight](https://user-images.githubusercontent.com/2865694/52523502-4bcbb700-2c92-11e9-9ef1-085e3a244cda.png)
 
+</details>
 
-## Theme: Solidity Visual Auditor Solarized Light
+<details>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Solarized Light</summary>
+
+## Theme: Solidity Visual Developer Solarized Light
 
 **Simple DAO**
 
 <img width="970" alt="screenshot 2019-02-11 at 21 52 11" src="https://user-images.githubusercontent.com/2865694/52592696-5c715e00-2e47-11e9-99f4-32332e308ec3.png">
 
+</details>
 
 
+<details>
+  <summary style='font-size:14pt'><b>Configuration:</b> Settings & Customizations</summary>
 
 ## Extension Settings
 
@@ -269,6 +389,10 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 * `solidity-va.preview.markdown` ... open markdown output in rendered form
 * `Solidity-va.tools.surya.input.contracts` ... Define whether surya should take cached files or all contracts in the workspace as input
 
+Please refer to the extension's contribution section to show an up-to-date list of settings.
+
+</details>
+
 
 ## Known Issues
 
@@ -283,27 +407,6 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 
 # Release Notes
-
-## v0.0.25
-- updated: breaking interface with `vscode-interactive-graphviz@v0.0.8`: the render command was renamed from `interactive-graphviz.preview.beside` to `graphviz-interactive-preview.preview.beside`
-
-## v0.0.24
-- new: Solidity Visual Auditor Cockpit panel additions
-    - Context: show function call trace when clicking into a contract method in the editor
-    - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
-- updated: surya (fixed multiple issues when parsing certain smart contracts with `usingFor` statements)
-
-## v0.0.23
-- new: Update notifications have arrived!
-- updated: solidity parser and surya
-- new: 🔥 Solidity Visual Auditor Cockpit panel
-    - Workspace Explorer
-    - Quick-access to extension settings
-    - Find Top Level Contracts
-    - Keep track of flattened files
-    - List public state-changing methods from the current contract
-    - Show the function call trace for the current method
-
 
 [Changelog](https://github.com/tintinweb/vscode-solidity-auditor/blob/master/CHANGELOG.md)
 
