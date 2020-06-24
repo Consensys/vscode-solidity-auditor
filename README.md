@@ -131,13 +131,26 @@ Scroll down and take the tour.
 * graph's and uml
 * generic interface to import issues from external scanners
 * Cockpit View
-* Etherscan.io integration
 
 
 <details>
-  <summary style='font-size:14pt'><b>Feature:</b> semantic function argument highlighting</summary>
+  <summary style='font-size:14pt'><b>Feature:</b> Ethereum Account Address augmentation</summary>
 
-## semantic function argument highlighting
+## Ethereum Account Address augmentation
+
+-  `open` the account on etherscan.io
+- show the contract `code`
+- show the `VerifiedContract` source code
+- `decompile` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)
+  
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
+
+</details>
+
+<details>
+  <summary style='font-size:14pt'><b>Feature:</b> Semantic function argument highlighting</summary>
+
+## Semantic function argument highlighting
 
 * arguments are assigned different colors in the scope of the function
 
@@ -149,7 +162,7 @@ Scroll down and take the tour.
 <details>
   <summary style='font-size:14pt'><b>Feature:</b> Inline Bookmarks</summary>
 
-## @audit inline bookmarks
+## Inline Bookmarks: @audit tags
 
 This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
 
@@ -161,9 +174,9 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 </details>
 
 <details>
-  <summary style='font-size:14pt'><b>Feature:</b> code annotations / hover / tooltip</summary>
+  <summary style='font-size:14pt'><b>Feature:</b> Code Augmentation / Annotations / Hover / Tooltip</summary>
 
-## code annotations / hover / tooltip
+## Code Augmentation / Annotations / Hover / Tooltip
 
 * additional information for various keywords (including security notes)
 
@@ -181,10 +194,10 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 
 <details>
-  <summary style='font-size:14pt'><b>Feature:</b> state variable highlighting</summary>
+  <summary style='font-size:14pt'><b>Feature:</b> State Variable Highlighting</summary>
 
 
-## stateVar tracing
+## State Variable Highlighting
 
 * highlight contract local stateVars (golden box)
 
@@ -208,7 +221,7 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 <details>
   <summary style='font-size:14pt'><b>Feature:</b> CodeLenses</summary>
 
-## codelenses
+## CodeLenses
 
 * surya - interactive graph
 
@@ -239,7 +252,7 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 <details>
   <summary style='font-size:14pt'><b>Feature:</b> Outline View</summary>
 
-## outline view
+## Outline View
 
 * library with function parameters `T` and declarations
 
@@ -275,7 +288,7 @@ So, what can you do with it?
 - Explore .sol files with the new workspace explorer
 - Generate report/graphs for any files/folders selected in the explorer views
   <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
-- Conveniently flatten selected files (selected folders or all files in the top-level view) (Note: \`truffle-flattener\` may require an \`npm install\` of the project for flattening to work)
+- Conveniently flatten selected files (selected folders or all files in the top-level view) (Note: `truffle-flattener` may require an `npm install` of the project for flattening to work)
 - Search for contracts that are likely to be deployed in the system (complete workspace or selected folders)
     <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017640-d666ee00-734c-11ea-8d16-fbf393ad4804.png">  
 - Context-sensitive views: click into a contract in the editor to list public state-changing methods
@@ -292,7 +305,7 @@ And there is more to come 🙌 stay tuned!
 <details>
   <summary style='font-size:14pt'><b>BuiltIn:</b> Commands</summary>
 
-## commands
+## Commands
 
 * suggest top level contracts aka "entrypoint contracts" (most derived)
 * flatten current (codelens) or all suggested top level contracts (command)
@@ -306,7 +319,7 @@ Please refer to the extension's contribution section to show an up-to-date list 
 </details>
 
 <details>
-  <summary style='font-size:14pt'><b>Theme:</b>Solidity Visual Developer Light (VSCode)</summary>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Light (VSCode)</summary>
 
 ## Theme: Solidity Visual Developer Light (VSCode)
 
@@ -315,7 +328,7 @@ Please refer to the extension's contribution section to show an up-to-date list 
 </details>
 
 <details>
-  <summary style='font-size:14pt'><b>Theme:</b>Solidity Visual Developer Dark</summary>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Dark</summary>
 
 ## Theme: Solidity Visual Developer Dark
 
@@ -330,7 +343,7 @@ Please refer to the extension's contribution section to show an up-to-date list 
 </details>
 
 <details>
-  <summary style='font-size:14pt'><b>Theme:</b>Solidity Visual Developer Solarized Light</summary>
+  <summary style='font-size:14pt'><b>Theme:</b> Solidity Visual Developer Solarized Light</summary>
 
 ## Theme: Solidity Visual Developer Solarized Light
 
@@ -342,7 +355,7 @@ Please refer to the extension's contribution section to show an up-to-date list 
 
 
 <details>
-  <summary style='font-size:14pt'><b>Configuration:</b>Settings</summary>
+  <summary style='font-size:14pt'><b>Configuration:</b> Settings & Customizations</summary>
 
 ## Extension Settings
 
