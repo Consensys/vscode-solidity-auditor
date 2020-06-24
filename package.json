@@ -6,7 +6,12 @@
         "solidity",
         "ethereum",
         "blockchain",
-        "security"
+        "security",
+        "audit",
+        "review",
+        "developer",
+        "solidity security",
+        "solidity audit"
     ],
     "version": "0.0.27",
     "publisher": "tintinweb",
