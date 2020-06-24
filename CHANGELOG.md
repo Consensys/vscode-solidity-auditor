@@ -1,12 +1,13 @@
 # Change Log
 
 ## v0.0.27
-- new: `Solidity Visual Auditor` is now `Solidity Visual Developer` 🎉
+- rebirth: `Solidity Visual Auditor` is now `Solidity Visual Developer` 🎉
 - new: Ethereum Address hover commands. Hover over an ethereum account address to:
   -  `open` the account on etherscan.io
   - show the contract `code`
   - show the `VerifiedContract` source code
-  - `decompile` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)
+  - `decompile` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)<br>
+    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
 
 ## v0.0.26
 - new: support for solidity `0.6.x` via #53
