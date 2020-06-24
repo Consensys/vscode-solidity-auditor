@@ -60,7 +60,7 @@ Code fragments are highlighted to draw your attention to <span style="color:gree
 * highlights **function arguments** in the function body
 
 
-##### Audit Features
+##### Review Features
 
 * audit annotations/bookmarks - `@audit - <msg>` `@audit-ok - <msg>` (see below)
 * generic interface for importing external scanner results - cdili json format (see below)
@@ -108,6 +108,8 @@ Scroll down and take the tour.
 * `@audit` tags
 * graph's and uml
 * generic interface to import issues from external scanners
+* Cockpit View
+* Etherscan.io integration
 
 
 
@@ -137,6 +139,10 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 * asm instruction signatures
 
 <img width="713" alt="code_asm_tooltip" src="https://user-images.githubusercontent.com/2865694/53698881-c34cbc00-3de2-11e9-97ae-3b7145430c27.png">
+
+* Etherscan.io integration
+
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
 
 ## stateVar tracing
 
@@ -203,6 +209,27 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 * extra information (subjective function complexity; accesses stateVar?)
 
 <img width="360" alt="outline_extra" src="https://user-images.githubusercontent.com/2865694/53698889-d069ab00-3de2-11e9-88bd-65598a39140c.png">
+
+## Cockpit View
+
+We've been working on a new cockpit view that allows you to navigate large codebases more efficiently. Check out the new &nbsp;<img width="32" alt="sidebar-logo" src="https://user-images.githubusercontent.com/2865694/78054647-acc8b980-7382-11ea-9542-ee8bcfaae175.png">&nbsp; icon in the activity bar to your left.
+
+So, what can you do with it?	So, what can you do with it?
+
+- Explore .sol files with the new workspace explorer
+- Generate report/graphs for any files/folders selected in the explorer views
+  <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
+- Conveniently flatten selected files (selected folders or all files in the top-level view) (Note: \`truffle-flattener\` may require an \`npm install\` of the project for flattening to work)
+- Search for contracts that are likely to be deployed in the system (complete workspace or selected folders)
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017640-d666ee00-734c-11ea-8d16-fbf393ad4804.png">  
+- Context-sensitive views: click into a contract in the editor to list public state-changing methods	- Context-sensitive views: click into a contract in the editor to list public state-changing methods
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78017716-fc8c8e00-734c-11ea-8e04-0e9ed0a71471.png">
+- Get quick access to extension settings	- Get quick access to extension settings
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/78018038-7ae93000-734d-11ea-8303-a4366e231217.png">
+
+And there is more to come 🙌 stay tuned!	And there is more to come 🙌 stay tuned!
+
+**Note**: The cockpit view is fully customizable. You can hide both the sidebar menu or any view in the cockpit that you do not need (right-click → hide).
 
 ## commands
 
