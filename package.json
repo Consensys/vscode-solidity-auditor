@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.0.27",
+    "version": "0.0.28",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -46,12 +46,13 @@
         "onCommand:solidity-va.cockpit.topLevelContracts.refresh",
         "onCommand:solidity-va.cockpit.settings.toggle",
         "onCommand:solidity-va.etherscan.getSource",
+        "onView:solidity-va-cockpit",
         "onView:solidity-va-cockpit-explorer",
         "onView:solidity-va-cockpit-topLevelContracts",
+        "onView:solidity-va-cockpit-flatFiles",
         "onView:solidity-va-cockpit-settings",
         "onView:solidity-va-cockpit-ftrace",
-        "onView:solidity-va-cockpit-publicMethods",
-        "onView:solidity-va-cockpit"
+        "onView:solidity-va-cockpit-publicMethods"
     ],
     "main": "./src/extension",
     "capabilities": {
@@ -435,16 +436,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable update notifications"
-                },
-                "solidity-va.utils.address.lookupUrl": {
-                    "type": "string",
-                    "description": "Service used to lookup ethereum addresses. Note: placeholder {address}",
-                    "default": "https://etherscan.io/address/{address}"
-                },
-                "solidity-va.utils.etherscan.apikey": {
-                    "type": "string",
-                    "description": "Your etherscan.io API key used when fetching Contract Source or Bytecode from etherscan.io.",
-                    "default": "YourApiKeyToken"
                 }
             }
         }
@@ -455,12 +446,13 @@
     "extensionPack": [
         "tintinweb.vscode-solidity-flattener",
         "jebbs.plantuml",
-        "tintinweb.vscode-inline-bookmarks"
+        "tintinweb.vscode-inline-bookmarks",
+        "tintinweb.vscode-ethover"
     ],
     "dependencies": {
+        "@solidity-parser/parser": "^0.6.1",
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "@solidity-parser/parser": "^0.6.1",
-        "surya": "^0.4.0"
+        "surya": "^0.4.1-dev.2"
     }
 }

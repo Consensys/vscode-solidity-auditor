@@ -82,36 +82,9 @@ function provideHoverHandler(document, position, token, type, g_parser) {
         return;
     }
 
-    return builtInsHoverHandler(document, position, token, type, g_parser) || addressHoverProvider(document, position, token, type, g_parser);
+    return builtInsHoverHandler(document, position, token, type, g_parser);
 }
 
-function addressHoverProvider(document, position, token, type, g_parser) {
-    
-    let range = document.getWordRangeAtPosition(position, /(0x[a-fA-F0-9]{40})(?:[^a-zA-Z0-9]|$)/);
-
-    if (!range) {
-        return;
-    }
-
-    //fix range to 40+2 bytes (first capture group)
-    range = range.with({end: new vscode.Position(range.end.line, range.start.character + 42)})
-
-    const word = document.getText(range);
-
-    if(token.isCancellationRequested){
-        return token;
-    }
-    
-    let addressHover = `🌎 [GoTo](${settings.extensionConfig().utils.address.lookupUrl.replace("{address}",word)})
-    |  [ByteCode](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"byteCode"}))})
-    |  [VerifiedContract](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"sourceCode"}))})
-    |  [Decompile](command:solidity-va.etherscan.getCode?${encodeURIComponent(JSON.stringify({address:word, type:"byteCodeDecompiled"}))})
-    `;
-
-    const contents = new vscode.MarkdownString(addressHover);
-    contents.isTrusted = true;
-    return new vscode.Hover(contents);
-}
 
 function builtInsHoverHandler(document, position, token, type, g_parser) {
     
