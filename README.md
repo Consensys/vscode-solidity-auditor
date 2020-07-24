@@ -186,9 +186,22 @@ This feature is provided by [Inline Bookmarks](https://marketplace.visualstudio.
 
 <img width="713" alt="code_asm_tooltip" src="https://user-images.githubusercontent.com/2865694/53698881-c34cbc00-3de2-11e9-97ae-3b7145430c27.png">
 
-* Etherscan.io integration
+* Address hover integration via [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
+  * Open it in etherscan (or whatever you configure)
+  * Show address balance in hover (mainnet) (note: might be rate-limited, configure your API key in settings)
+  * Download the bytecode and disassemble it. 
+    * With hover info on instructions
+    * Representation of data as ASCII and resolving 4bytes to funcsigs, Color code reflects the type of instruction: stack, memory, storage, arithm., logic, system, environment, …
+  * Download the bytecode and show it. 
+    * With hover info
+    * Click to see instruction boundaries
+    * Color coded bytes to reflect type of instruction)
+  * Show verified contract source (etherscan.io)
+  * Show reconstructed contract source from eveem.org
+  * Show reconstructed contract source from [evm.js](https://www.npmjs.com/package/evm)
+  * run [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler) to decompile it manually using panoramix (eveem.org) locally
 
-<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
 
 </details>
 

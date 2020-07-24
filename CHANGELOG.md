@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.0.28
+- new: integrate with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
+  <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
+- update: `surya` to `0.4.1-dev.2`
+
 ## v0.0.27
 - rebirth: `Solidity Visual Auditor` is now `Solidity Visual Developer` 🎉
 - new: Ethereum Address hover commands. Hover over an ethereum account address to:
