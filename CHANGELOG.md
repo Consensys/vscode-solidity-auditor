@@ -1,7 +1,12 @@
 # Change Log
 
 ## v0.0.28
-- new: integrate with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
+- new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
+  - ethereum address hover
+  - open address in etherscan, fetch bytecode, verified contract
+  - disassemble or decompile bytecode
+  - registers `.evmtrace` and `.evm` language handlers to decorate disassemblies or bytecode
+  - customizations/ApiKey: see settings
 
   <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
 - update: `surya` to `0.4.1-dev.2`

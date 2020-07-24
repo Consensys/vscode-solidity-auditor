@@ -29,26 +29,16 @@ Thanks for using **Solidity Visual Developer** 🤜🤛
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.27
-- rebirth: Solidity Visual Auditor is now \`Solidity Visual Developer\` 🎉
-- new: Ethereum Address hover commands. Hover over an ethereum account address to:
-    - \`open\` the account on etherscan.io
-    - show the contract \`code\`
-    - show the \`VerifiedContract\` source code
-    - \`decompile\` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)<br>
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
+#### v0.0.28
+- new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover) (uninstall to disable)
+    - ethereum address hover
+    - open address in etherscan, fetch bytecode, verified contract
+    - disassemble or decompile bytecode
+    - registers \`.evmtrace\` and \`.evm\` language handlers to decorate disassemblies or bytecode
+    - customizations/ApiKey: see settings
 
-#### v0.0.26
-- new: support for solidity \`>= 0.6.0\`
-- new: \`cockpit → Workspace: Explorer → Surya: Contract interaction graph\` aka \`surya.graphSimple\` </br>
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"></br>
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
-- updated: surya to 0.4.0 
-- updated: \`solidity-parser-diligence\` to community maintained \`@solidity-parser/parser\` 
-
-<sub>
-The cockpit view is fully customizable. You can hide both the sidebar menu or any view in the cockpit that you do not need (right-click → hide). 
-</sub>
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
+- update: \`surya\` to \`0.4.1-dev.2\`
 
 <sub>
 Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
