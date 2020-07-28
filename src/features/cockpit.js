@@ -14,32 +14,32 @@ const fs = require('fs');
 /** views */
 
 class BaseView {
-    async refresh(value){
+    async refresh(value) {
         this.treeView.message = undefined;  // clear the treeview message
         return this.dataProvider.refresh(value);
     }
-    async onDidSelectionChange(event) {}
+    async onDidSelectionChange(event) { }
 }
 
 class BaseDataProvider {
-    async dataGetRoot(){
+    async dataGetRoot() {
         return [];
     }
 
-    dataGetChildren(element){
+    dataGetChildren(element) {
         return null;
     }
 
     /** tree methods */
-    getChildren(element){
-        return element ? this.dataGetChildren(element): this.dataGetRoot();
+    getChildren(element) {
+        return element ? this.dataGetChildren(element) : this.dataGetRoot();
     }
 
-    getParent(element){
+    getParent(element) {
         return element.parent;
     }
 
-    getTreeItem(element){
+    getTreeItem(element) {
         return {
             resourceUri: element.resource,
             label: element.label,
@@ -51,11 +51,11 @@ class BaseDataProvider {
                 arguments: [element.resource],
                 title: 'JumpTo'
             }
-        }; 
+        };
     }
 
     /** other methods */
-    refresh(){
+    refresh() {
         return new Promise((resolve, reject) => {
             this._onDidChangeTreeData.fire();
             resolve();
@@ -74,46 +74,46 @@ class FilePathTreeDataProvider extends BaseDataProvider {
         this.data = [];
     }
 
-    async dataGetRoot(){
+    async dataGetRoot() {
         return this.data;
     }
 
     dataGetChildren(element) {
-        if(!element) {
+        if (!element) {
             return this.data;
         }
         // element provided? - 
         return element.children;
     }
 
-    dataGetParent(element){
+    dataGetParent(element) {
         return element.parent;
     }
 
-    _addPathTree(uri){
+    _addPathTree(uri) {
         //strip workspace path
         let workspacePath = vscode.workspace.getWorkspaceFolder(uri).uri.fsPath;
         let pathSegments = path.relative(workspacePath, uri.fsPath).split(this._separator);
         let parent = this.data;
 
-        for(let idx = 0; idx < pathSegments.length; idx++){
+        for (let idx = 0; idx < pathSegments.length; idx++) {
             let name = pathSegments[idx];
-            if(name == ""){
+            if (name == "") {
                 continue;
             }
-            let pathObj = parent.find( p => p.name == name);
+            let pathObj = parent.find(p => p.name == name);
 
-            if(!pathObj){
+            if (!pathObj) {
                 //create a new one
-                let _path = pathSegments.slice(0, idx+1).join(this._separator);
-                let _abspath = path.join(workspacePath,_path);
+                let _path = pathSegments.slice(0, idx + 1).join(this._separator);
+                let _abspath = path.join(workspacePath, _path);
                 let _type = FilePathTreeDataProvider.TYPE_FILE;
                 try {
                     _type = fs.lstatSync(_abspath).isDirectory() ? FilePathTreeDataProvider.TYPE_DIRECTORY : FilePathTreeDataProvider.TYPE_FILE;
                 } catch (err) {
                     console.warn(err);  //fallback to type file
                 }
-                
+
                 pathObj = {
                     name: name,
                     path: _path,
@@ -130,7 +130,7 @@ class FilePathTreeDataProvider extends BaseDataProvider {
         }
     }
 
-    _addPathFlat(uri){
+    _addPathFlat(uri) {
         let pathSegments = uri.fsPath.split(this._separator);
         let workspacePath = vscode.workspace.getWorkspaceFolder(uri).uri.fsPath;
         this.data.push(
@@ -144,14 +144,14 @@ class FilePathTreeDataProvider extends BaseDataProvider {
                 workspace: workspacePath,
                 collapsibleState: 0,
             }
-        ); 
+        );
     }
 
-    addPath(uri){
-        if(uri.scheme === undefined){
+    addPath(uri) {
+        if (uri.scheme === undefined) {
             uri = vscode.Uri.file(uri);
         }
-        if(this.listStyle === "flat"){
+        if (this.listStyle === "flat") {
             this._addPathFlat(uri);
         } else {
             this._addPathTree(uri);
@@ -160,9 +160,9 @@ class FilePathTreeDataProvider extends BaseDataProvider {
 
     load(paths) {
         this.data = [];
-        for(let p of paths){
+        for (let p of paths) {
             this.addPath(p);
-        } 
+        }
     }
 }
 FilePathTreeDataProvider.TYPE_DIRECTORY = 1;
@@ -170,22 +170,22 @@ FilePathTreeDataProvider.TYPE_FILE = 2;
 
 class VirtualPathTreeDataProvider extends FilePathTreeDataProvider {
 
-    _addPathTree(s, metadata){
+    _addPathTree(s, metadata) {
         //strip workspace path
         let pathSegments = s.split(this._separator);
         let parent = this.data;
 
-        for(let idx = 0; idx < pathSegments.length; idx++){
+        for (let idx = 0; idx < pathSegments.length; idx++) {
             let name = pathSegments[idx];
-            if(name == ""){
+            if (name == "") {
                 continue;
             }
-            var pathObj = parent.find( p => p.name == name);
+            var pathObj = parent.find(p => p.name == name);
 
-            if(!pathObj){
+            if (!pathObj) {
                 //create a new one
-                let _path = pathSegments.slice(0, idx+1).join(this._separator);
-                let _type = idx == pathSegments.length -1 ? VirtualPathTreeDataProvider.TYPE_LEAF : VirtualPathTreeDataProvider.TYPE_NODE;
+                let _path = pathSegments.slice(0, idx + 1).join(this._separator);
+                let _type = idx == pathSegments.length - 1 ? VirtualPathTreeDataProvider.TYPE_LEAF : VirtualPathTreeDataProvider.TYPE_NODE;
                 pathObj = {
                     name: name,
                     path: _path,
@@ -203,7 +203,7 @@ class VirtualPathTreeDataProvider extends FilePathTreeDataProvider {
         }
     }
 
-    _addPathFlat(s, metadata){
+    _addPathFlat(s, metadata) {
         let pathSegments = s.split(this._separator);
         this.data.push(
             {
@@ -217,11 +217,11 @@ class VirtualPathTreeDataProvider extends FilePathTreeDataProvider {
                 type: VirtualPathTreeDataProvider.TYPE_LEAF,
                 collapsibleState: 0,
             }
-        ); 
+        );
     }
 
-    addPath(s, metadata){
-        if(this.listStyle === "flat"){
+    addPath(s, metadata) {
+        if (this.listStyle === "flat") {
             this._addPathFlat(s, metadata);
         } else {
             this._addPathTree(s, metadata);
@@ -231,16 +231,16 @@ class VirtualPathTreeDataProvider extends FilePathTreeDataProvider {
     load(paths) {
         this.data = [];
 
-        if(Array.isArray(paths)){
-            for(let p of paths){
+        if (Array.isArray(paths)) {
+            for (let p of paths) {
                 this.addPath(p);
-            } 
+            }
         } else {
-            for(let p of Object.keys(paths)){
+            for (let p of Object.keys(paths)) {
                 this.addPath(p, paths[p]);
             }
         }
-        
+
     }
 }
 VirtualPathTreeDataProvider.TYPE_NODE = 1;
@@ -250,7 +250,7 @@ VirtualPathTreeDataProvider.TYPE_LEAF = 2;
 
 class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
 
-    constructor(treeView){
+    constructor(treeView) {
         super(settings.extensionConfig().cockpit.view.topLevelContracts.listStyle);
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -259,7 +259,7 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
         this.data = null;
     }
 
-    async dataGetRoot(){
+    async dataGetRoot() {
         return this.data || [];
     }
 
@@ -268,7 +268,7 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     /** tree methods */
     // inherited.
 
-    getTreeItem(element){
+    getTreeItem(element) {
         let ret = {
             resourceUri: element.resource,
             label: element.label,
@@ -284,10 +284,16 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     }
 
     /** other methods */
-    refresh(workspaceRelativeBaseDir){
+    refresh(workspaceRelativeBaseDir) {
         return new Promise((resolve, reject) => {
             this.treeView.cockpit.commands._findTopLevelContracts(undefined, undefined, workspaceRelativeBaseDir).then(data => {
-                this.load(Object.values(data).sort());
+                this.load(Object.values(data).sort((a, b) => {
+                    a = a.path.split('/').pop();
+                    b = b.path.split('/').pop();
+                    if (a == b) { return 0; }
+                    return a < b ? -1 : 1;
+                })
+                );
                 this._onDidChangeTreeData.fire();
                 resolve();
             });
@@ -298,7 +304,7 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
 
 class DEPRECATED__TopLevelContractsViewDataProviderx extends BaseDataProvider {
 
-    constructor(treeView){
+    constructor(treeView) {
         super();
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -307,23 +313,23 @@ class DEPRECATED__TopLevelContractsViewDataProviderx extends BaseDataProvider {
         this.data = null;
     }
 
-    async dataGetRoot(){
-        if(this.data === null){
+    async dataGetRoot() {
+        if (this.data === null) {
             return [];
             await this.refresh();  //first time: get data
         }
         return Object.keys(this.data).map(k => {
-            return { 
+            return {
                 resource: this.data[k], //uri
                 tooltip: k,
-                name: k, 
+                name: k,
                 parent: null,
                 iconPath: vscode.ThemeIcon.File,
             };
         });
     }
 
-    dataGetChildren(){
+    dataGetChildren() {
         return null; //no children :)
     }
 
@@ -333,7 +339,7 @@ class DEPRECATED__TopLevelContractsViewDataProviderx extends BaseDataProvider {
     // inherited.
 
     /** other methods */
-    refresh(){
+    refresh() {
         return new Promise((resolve, reject) => {
             this.treeView.cockpit.commands._findTopLevelContracts().then(data => {
                 this.data = data;
@@ -351,16 +357,16 @@ class TopLevelContractsView extends BaseView {
         this.cockpit = cockpit;
         this.id = "topLevelContracts";
         this.dataProvider = new TopLevelContractsViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider });
         this.treeView.message = "click ↻ to scan for contracts...";
-    }    
+    }
 }
 
 /* FTrace View */
 
 class FTraceViewDataProvider extends BaseDataProvider {
 
-    constructor(treeView){
+    constructor(treeView) {
         super();
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -370,18 +376,18 @@ class FTraceViewDataProvider extends BaseDataProvider {
         this.documentUri = null;
     }
 
-    async dataGetRoot(){
-        if(this.data === null || this.documentUri === null){
+    async dataGetRoot() {
+        if (this.data === null || this.documentUri === null) {
             return [];
         }
         return Object.keys(this.data).map(k => {
             let children = typeof this.data[k] === "object" ? this.data[k] : {};
-            return { 
+            return {
                 children: children,
                 resource: this.documentUri, //uri
                 label: k,
                 tooltip: k,
-                name: k, 
+                name: k,
                 parent: null,
                 iconPath: vscode.ThemeIcon.File,
                 collapsibleState: children && Object.keys(children).length > 0 ? vscode.TreeItemCollapsibleState.Expanded : 0,
@@ -389,23 +395,23 @@ class FTraceViewDataProvider extends BaseDataProvider {
         });
     }
 
-    dataGetChildren(element){
-        if(!element) {
+    dataGetChildren(element) {
+        if (!element) {
             return this.data;
         }
 
-        if(!element.children){
+        if (!element.children) {
             return [];
         }
         // element provided? - 
         return Object.keys(element.children).map(k => {
             let children = typeof element.children[k] === "object" ? element.children[k] : {};
-            return { 
+            return {
                 children: children,
                 resource: this.documentUri, //uri
                 label: k,
                 tooltip: k,
-                name: k, 
+                name: k,
                 parent: null,
                 iconPath: vscode.ThemeIcon.File,
                 collapsibleState: children && Object.keys(children).length > 0 ? vscode.TreeItemCollapsibleState.Expanded : 0,
@@ -414,7 +420,7 @@ class FTraceViewDataProvider extends BaseDataProvider {
     }
 
 
-    dataGetParent(element){
+    dataGetParent(element) {
         return element.parent;
     }
 
@@ -422,7 +428,7 @@ class FTraceViewDataProvider extends BaseDataProvider {
 
     /** tree methods */
     // inherited.
-    
+
 }
 
 class FTraceView extends BaseView {
@@ -431,11 +437,11 @@ class FTraceView extends BaseView {
         this.cockpit = cockpit;
         this.id = "ftrace";
         this.dataProvider = new FTraceViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider, showCollapseAll: true });
         this.treeView.message = "click into the editor to update view...";
     }
 
-    async onDidSelectionChange(event){
+    async onDidSelectionChange(event) {
 
         let documentUri = event.textEditor._documentData._uri;
         let focus = event.selections[0].anchor;
@@ -443,28 +449,28 @@ class FTraceView extends BaseView {
 
         let contractObj = commands.g_parser.sourceUnits[documentUri.fsPath];
         let knownFiles = Object.keys(commands.g_parser.sourceUnits).filter(f => f.endsWith(".sol"));
-        
 
-        if(!contractObj){
+
+        if (!contractObj) {
             console.warn("surya.ftrace: not a file: " + documentUri.fsPath);
             return;
         }
 
         let focusSolidityElement = contractObj.getFunctionAtLocation(focus.line, focus.character);
-        if(!focusSolidityElement){
+        if (!focusSolidityElement) {
             console.warn("surya.ftrace: contract not found: " + documentUri.fsPath);
             return;
         }
         let contractName = focusSolidityElement.contract._node.name;
 
-        if(!focusSolidityElement.function){
+        if (!focusSolidityElement.function) {
             return;
         }
 
         let functionName = focusSolidityElement.function._node.name;
-        
+
         let files;
-        if(settings.extensionConfig().tools.surya.input.contracts=="workspace"){
+        if (settings.extensionConfig().tools.surya.input.contracts == "workspace") {
             await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
                 .then(uris => {
                     files = uris.map(function (uri) {
@@ -473,16 +479,16 @@ class FTraceView extends BaseView {
                 });
         } else {
             files = [documentUri.fsPath, ...knownFiles];  //better only add imported files. need to resolve that somehow
-        } 
+        }
 
         //  contract::func, all, files 
-        if (functionName === null){
-            functionName =  "<Constructor>";
-        } else if (functionName === ""){
+        if (functionName === null) {
+            functionName = "<Constructor>";
+        } else if (functionName === "") {
             functionName = "<Fallback>";
         }
 
-        let retj = surya.ftrace(contractName + "::" + functionName, 'all', files, {jsonOutput: true}, true);
+        let retj = surya.ftrace(contractName + "::" + functionName, 'all', files, { jsonOutput: true }, true);
         this.dataProvider.documentUri = documentUri;
         this.dataProvider.data = retj;
         this.refresh();
@@ -494,7 +500,7 @@ class FTraceView extends BaseView {
 
 class PublicMethodsViewDataProvider extends BaseDataProvider {
 
-    constructor(treeView){
+    constructor(treeView) {
         super();
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -504,50 +510,50 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
         this.documentUri = null;
     }
 
-    async dataGetRoot(){
-        if(this.data === null || this.documentUri === null){
+    async dataGetRoot() {
+        if (this.data === null || this.documentUri === null) {
             return [];
         }
 
         return Object.keys(this.data)
-                    .reduce((ret, key) => {
-                        let element = this.data[key];
-                        let range = new vscode.Range(element._node.loc.start.line, element._node.loc.start.column, element._node.loc.end.line, element._node.loc.end.column);
-                        let modifiers = Object.keys(element.modifiers);
-                        let item = {
-                            resource: element.resource,
-                            contextValue: element.resource.fsPath,
-                            range: range,
-                            label: element._node.stateMutability == "payable" ? key +  " 💰 " : key,
-                            tooltip: key,
-                            name: key,
-                            iconPath: vscode.ThemeIcon.File,
-                            collapsibleState: modifiers.length > 0 ? vscode.TreeItemCollapsibleState.Collapsed : 0,
-                            parent: null,
-                            children: modifiers.map(name => { 
-                                return {
-                                    //resource: element.resource,
-                                    label: "Ⓜ  " + name,
-                                    //iconPath: 0,
-                                    command: {
-                                        command: 'solidity-va.cockpit.jumpToRange',
-                                        arguments: [element.resource, range],
-                                        title: 'JumpTo'
-                                    }
-                                };
-                            }),
+            .reduce((ret, key) => {
+                let element = this.data[key];
+                let range = new vscode.Range(element._node.loc.start.line, element._node.loc.start.column, element._node.loc.end.line, element._node.loc.end.column);
+                let modifiers = Object.keys(element.modifiers);
+                let item = {
+                    resource: element.resource,
+                    contextValue: element.resource.fsPath,
+                    range: range,
+                    label: element._node.stateMutability == "payable" ? key + " 💰 " : key,
+                    tooltip: key,
+                    name: key,
+                    iconPath: vscode.ThemeIcon.File,
+                    collapsibleState: modifiers.length > 0 ? vscode.TreeItemCollapsibleState.Collapsed : 0,
+                    parent: null,
+                    children: modifiers.map(name => {
+                        return {
+                            //resource: element.resource,
+                            label: "Ⓜ  " + name,
+                            //iconPath: 0,
                             command: {
                                 command: 'solidity-va.cockpit.jumpToRange',
                                 arguments: [element.resource, range],
                                 title: 'JumpTo'
-                            },
+                            }
                         };
-                        ret.push(item);
-                        return ret;
-                    }, []);
+                    }),
+                    command: {
+                        command: 'solidity-va.cockpit.jumpToRange',
+                        arguments: [element.resource, range],
+                        title: 'JumpTo'
+                    },
+                };
+                ret.push(item);
+                return ret;
+            }, []);
     }
 
-    dataGetChildren(element){
+    dataGetChildren(element) {
         return element.children;
     }
 
@@ -555,7 +561,7 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
 
     /** tree methods */
     // inherited.
-    
+
 }
 
 class PublicMethodsView extends BaseView {
@@ -564,52 +570,52 @@ class PublicMethodsView extends BaseView {
         this.cockpit = cockpit;
         this.id = "publicMethods";
         this.dataProvider = new PublicMethodsViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider });
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider });
         this.treeView.message = "click into the editor to update view...";
     }
 
-    async onDidSelectionChange(event){
+    async onDidSelectionChange(event) {
 
         let documentUri = event.textEditor._documentData._uri;
         let focus = event.selections[0].anchor;
         let commands = this.cockpit.commands;
 
         let contractObj = commands.g_parser.sourceUnits[documentUri.fsPath];
-        
 
-        if(!contractObj){
+
+        if (!contractObj) {
             console.warn("cockpit.methods: not a file: " + documentUri.fsPath);
             return;
         }
 
         let focusSolidityElement = contractObj.getFunctionAtLocation(focus.line, focus.character);
-        if(!focusSolidityElement){
+        if (!focusSolidityElement) {
             console.warn("cockpit.methods: contract not found: " + documentUri.fsPath);
             return;
         }
 
-        let filterNotVisibility = ["private","internal"];
+        let filterNotVisibility = ["private", "internal"];
         let filterNotStateMutability = ["view", "pure", "constant"];
 
         let publicFunctions = Object.keys(focusSolidityElement.contract.functions)
-                                .filter(f => {
-                                    let node = focusSolidityElement.contract.functions[f]._node;
-                                    //filter only for state changing public functions
-                                    return !filterNotVisibility.includes(node.visibility) && !filterNotStateMutability.includes(node.stateMutability);
-                                })
-                                .reduce((obj, key) => {
-                                    let newKey = key;
-                                    let func = focusSolidityElement.contract.functions[key];
+            .filter(f => {
+                let node = focusSolidityElement.contract.functions[f]._node;
+                //filter only for state changing public functions
+                return !filterNotVisibility.includes(node.visibility) && !filterNotStateMutability.includes(node.stateMutability);
+            })
+            .reduce((obj, key) => {
+                let newKey = key;
+                let func = focusSolidityElement.contract.functions[key];
 
-                                    if (key === null || func._node.isConstructor){
-                                        newKey =  "<Constructor>";
-                                    } else if (key === "" || func._node.isFallback){
-                                        newKey = "<Fallback>";
-                                    }
-                                    func.resource = documentUri;
-                                    obj[newKey] = func;
-                                    return obj;
-                                }, {});
+                if (key === null || func._node.isConstructor) {
+                    newKey = "<Constructor>";
+                } else if (key === "" || func._node.isFallback) {
+                    newKey = "<Fallback>";
+                }
+                func.resource = documentUri;
+                obj[newKey] = func;
+                return obj;
+            }, {});
         //  contract::func, all, files 
         this.dataProvider.documentUri = documentUri;
         this.dataProvider.data = publicFunctions;
@@ -621,7 +627,7 @@ class PublicMethodsView extends BaseView {
 /* Solidity Files View */
 
 class ExplorerViewDataProvider extends FilePathTreeDataProvider {
-    constructor(treeView){
+    constructor(treeView) {
         super("tree");
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -630,8 +636,8 @@ class ExplorerViewDataProvider extends FilePathTreeDataProvider {
         this.data = null;
     }
 
-    async dataGetRoot(){
-        if(this.data === null){
+    async dataGetRoot() {
+        if (this.data === null) {
             this.refresh();
         }
         return this.data || [];
@@ -642,7 +648,7 @@ class ExplorerViewDataProvider extends FilePathTreeDataProvider {
     /** tree methods */
     // inherited.
 
-    getTreeItem(element){
+    getTreeItem(element) {
         let ret = {
             resourceUri: element.resource,
             contextValue: element.resource.fsPath,
@@ -659,13 +665,13 @@ class ExplorerViewDataProvider extends FilePathTreeDataProvider {
     }
 
     /** other methods */
-    refresh(){
+    refresh() {
         return new Promise((resolve, reject) => {
             vscode.workspace.findFiles("{**/*.sol}", settings.DEFAULT_FINDFILES_EXCLUDES_ALLOWFLAT, 5000)
                 .then((solfiles) => {
                     this.load(solfiles);
                     this._onDidChangeTreeData.fire();
-                resolve();
+                    resolve();
                 });
         });
     }
@@ -677,12 +683,12 @@ class ExplorerView extends BaseView {
         this.cockpit = cockpit;
         this.id = "explorer";
         this.dataProvider = new ExplorerViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true, canSelectMany:true });
-    }    
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider, showCollapseAll: true, canSelectMany: true });
+    }
 }
 
 class FlatFilesDataProvider extends FilePathTreeDataProvider {
-    constructor(treeView){
+    constructor(treeView) {
         super("tree");
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -691,8 +697,8 @@ class FlatFilesDataProvider extends FilePathTreeDataProvider {
         this.data = null;
     }
 
-    async dataGetRoot(){
-        if(this.data === null){
+    async dataGetRoot() {
+        if (this.data === null) {
             this.refresh();
         }
         return this.data || [];
@@ -703,7 +709,7 @@ class FlatFilesDataProvider extends FilePathTreeDataProvider {
     /** tree methods */
     // inherited.
 
-    getTreeItem(element){
+    getTreeItem(element) {
         let ret = {
             resourceUri: element.resource,
             contextValue: element.resource.fsPath,
@@ -720,13 +726,13 @@ class FlatFilesDataProvider extends FilePathTreeDataProvider {
     }
 
     /** other methods */
-    refresh(){
+    refresh() {
         return new Promise((resolve, reject) => {
             vscode.workspace.findFiles("{**/*_flat.sol,**/flat_*.sol}", settings.DEFAULT_FINDFILES_EXCLUDES_ALLOWFLAT, 500)
                 .then((solfiles) => {
                     this.load(solfiles);
                     this._onDidChangeTreeData.fire();
-                resolve();
+                    resolve();
                 });
         });
     }
@@ -738,13 +744,13 @@ class FlatFilesView extends BaseView {
         this.cockpit = cockpit;
         this.id = "flatFiles";
         this.dataProvider = new FlatFilesDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true, canSelectMany:true });
-    }    
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider, showCollapseAll: true, canSelectMany: true });
+    }
 }
 
 /* settings view */
 class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
-    constructor(treeView){
+    constructor(treeView) {
         super("tree", ".");
         this.treeView = treeView;
         this._onDidChangeTreeData = new vscode.EventEmitter();
@@ -752,7 +758,7 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
 
         this.data = null;
 
-        let pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..","..",'package.json')));
+        let pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", 'package.json')));
         let properties = pkg.contributes.configuration.properties;
         this.settings = Object.keys(properties)
             .filter(key => properties[key].type === "boolean")
@@ -762,8 +768,8 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
             }, {});
     }
 
-    async dataGetRoot(){
-        if(this.data === null){
+    async dataGetRoot() {
+        if (this.data === null) {
             this.refresh();
         }
         return this.data || [];
@@ -774,12 +780,12 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
     /** tree methods */
     // inherited.
 
-    getTreeItem(element){
+    getTreeItem(element) {
         let ret = {
             resourceUri: element.resource,
             metadata: element.metadata,
             contextValue: element.type,
-            label: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? (element.metadata.currentValue===true ? "☑  " : "☐  ") + element.label : element.label,
+            label: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? (element.metadata.currentValue === true ? "☑  " : "☐  ") + element.label : element.label,
             tooltip: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? element.metadata.description : null,
             iconPath: element.iconPath,
             collapsibleState: element.collapsibleState,
@@ -793,9 +799,9 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
     }
 
     /** other methods */
-    refresh(){
+    refresh() {
         return new Promise((resolve, reject) => {
-            let settingsState =  Object.keys(this.settings)
+            let settingsState = Object.keys(this.settings)
                 .reduce((obj, key) => {
                     obj[key] = this.settings[key];
                     let k = key.split(".");
@@ -817,8 +823,8 @@ class SettingsView extends BaseView {
         this.cockpit = cockpit;
         this.id = "settings";
         this.dataProvider = new SettingsViewDataProvider(this);
-        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider:this.dataProvider, showCollapseAll:true });
-    }    
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider, showCollapseAll: true });
+    }
 }
 
 /** -- cockpit handler -- */
@@ -840,15 +846,15 @@ class Cockpit {
         this.views[view.id] = view;
     }
 
-    async onDidSelectionChange(event){
+    async onDidSelectionChange(event) {
 
-        if(event.textEditor._visibleRanges.length <= 0 || event.selections.length <= 0){
+        if (event.textEditor._visibleRanges.length <= 0 || event.selections.length <= 0) {
             return;  // no visible range open; no selection
         }
 
         Object.keys(this.views).forEach(k => {
             let v = this.views[k];
-            if(v.treeView.visible){
+            if (v.treeView.visible) {
                 v.onDidSelectionChange(event);
             }
         });
