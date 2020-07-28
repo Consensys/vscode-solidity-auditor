@@ -1,5 +1,8 @@
 # Change Log
 
+## v0.0.29
+- sort top level contracts list by filename
+
 ## v0.0.28
 - new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
   - ethereum address hover
