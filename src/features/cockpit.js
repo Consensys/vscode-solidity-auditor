@@ -786,7 +786,7 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
             metadata: element.metadata,
             contextValue: element.type,
             label: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? (element.metadata.currentValue === true ? "☑  " : "☐  ") + element.label : element.label,
-            tooltip: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? element.metadata.description : null,
+            //tooltip: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? element.metadata.description : null, /* fixes proposed api warning */
             iconPath: element.iconPath,
             collapsibleState: element.collapsibleState,
             command: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? {

@@ -13,8 +13,11 @@ var semver = require('semver');
 const SKIP_VERSIONS = {
     "0.0.25":function(lastSeenVersion){                         //extensionversion is 0.0.25
         return semver.satisfies(lastSeenVersion, ">=0.0.24");    //skip if last seen version was 0.0.24 or greater
+    },
+    "0.0.29":function(lastSeenVersion){                         //extensionversion is 0.0.29
+        return semver.satisfies(lastSeenVersion, ">=0.0.28");    //skip if last seen version was 0.0.28 or greater
     }
-}
+};
 
 const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
 <sup>
