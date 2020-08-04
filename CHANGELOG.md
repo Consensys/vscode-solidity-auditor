@@ -2,6 +2,7 @@
 
 ## v0.0.29
 - sort top level contracts list by filename
+- fix: VSCode-Error: Proposed API is only available when running out of dev or with the following command line switch... #59
 
 ## v0.0.28
 - new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
