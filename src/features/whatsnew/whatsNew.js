@@ -37,6 +37,8 @@ The complete changelog can be found [here](https://github.com/ConsenSys/vscode-s
     - returns results for a lexical search for all source files containing the word under the cursor
 - update: dependencies surya / solidity parser
 
+<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
+
 <sub>
 Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
 </sub>
