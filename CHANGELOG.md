@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.0.30
+- new: Right Click → `Find All References` (naive approach)
+  - returns results for a lexical search for all source files containing the worder under the cursor
+- update: dependencies surya / solidity parser
+
 ## v0.0.29
 - sort top level contracts list by filename
 - fix: VSCode-Error: Proposed API is only available when running out of dev or with the following command line switch... #59
