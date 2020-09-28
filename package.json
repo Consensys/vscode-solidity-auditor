@@ -450,9 +450,9 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.6.1",
+        "@solidity-parser/parser": "^0.8.1",
         "c3-linearization": "^0.3.0",
         "keccak": "^2.0.0",
-        "surya": "^0.4.1-dev.2"
+        "surya": "^0.4.1"
     }
 }
