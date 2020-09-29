@@ -1,8 +1,10 @@
 # Change Log
 
 ## v0.0.30
-- new: Right Click → `Find All References` (naive approach)
-  - returns results for a lexical search for all source files containing the worder under the cursor
+- new: We've finally implemented support for `Right Click → Find All References` for solidity source files!
+  - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
+  <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
+    
 - update: dependencies surya / solidity parser
 
 ## v0.0.29
