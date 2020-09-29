@@ -21,6 +21,7 @@ const {Commands} = require('./features/commands');
 const {SolidityCodeLensProvider} = require('./features/codelens');
 const settings = require('./settings');
 const {Cockpit} = require('./features/cockpit.js');
+const {SolidityReferenceProvider} = require('./features/references');
 
 const {WhatsNewHandler} = require('./features/whatsnew/whatsNew');
 
@@ -925,6 +926,13 @@ function onActivate(context) {
                 )
             );
         }
+
+        context.subscriptions.push(
+            vscode.languages.registerReferenceProvider(
+                docSel, 
+                new SolidityReferenceProvider()
+            )
+        );
     }
 }
 

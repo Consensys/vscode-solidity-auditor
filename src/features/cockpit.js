@@ -488,10 +488,17 @@ class FTraceView extends BaseView {
             functionName = "<Fallback>";
         }
 
-        let retj = surya.ftrace(contractName + "::" + functionName, 'all', files, { jsonOutput: true }, true);
+        let retj = {};
+        try {
+            retj = surya.ftrace(contractName + "::" + functionName, 'all', files, { jsonOutput: true }, true);
+        } catch (e) {
+            //console.error(e);
+            retj = {"💣💥 - sorry! we've encountered an unrecoverable error :/ Please file an issue in our github repository and provide (mention codebase). thanks!":null};
+        }
         this.dataProvider.documentUri = documentUri;
         this.dataProvider.data = retj;
         this.refresh();
+        
     }
 }
 

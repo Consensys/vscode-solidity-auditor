@@ -278,10 +278,14 @@ class Commands{
                 } else if (args[1] === ""){
                     args[1] = "<Fallback>";
                 }
-
-                ret = surya.ftrace(args[0] + "::" + args[1], args[2] || 'all', files, {}, true);
-                vscode.workspace.openTextDocument({content: ret, language: "markdown"})
-                    .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
+                try {
+                    ret = surya.ftrace(args[0] + "::" + args[1], args[2] || 'all', files, {}, true);
+                    vscode.workspace.openTextDocument({content: ret, language: "markdown"})
+                        .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
+                } catch (e) {
+                    console.error(e);
+                }
+                
                 break;
             case "mdreport":
                 ret = surya.mdreport(files);

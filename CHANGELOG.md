@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.0.30
+- new: We've finally implemented support for `Right Click → Find All References` for solidity source files!
+  - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
+  <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
+    
+- update: dependencies surya / solidity parser
+
 ## v0.0.29
 - sort top level contracts list by filename
 - fix: VSCode-Error: Proposed API is only available when running out of dev or with the following command line switch... #59

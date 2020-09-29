@@ -32,20 +32,12 @@ Thanks for using **Solidity Visual Developer** 🤜🤛
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.29
-- sort top level contracts list by filename
-- fix: VSCode-Error: Proposed API is only available when running out of dev or with the following command line switch... #59
-
-#### v0.0.28
-- new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover) (uninstall to disable)
-    - ethereum address hover
-    - open address in etherscan, fetch bytecode, verified contract
-    - disassemble or decompile bytecode
-    - registers \`.evmtrace\` and \`.evm\` language handlers to decorate disassemblies or bytecode
-    - customizations/ApiKey: see settings
-
-<img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
-- update: \`surya\` to \`0.4.1-dev.2\`
+#### v0.0.30
+- new: We've finally implemented support for \`Right Click → Find All References\` for solidity source files!
+    - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
+    
+- update: dependencies surya / solidity parser
 
 <sub>
 Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
@@ -97,7 +89,7 @@ class WhatsNewHandler {
         let webview = new InteractiveWebviewGenerator(context, "whats_new");
         webview.revealOrCreatePreview(vscode.ViewColumn.Beside, doc)
             .then(webpanel => {
-                webpanel.getPanel().postMessage({
+                webpanel.getPanel().webview.postMessage({
                     command:"render", 
                     value:{
                         markdown:MESSAGE,
