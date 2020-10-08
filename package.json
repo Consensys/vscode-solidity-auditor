@@ -408,6 +408,11 @@
                     "default": true,
                     "description": "Enable/Disable codelens - inline action"
                 },
+                "solidity-va.findAllReferences.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable right-click -> Find All References. Note: This allows you to disable the built-in reference provider in favor of one of another extension. Takes effect after restart."
+                },
                 "solidity-va.mode.active": {
                     "type": "boolean",
                     "default": true,
