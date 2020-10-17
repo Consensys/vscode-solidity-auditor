@@ -847,6 +847,15 @@ function onActivate(context) {
         );
 
         context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.uml.contract.export.drawio.csv', 
+                function (doc, contractObjects) {
+                    commands.drawioContractsOutlineAsCSV(contractObjects);
+                }
+            )
+        );
+
+        context.subscriptions.push(
             vscode.commands.registerCommand("solidity-va.cockpit.topLevelContracts.refresh", async (treeItem, multiSelectTreeItems) => {
                 if(multiSelectTreeItems){
                     cockpit.views.topLevelContracts.refresh(multiSelectTreeItems.filter(t => !t.path.endsWith(".sol")).map(t => t.path));

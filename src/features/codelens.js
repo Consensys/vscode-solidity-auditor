@@ -122,6 +122,13 @@ class SolidityCodeLensProvider  {
             })
         );
 
+        codeLens.push(new vscode.CodeLens(firstLine, {
+            command: 'solidity-va.uml.contract.export.drawio.csv',
+            title: 'draw.io',
+            arguments: [document, Object.values(parser.contracts)]
+            })
+        );
+
         let annotateContractTypes = ["contract","library"];
         /** all contract decls */
         for(let name in parser.contracts){
