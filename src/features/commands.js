@@ -39,7 +39,7 @@ const suryaDefaultColorSchemeDark = {
       isFilled: true,
       public: "#FF9797",
       external: "#ffbdb9",
-      private: "#edad56",
+      private: "#ffffff",
       internal: "#f2c383",
     },
     nodeType : {
