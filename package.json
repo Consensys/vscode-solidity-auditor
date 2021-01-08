@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.0.30",
+    "version": "0.0.31",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -408,6 +408,16 @@
                     "default": true,
                     "description": "Enable/Disable codelens - inline action"
                 },
+                "solidity-va.findAllReferences.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable right-click -> Find All References. Note: This allows you to disable the built-in reference provider in favor of one of another extension. Takes effect after restart."
+                },
+                "solidity-va.codelens.drawio.enable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable draw.io uml export"
+                },
                 "solidity-va.mode.active": {
                     "type": "boolean",
                     "default": true,
@@ -450,9 +460,9 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.8.1",
+        "@solidity-parser/parser": "^0.11.0",
         "c3-linearization": "^0.3.0",
-        "keccak": "^2.0.0",
-        "surya": "^0.4.1"
+        "keccak": "^3.0.1",
+        "surya": "^0.4.2"
     }
 }

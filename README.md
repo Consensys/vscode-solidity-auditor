@@ -16,6 +16,9 @@
 This extension contributes **security centric** syntax and semantic highlighting, a detailed class outline, specialized views, advanced Solidity code insights and augmentation to Visual Studio Code.
 
 
+**Note**: Almost anything can be customized/disabled in the extension settings. Make this extension fit your needs!
+
+
 We ❤ feedback → [get in touch!](https://github.com/tintinweb/vscode-solidity-auditor/issues)
 
 ____

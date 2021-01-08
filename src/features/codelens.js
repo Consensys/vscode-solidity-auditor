@@ -6,6 +6,7 @@
  * 
  * */
 const vscode = require('vscode');
+const settings = require('../settings.js');
 
 /*
 await window.showInputBox({prompt: 'prompt for something',})
@@ -122,6 +123,15 @@ class SolidityCodeLensProvider  {
             })
         );
 
+        if(settings.extensionConfig().codelens.drawio.enable){
+            codeLens.push(new vscode.CodeLens(firstLine, {
+                command: 'solidity-va.uml.contract.export.drawio.csv',
+                title: 'draw.io',
+                arguments: [document, Object.values(parser.contracts)]
+                })
+            );
+        }
+
         let annotateContractTypes = ["contract","library"];
         /** all contract decls */
         for(let name in parser.contracts){
@@ -174,6 +184,15 @@ class SolidityCodeLensProvider  {
             arguments: [document, [item]]
             })
         );
+
+        if(settings.extensionConfig().codelens.drawio.enable){
+            lenses.push(new vscode.CodeLens(range, {
+                command: 'solidity-va.uml.contract.export.drawio.csv',
+                title: 'draw.io',
+                arguments: [document, [item]]
+                })
+            );
+        }
         
         return lenses;
     }

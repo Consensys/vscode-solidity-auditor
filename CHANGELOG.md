@@ -1,11 +1,33 @@
 # Change Log
 
+## v0.0.31
+
+Happy new year 👪🌃🥂🎇!
+
+- new: allow to disable the "find references" provider 
+  - `preferences → Settings → Solidity Visual Developer: solidity-va.findAllReferences.enable`
+  - in case another extension implements a better provider someday :)
+- new: experimental draw.io uml export to support your threat modelling needs (you're going to ❤ this!)
+  - disabled by default
+  - `preferences → Settings → Solidity Visual Developer: solidity-va.codelens.drawio.enable`
+- fix: function signature generation for `AbiEncoderV2` functions that declare custom types
+  - for now this falls back to assume every custom type is an `address`. needs some love if this feature is actually being used.
+- refactor: modular uml export
+- refactor: improved syntax highlighting / decoration performance
+  - only decorates when needed, avoid double decoration
+  - should fix or make it unlikely that decorations are being applied to the wrong editor - fixes #12
+- update: dependencies
+  - surya
+  - solidity parser
+  - keccak
+
 ## v0.0.30
 - new: We've finally implemented support for `Right Click → Find All References` for solidity source files!
   - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
   <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
     
 - update: dependencies surya / solidity parser
+
 
 ## v0.0.29
 - sort top level contracts list by filename
