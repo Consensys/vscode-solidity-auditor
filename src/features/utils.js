@@ -92,7 +92,6 @@ function functionSignatureExtractor(content) {
 
 function getCanonicalizedArgumentFromAstNode(node){
     let arraySuffix = '';
-
     if (typeof node.typeName != "undefined"){
         if (node.typeName.type=="ArrayTypeName") { 
             //is array
@@ -106,7 +105,8 @@ function getCanonicalizedArgumentFromAstNode(node){
     if(node.type=="ElementaryTypeName"){
         return node.name + arraySuffix;
     } else if (node.type=="UserDefinedTypeName"){
-        return node.namePath + arraySuffix;
+        // TODO: assumes address which is not correct. this might as well unwind to an elementary type but that needs more effort to resolve.
+        return "address" + arraySuffix; //assume address instead of resolving node.namePath 
     } else {
         return null;
     }
