@@ -28,9 +28,31 @@ const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" s
 
 Thanks for using **Solidity Visual Developer** 🤜🤛
 
+**Note**: Almost anything can be customized/disabled in the extension settings. Make this extension fit your needs!
+
 ### What's New?
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
+
+#### v0.0.31
+
+Happy new year from your [Diligence Family](https://consensys.net/diligence) 🙌 👪🌃🥂🎇!
+
+- new: optionally disable the "find references" provider 
+    - \`preferences → Settings → Solidity Visual Developer: solidity-va.findAllReferences.enable\`
+- new: experimental [draw.io](https://draw.io) uml export to support your threat modelling needs (you're going to ❤ this!)
+    - experimental feature, you'll have to manually enable this
+    - \`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.drawio.enable\`
+- fix: function signature generation for \`AbiEncoderV2\` functions that declare custom types
+    - for now this falls back to assume every custom type is an \`address\`. may need more love if there's support for this feature.
+- refactor: modular uml export
+- refactor: improved syntax highlighting / decoration performance
+    - only decorates when needed, avoid double decoration
+    - should fix or make it unlikely that decorations are being applied to the wrong editor - fixes #12
+- update: dependencies
+    - surya
+    - solidity parser
+    - keccak
 
 #### v0.0.30
 - new: We've finally implemented support for \`Right Click → Find All References\` for solidity source files!
