@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.0.32
+
+- new: graphviz view titles were adjusted
+
 ## v0.0.31
 
 Happy new year 👪🌃🥂🎇!
