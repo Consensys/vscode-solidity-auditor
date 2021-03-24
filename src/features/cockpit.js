@@ -855,7 +855,7 @@ class Cockpit {
 
     async onDidSelectionChange(event) {
 
-        if (!event || !event.textEditor || !event.textEditor._visibleRanges || event.textEditor._visibleRanges.length <= 0 || !event.selections || event.selections.length <= 0) {
+        if (!event || !event.textEditor || !event.textEditor.visibleRanges || event.textEditor.visibleRanges.length <= 0 || !event.selections || event.selections.length <= 0) {
             return;  // no visible range open; no selection
         }
 
