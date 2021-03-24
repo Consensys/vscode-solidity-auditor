@@ -100,8 +100,8 @@ function runCommand(cmd, args, env, cwd, stdin){
 
 class Commands{
 
-    constructor(g_parser) {
-        this.g_parser = g_parser;
+    constructor(g_workspace) {
+        this.g_workspace = g_workspace;
     }
 
     _checkIsSolidity(document) {
@@ -114,7 +114,7 @@ class Commands{
     async generateUnittestStubForContract(document, contractName) {
         this._checkIsSolidity(document);
 
-        let content = mod_templates.generateUnittestStubForContract(document, this.g_parser, contractName);
+        let content = mod_templates.generateUnittestStubForContract(document, this.g_workspace, contractName);
 
         vscode.workspace.openTextDocument({content: content, language: "javascript"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
@@ -167,7 +167,7 @@ class Commands{
                         });
                     });
             } else {
-                files = [documentOrListItems.uri.fsPath, ...Object.keys(this.g_parser.sourceUnits)];  //better only add imported files. need to resolve that somehow
+                files = [documentOrListItems.uri.fsPath, ...Object.keys(this.g_workspace.sourceUnits)];  //better only add imported files. need to resolve that somehow
             } 
         }
 
@@ -332,11 +332,14 @@ class Commands{
             let searchFileString = "{" +workspaceRelativeBaseDirs.map(d => d === undefined ?  "**/*.sol" : d + path.sep +  "**/*.sol").join(",") + "}";
 
             await vscode.workspace.findFiles(searchFileString, settings.DEFAULT_FINDFILES_EXCLUDES, 500)
-                .then((solfiles) => {
-                    solfiles.forEach(function(solfile){
+                .then(async (solfiles) => {
+                    await solfiles.forEach( async (solfile) => {
                         try {
-                            let content = fs.readFileSync(solfile.fsPath).toString('utf-8');
-                            let sourceUnit = that.g_parser.parseSourceUnit(content);
+                            //let content = fs.readFileSync(solfile.fsPath).toString('utf-8');
+                            //let sourceUnit = that.g_parser.parseSourceUnit(content);
+
+                            let sourceUnit = await that.g_workspace.add(solfile.fsPath, {skipExisting: true});
+
                             for(let contractName in sourceUnit.contracts){
                                 if(sourceUnit.contracts[contractName]._node.kind == "interface") {  //ignore interface contracts
                                     continue;
@@ -350,14 +353,11 @@ class Commands{
                     });
                 });
         } else {
-            //files not set: take loaded sourceUnits from this.g_parser
+            //files not set: take loaded sourceUnits from this.g_workspace
             //files set: only take these sourceUnits
-            for(let contractName in this.g_parser.contracts){
-                if(this.g_parser.contracts[contractName]._node.kind == "interface") {
-                    continue;
-                }
-                dependencies[contractName] = this.g_parser.contracts[contractName].dependencies;
-            }
+            await this.g_workspace.getAllContracts().filter(c => c._node.kind != "interface" && c._node.kind != "library").forEach(c => {
+                dependencies[c.name] = c.dependencies;
+            });
         }
         
         var depnames = [].concat.apply([], Object.values(dependencies));
@@ -585,7 +585,6 @@ ${topLevelContractsText}`;
     }
 
     async umlContractsOutline(contractObjects) {
-        await this.drawioContractsOutlineAsCSV(contractObjects);
         let writer = new PlantumlWriter();
         const content = writer.export(contractObjects);
         

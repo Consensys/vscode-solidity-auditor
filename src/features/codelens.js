@@ -21,8 +21,8 @@ function elemLocToRange(elem){
 }
 
 class SolidityCodeLensProvider  {
-    constructor(g_parser, cb_analyze) {
-        this.g_parser = g_parser;
+    constructor(g_workspace, cb_analyze) {
+        this.g_workspace = g_workspace;
         this.cb_analyze = cb_analyze;
     }
 
@@ -110,7 +110,7 @@ class SolidityCodeLensProvider  {
             )
         );
 
-        let parser = this.g_parser.sourceUnits[document.uri.fsPath];
+        let parser = this.g_workspace.sourceUnits[document.uri.fsPath];
         if(!parser) {
             console.warn("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.");
             return codeLens;
@@ -134,21 +134,21 @@ class SolidityCodeLensProvider  {
 
         let annotateContractTypes = ["contract","library"];
         /** all contract decls */
-        for(let name in parser.contracts){
+        for(let contractObj of Object.values(parser.contracts)){
             if(token.isCancellationRequested){
                 return [];
             }
 
-            if(annotateContractTypes.indexOf(parser.contracts[name]._node.kind)>=0){
-                codeLens = codeLens.concat(this.onContractDecl(document,parser.contracts[name]));
+            if(annotateContractTypes.indexOf(contractObj._node.kind)>=0){
+                codeLens = codeLens.concat(this.onContractDecl(document,contractObj));
 
                 /** all function decls */
-                for(let funcName in parser.contracts[name].functions){
-                    codeLens = codeLens.concat(this.onFunctionDecl(document, name, parser.contracts[name].functions[funcName]));
+                for(let funcObj of contractObj.functions){
+                    codeLens = codeLens.concat(this.onFunctionDecl(document, contractObj.name, funcObj));
                 }
-            } else if (parser.contracts[name]._node.kind == "interface"){
+            } else if (contractObj._node.kind == "interface"){
                 // add uml to interface
-                let item = parser.contracts[name];
+                let item = contractObj;
                 codeLens.push(new vscode.CodeLens(elemLocToRange(item._node), {
                     command: 'solidity-va.uml.contract.outline',
                     title: 'uml',

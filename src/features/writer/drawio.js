@@ -80,7 +80,7 @@ class DrawioContract {
         this.kind = contractObj._node.kind;
         this.inherits = contractObj.dependencies; //usingFor?
         this.usingFor = Object.values(contractObj.usingFor);
-        this.methods = Object.values(contractObj.functions)
+        this.methods = contractObj.functions
             .filter(funcObj => methodFilterOnlyPublic.includes(funcObj._node.visibility));
         this.actors = this._getActors(contractObj);
 
@@ -94,8 +94,7 @@ class DrawioContract {
         //update actors
 
         actors = actors.concat(Object.values(contractObj.stateVars).filter(astNode => !astNode.isDeclaredConst && astNode.typeName.name == "address").map(astNode => astNode.name));
-        for (let fidx in contractObj.functions) {
-            let functionObj = contractObj.functions[fidx];
+        for (let functionObj of contractObj.functions) {
             actors = actors.concat(Object.values(functionObj.arguments).filter(astNode => astNode.typeName.name == "address").map(astNode => astNode.name));
         }
 

@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.0.31",
+    "version": "0.1.0-preview",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -52,7 +52,8 @@
         "onView:solidity-va-cockpit-flatFiles",
         "onView:solidity-va-cockpit-settings",
         "onView:solidity-va-cockpit-ftrace",
-        "onView:solidity-va-cockpit-publicMethods"
+        "onView:solidity-va-cockpit-publicMethods",
+        "onView:solidity-va-cockpit-externalCalls"
     ],
     "main": "./src/extension",
     "capabilities": {
@@ -125,6 +126,10 @@
                 {
                     "id": "solidity-va-cockpit-publicMethods",
                     "name": "Context: Public StateChanging Methods"
+                },
+                {
+                    "id": "solidity-va-cockpit-externalCalls",
+                    "name": "Context: External Calls"
                 },
                 {
                     "id": "solidity-va-cockpit-ftrace",
@@ -339,6 +344,11 @@
                     "default": true,
                     "description": "Enable/Disable warning decoration when overriding reserved names"
                 },
+                "solidity-va.deco.warn.externalCalls": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable gutter-icon decorations for lines performing external address calls"
+                },
                 "solidity-va.outline.enable": {
                     "type": "boolean",
                     "default": true,
@@ -460,9 +470,10 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.11.0",
+        "@solidity-parser/parser": "^0.11.1",
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.1",
+        "solidity-parser-object": "file:../../js/solidity-parser-object",
         "surya": "^0.4.2"
     }
 }

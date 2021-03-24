@@ -8,7 +8,7 @@
 
 const vscode = require('vscode');
 
-function generateUnittestStubForContract(document, g_parser, contractName){
+function generateUnittestStubForContract(document, g_workspace, contractName){
     let contract = {
         name: contractName,
         path: document.uri.fsPath
@@ -16,7 +16,7 @@ function generateUnittestStubForContract(document, g_parser, contractName){
 
     if(!contractName){
         //take first
-        let sourceUnit = g_parser.sourceUnits[document.uri.fsPath];
+        let sourceUnit = g_workspace.get(document.uri.fsPath);
         if(!sourceUnit || Object.keys(sourceUnit.contracts).length<=0){
             vscode.window.showErrorMessage(`[Solidity VA] unable to create unittest stub for current contract. missing analysis for source-unit: ${document.uri.fsPath}`);
             return;

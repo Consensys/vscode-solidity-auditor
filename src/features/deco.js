@@ -7,8 +7,21 @@
  * */
 
 const vscode = require('vscode');
+const path = require('path');
 
-let activeEditor = vscode.window.activeTextEditor;
+const decoStyleRedLine = vscode.window.createTextEditorDecorationType({
+        isWholeLine: true,
+        overviewRulerColor: 'blue',
+        overviewRulerLane: vscode.OverviewRulerLane.Right,
+        light: {
+            // this color will be used in light color themes
+            backgroundColor: `#E8625250`
+        },
+        dark: {
+            // this color will be used in dark color themes
+            backgroundColor: `#E9190F50`
+        },
+    });
 
 // create a decorator type that we use to decorate small numbers
 const decoStyleBoxedLightBlue = vscode.window.createTextEditorDecorationType({
@@ -103,8 +116,11 @@ var styles = {
     decoStyleLightGreen:decoStyleLightGreen,
     decoStyleLightOrange:decoStyleLightOrange,
     decoStyleLightBlue:decoStyleLightBlue,
+    decoStyleRedLine:decoStyleRedLine,
     decoStyleBookmarkGreen:undefined,
-    decoStyleBookmarkRed:undefined
+    decoStyleBookmarkRed:undefined,
+    decoStyleExternalCall:undefined
+
 };
 
 
@@ -269,6 +285,12 @@ function semanticHighlightFunctionParameters(arrIdents){
 }
 
 function init(context){
+
+    styles.decoStyleExternalCall = vscode.window.createTextEditorDecorationType({
+        gutterIconPath:context.asAbsolutePath(path.join("images", "warning.svg")),
+        gutterIconSize:"50%",
+    });
+
     [...Array(15).keys()].forEach(function(idx){
         styles["styleArgument"+idx] = vscode.window.createTextEditorDecorationType({
             //cursor: 'crosshair',
