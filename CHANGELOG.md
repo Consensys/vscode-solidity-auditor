@@ -1,8 +1,12 @@
 # Change Log
 
-## v0.0.32
+## v0.1.0
 
 - new: graphviz view titles were adjusted
+- fix: typeError "cannot read property length of undefined"
+- new: major parser refactor #67
+- new: highlighting of external calls in the gutter
+- new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
 
 ## v0.0.31
 
