@@ -338,7 +338,7 @@ class Commands{
                             //let content = fs.readFileSync(solfile.fsPath).toString('utf-8');
                             //let sourceUnit = that.g_parser.parseSourceUnit(content);
 
-                            let sourceUnit = await that.g_workspace.add(solfile.fsPath, {skipExisting: true});
+                            let sourceUnit = await that.g_workspace.add(solfile.fsPath);
 
                             for(let contractName in sourceUnit.contracts){
                                 if(sourceUnit.contracts[contractName]._node.kind == "interface") {  //ignore interface contracts

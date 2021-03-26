@@ -25,6 +25,7 @@ function nodeTypeName(node){
     return node.typeName.type === "ElementaryTypeName" ? node.typeName.name : node.typeName.namePath;
 }
 
+
 /** views */
 
 class BaseView {

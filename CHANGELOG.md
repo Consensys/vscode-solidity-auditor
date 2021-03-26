@@ -11,6 +11,7 @@
 - fix: misplaced decoration when document changes
 - new: adjusted graphviz view titles
 - new: decorate identifiers that are storage references (treating them like state-vars)
+- update: code cleanup; refactored decoration logic and moved it to submodule
 
 ## v0.0.31
 

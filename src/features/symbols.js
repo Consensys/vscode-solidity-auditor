@@ -280,7 +280,7 @@ class SolidityDocumentSymbolProvider{
                 return;
             }
             //var insights = this.g_workspace.inspect(document.getText(), document.fileName, true, token);
-            this.g_workspace.add(document.fileName, { content: document.getText(), skipExisting:true }).then((insights)=>{
+            this.g_workspace.add(document.fileName, { content: document.getText() }).then((insights)=>{
                 console.log(`✓ inspect ${insights.filePath}`);
 
                 console.log("--- preparing symbols for: "+ document.fileName);
