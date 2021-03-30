@@ -161,6 +161,9 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                     if (subcontract.name == contract.name) {
                         return; //skip self
                     }
+                    if (subcontract._node.kind === "interface"){
+                        return; //skip inherited names from interfaces
+                    }
 
                     /*
                     let foundContracts = g_workspace.findContractsByNameSync(contractName);
