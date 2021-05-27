@@ -443,7 +443,7 @@ class FTraceView extends BaseView {
 
     async onDidSelectionChange(event) {
 
-        let documentUri = event.textEditor._documentData._uri;
+        let documentUri = event.textEditor.document.uri;
         let focus = event.selections[0].anchor;
         let commands = this.cockpit.commands;
 
@@ -583,7 +583,7 @@ class PublicMethodsView extends BaseView {
 
     async onDidSelectionChange(event) {
 
-        let documentUri = event.textEditor._documentData._uri;
+        let documentUri = event.textEditor.document.uri;
         let focus = event.selections[0].anchor;
         let commands = this.cockpit.commands;
 
