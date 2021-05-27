@@ -34,32 +34,15 @@ Thanks for using **Solidity Visual Developer** 🤜🤛
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.31
+#### v0.0.32
 
-Happy new year from your [Diligence Family](https://consensys.net/diligence) 🙌 👪🌃🥂🎇!
+Maintenance release until v0.1.0 is ready.
 
-- new: optionally disable the "find references" provider 
-    - \`preferences → Settings → Solidity Visual Developer: solidity-va.findAllReferences.enable\`
-- new: experimental [draw.io](https://draw.io) uml export to support your threat modelling needs (you're going to ❤ this!)
-    - experimental feature, you'll have to manually enable this
-    - \`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.drawio.enable\`
-- fix: function signature generation for \`AbiEncoderV2\` functions that declare custom types
-    - for now this falls back to assume every custom type is an \`address\`. may need more love if there's support for this feature.
-- refactor: modular uml export
-- refactor: improved syntax highlighting / decoration performance
-    - only decorates when needed, avoid double decoration
-    - should fix or make it unlikely that decorations are being applied to the wrong editor - fixes #12
-- update: dependencies
-    - surya
-    - solidity parser
-    - keccak
+- new: graphviz view titles were adjusted
+- fix: vscode API adjustments ("crippled" events): "Cannot read property length of 'undefined'"
+- fix: check if statevar highlighting is enabled - #73
+- update: solidity parser to 0.12.2
 
-#### v0.0.30
-- new: We've finally implemented support for \`Right Click → Find All References\` for solidity source files!
-    - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
-    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
-    
-- update: dependencies surya / solidity parser
 
 <sub>
 Note: This notification is only shown once per release. Disable future notification? \`settings → solidity-va.whatsNew.disabled : true\`
