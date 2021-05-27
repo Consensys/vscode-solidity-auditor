@@ -1,6 +1,6 @@
 # Change Log
 
-## v0.0.32
+## v0.0.32 - v0.0.33
 
 Maintenance release until v0.1.0 is ready.
 

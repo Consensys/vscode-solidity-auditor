@@ -34,7 +34,7 @@ Thanks for using **Solidity Visual Developer** 🤜🤛
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.32
+#### v0.0.32 - v0.0.33
 
 Maintenance release until v0.1.0 is ready.
 
