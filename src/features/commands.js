@@ -585,7 +585,6 @@ ${topLevelContractsText}`;
     }
 
     async umlContractsOutline(contractObjects) {
-        await this.drawioContractsOutlineAsCSV(contractObjects);
         let writer = new PlantumlWriter();
         const content = writer.export(contractObjects);
         
