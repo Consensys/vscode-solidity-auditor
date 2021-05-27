@@ -470,7 +470,6 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.11.1",
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.1",
         "solidity-parser-object": "file:../../js/solidity-parser-object",
