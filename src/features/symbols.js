@@ -537,7 +537,8 @@ class SolidityDocumentSymbolProvider{
                         let contractNodes = {};
                         for (var name in insights.contracts[contractName].inherited_names){
                             //skip self
-                            let inheritedFromContractName = insights.contracts[contractName].inherited_names[name];
+                            let inheritedFromContract = insights.contracts[contractName].inherited_names[name];
+                            let inheritedFromContractName = inheritedFromContract.name;
                             if(inheritedFromContractName==contractName)
                                 continue;
                             //skip functions, modifiers, events of local contract
@@ -549,7 +550,7 @@ class SolidityDocumentSymbolProvider{
                             if(!_contract){
                                 let _contract = this.g_workspace.findContractsByNameSync(inheritedFromContractName);
                                 if(_contract.length==0){
-                                    console.warning(`symbol/inheritance: contract ${inheritedFromContractName} not found :/. skipping.`)
+                                    console.warn(`symbol/inheritance: contract ${inheritedFromContractName} not found :/. skipping.`)
                                     continue; 
                                 }
                                 _contract = _contract.pop(); //pop one item. ignore multiple results
