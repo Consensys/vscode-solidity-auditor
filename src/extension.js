@@ -113,12 +113,16 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
         (sourceUnit) => {
             console.log(`✓ inspect ${sourceUnit.filePath}`);
         }
-    );
+    ).catch(e => {
+        console.log(document.fileName);
+        console.log(e);
+    });
+
     g_workspace.withParserReady().then((finished) => {
 
         console.log("✓ workspace ready (linearized, resolved deps, ..)");
         
-        if (cancellationToken.isCancellationRequested || !finished.some(fp => fp.value.filePath === document.fileName)) {
+        if (cancellationToken.isCancellationRequested || !finished.some(fp => fp.value && fp.value.filePath === document.fileName)) {
             //abort - new analysis running already OR our finished task is not in the tasklist :/
             return;
         }

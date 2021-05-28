@@ -530,7 +530,7 @@ class CreateDecoStyle {
         if(subcontract){
             let foreignSourceUnit = subcontract._parent;
             let uri = vscode.Uri.file(foreignSourceUnit.filePath);
-            declaration = subcontract.stateVars[node.name] || node;
+            declaration = subcontract.names[node.name]._node || node;
             decl_uri = "([Declaration: " + subcontract + "#" + (declaration.loc.start.line) + "](" + uri + "#" + (declaration.loc.start.line) + "))";
             knownType = getVariableDeclarationType(declaration);
         }
@@ -556,7 +556,7 @@ class CreateDecoStyle {
         if(subcontract){
             let foreignSourceUnit = subcontract._parent;
             let uri = vscode.Uri.file(foreignSourceUnit.filePath);
-            declaration = subcontract.stateVars[node.name] || node;
+            declaration = subcontract.names[node.name]._node || node;
             decl_uri = "([Declaration: " + subcontract.name + "#" + (declaration.loc.start.line) + "](" + uri + "#" + (declaration.loc.start.line) + "))";
             knownType = getVariableDeclarationType(declaration);
         }
