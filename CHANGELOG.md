@@ -2,16 +2,17 @@
 
 ## v0.1.0
 
+🥳
+
 - new: major parser refactor #67
-- new: highlighting of external calls (yellow gutter icon)
+- new: 🎯 highlighting of external calls (yellow gutter icon)
   - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
   - do not completly rely on this feature :) 
 - new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
-- fix: typeError "cannot read property length of undefined"
 - fix: misplaced decoration when document changes
-- new: adjusted graphviz view titles
 - new: decorate identifiers that are storage references (treating them like state-vars)
 - update: code cleanup; refactored decoration logic and moved it to submodule
+- new: resolve inherited names (hover: declaration link)
 
 ## v0.0.32 - v0.0.33
 

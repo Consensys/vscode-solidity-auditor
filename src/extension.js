@@ -109,14 +109,19 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
         return;
     }
 
-    g_workspace.add(document.fileName, { content: document.getText() }).then(
-        (sourceUnit) => {
-            console.log(`✓ inspect ${sourceUnit.filePath}`);
-        }
-    ).catch(e => {
-        console.log(document.fileName);
-        console.log(e);
-    });
+    try {
+        g_workspace.add(document.fileName, { content: document.getText() }).then(
+            (sourceUnit) => {
+                console.log(`✓ inspect ${sourceUnit.filePath}`);
+            }
+        ).catch(e => {
+            console.error(document.fileName);
+            console.error(e);
+        });
+    } catch (e){
+        console.error(e);
+    }
+    
 
     g_workspace.withParserReady().then((finished) => {
 
