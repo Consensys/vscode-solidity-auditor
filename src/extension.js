@@ -661,6 +661,16 @@ function onActivate(context) {
                 }
             )
         );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.test.hardhat.createTemplate', 
+                function (doc, contractName) {
+                    commands.generateHardhatUnittestStubForContract(doc || vscode.window.activeTextEditor.document, contractName);
+                }
+            )
+        );
+
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.mdreport', 

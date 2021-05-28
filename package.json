@@ -199,6 +199,11 @@
                 "category": "Solidity Visual Developer"
             },
             {
+                "command": "solidity-va.test.hardhat.createTemplate",
+                "title": "Unittest - create Hardhat stub for current contract",
+                "category": "Solidity Visual Developer"
+            },
+            {
                 "command": "solidity-va.surya.mdreport",
                 "title": "Surya - generate report",
                 "category": "Solidity Visual Developer"
