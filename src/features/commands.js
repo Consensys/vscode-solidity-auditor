@@ -188,9 +188,9 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(settings.extensionConfig().preview.dot){
-                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null, title:`Call Graph: ${files}`})
+                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null, title:`Call Graph`})
                             .catch(error =>{
-                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null, title:`Call Graph: ${files}`}) //TODO: remove this in future version. only for transition to new command
+                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null, title:`Call Graph`}) //TODO: remove this in future version. only for transition to new command
                                 .catch(error =>{
                                     vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
                                     .catch(error => {
@@ -220,9 +220,9 @@ class Commands{
                 vscode.workspace.openTextDocument({content: ret, language: "dot"})
                     .then(doc => {
                         if(settings.extensionConfig().preview.dot){
-                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null, title:`Inheritance: ${files}`})
+                            vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", {document: doc, content:ret, callback:null, title:`Inheritance`})
                             .catch(error =>{
-                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null, title:`Inheritance: ${files}`})  //TODO: remove this in future version. only for transition to new command
+                                vscode.commands.executeCommand("interactive-graphviz.preview.beside", {document: doc, content:ret, callback:null, title:`Inheritance`})  //TODO: remove this in future version. only for transition to new command
                                 .catch(error =>{
                                     vscode.commands.executeCommand("graphviz.previewToSide", doc.uri)
                                     .catch(error => {
