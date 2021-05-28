@@ -488,7 +488,7 @@ class CreateDecoStyle {
         var decoStyle = "decoStyleStateVar";
 
         let decl_uri = "([Declaration: #" + (svar.loc.start.line) + "](" + document.uri + "#" + (svar.loc.start.line) + "))";
-
+        
         if (svar.isDeclaredConst) {
             prefix = "**CONST**  ";
             decoStyle = "decoStyleLightGreen";

@@ -38,13 +38,6 @@ const currentCancellationTokens = {
     onDidSave: new CancellationTokenSource()
 };
 
-const ScopeEnum = {
-    STATE: 1,  // declared satevar
-    ARGUMENT: 2,  // declared in arguments
-    RETURNS: 3,  // declared in returns
-    LOCAL: 4,  // function body,
-    INHERITED: 5 // inherited
-};
 
 /** helper */
 
@@ -78,9 +71,6 @@ async function setDecorations(editor, decorations) {
     }
 }
 
-function createDecoration() {
-
-}
 
 
 /*** EVENTS *********************************************** */
@@ -119,15 +109,17 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
         return;
     }
 
-    g_workspace.add(document.fileName, { content: document.getText() }).then((sourceUnit) => {
-        console.log(`✓ inspect ${sourceUnit.filePath}`);
-    });
-    g_workspace.withParserReady().then(() => {
+    g_workspace.add(document.fileName, { content: document.getText() }).then(
+        (sourceUnit) => {
+            console.log(`✓ inspect ${sourceUnit.filePath}`);
+        }
+    );
+    g_workspace.withParserReady().then((finished) => {
 
         console.log("✓ workspace ready (linearized, resolved deps, ..)");
-
-        if (cancellationToken.isCancellationRequested) {
-            //abort - new analysis running already
+        
+        if (cancellationToken.isCancellationRequested || !finished.some(fp => fp.value.filePath === document.fileName)) {
+            //abort - new analysis running already OR our finished task is not in the tasklist :/
             return;
         }
 
@@ -164,20 +156,6 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                     if (subcontract._node.kind === "interface"){
                         return; //skip inherited names from interfaces
                     }
-
-                    /*
-                    let foundContracts = g_workspace.findContractsByNameSync(contractName);
-                    if (foundContracts.length == 0) {
-                        return; //skip contract not found
-                    }
-
-                    let subcontract = foundContracts.pop(); //hack: take first
-                    
-                    if (typeof subcontract == "undefined") {
-                        console.error("ERROR - contract object not available " + contractName);
-                        return;
-                    }
-                    */
                     
                     for (let _var in subcontract.stateVars) {
                         if (subcontract.stateVars[_var].visibility != "private") {
@@ -219,164 +197,167 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                 console.log("✓ resolve inheritance");
 
                 /** todo fixme: rework */
-                for (var stateVar in contract.stateVars) {
-                    let svar = contract.stateVars[stateVar];
-                    //check for shadowing
-                    decorations.push(mod_decorator.CreateDecoStyle.stateVarDecl(svar, document, contract));
-
-                    /*** annotate all identifiers */
-                    //console.log(svar.usedAt)
-                    svar.usedAt.forEach(ident => {
-                        //check shadow in local declaration
-                        if (typeof ident.inFunction.declarations[ident.name] == "undefined") {
-                            // no local declaration. annotate as statevar
-                            decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, svar));
-                        } else {
-                            //shadowed!
-                            console.log("SHADOWED STATEVAR --> " + ident.name);
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(ident, document, contract, svar));
-                            //declaration
-                            let declaration = ident.inFunction.declarations[ident.name];
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(declaration, document, contract, svar));
-
-                        }
-                    });
-                }
-                console.log("✓ decorate scope");
-
-                /*** inherited vars */
-                /** have to get all identifiers :// */
-                /** fixme ugly hack ... */
-                for (let func of contract.functions) {
-                    //all functions
-                    let highlightIdentifiers = [];
-
-                    func.identifiers.forEach(ident => {
-                        if (ident.name === undefined) {
-                            return;
-                        }  //skip assemblyCall has no attrib .name
-                        // all idents in function
-
-                        const is_declared_locally = !!ident.inFunction.declarations[ident.name];
-                        const is_state_var = !!contract.stateVars[ident.name];
-                        const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
-
-                        if (is_declared_locally && !is_inherited && !is_state_var) {
-                            // local declaration
-                            switch (ident.scope) {
-                                case "argument":
-                                    highlightIdentifiers.push(ident);
-                                    break;
-                                case "returns":
-                                case "body":
-                                    break;
-                                case "storageRef":
-                                    decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
-                                    break;
-                                case "stateVar":
-                                    console.log("!!!! shadowed statevar"); // handled in a previous loop already
-                                    break;
-                                case "inheritedName":
-                                    console.log("!!!!! shadowed derived var");
-                                    decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                                    break;
-                                default:
-                                    break;
+                if(currentConfig.deco.statevars) {
+                    for (var stateVar in contract.stateVars) {
+                        let svar = contract.stateVars[stateVar];
+                        //check for shadowing
+                        decorations.push(mod_decorator.CreateDecoStyle.stateVarDecl(svar, document, contract));
+    
+                        /*** annotate all identifiers */
+                        //console.log(svar.usedAt)
+                        svar.usedAt.forEach(ident => {
+                            //check shadow in local declaration
+                            if (typeof ident.inFunction.declarations[ident.name] == "undefined") {
+                                // no local declaration. annotate as statevar
+                                decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, svar));
+                            } else {
+                                //shadowed!
+                                console.log("SHADOWED STATEVAR --> " + ident.name);
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(ident, document, contract, svar));
+                                //declaration
+                                let declaration = ident.inFunction.declarations[ident.name];
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(declaration, document, contract, svar));
+    
                             }
-                        } else if (is_declared_locally && is_inherited) {
-                            console.log("!!!!! shadowed derived var");
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                        } else if (is_state_var && is_inherited) {
-                            // no local declaration -> direct use of stateVar
-                            //shadowed inherited var
-                            console.log("!!! statevar shadows inherited");
-                            console.log("!!!!! shadowed derived var");
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                        } else if (is_inherited) {
-                            // normal inherited var
-                            decorations.push(mod_decorator.CreateDecoStyle.inheritedStateVar(ident, document, contract));
-                        }
-                        //annotate external calls?
-                    });
-                    if (settings.extensionConfig().deco.arguments) {
-                        decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+                        });
                     }
+                    console.log("✓ decorate scope");
+                
 
-                    if (settings.extensionConfig().deco.warn.reserved) {
-                        decorations = decorations.concat(checkReservedIdentifiers(func.identifiers));
-                        decorations = decorations.concat(checkReservedIdentifiers(func.arguments));
-                        decorations = decorations.concat(checkReservedIdentifiers(func.returns));
-                    }
-                }
-                //decorate modifiers (fixme copy pasta)
-                for (let functionName in contract.modifiers) {
-                    //all modifiers
-                    let highlightIdentifiers = [];
-                    contract.modifiers[functionName].identifiers.forEach(ident => {
-                        if (ident.name === undefined) {
-                            return;
-                        }  //skip assemblyCall has no attrib .name
+                    /*** inherited vars */
+                    /** have to get all identifiers :// */
+                    /** fixme ugly hack ... */
+                    for (let func of contract.functions) {
+                        //all functions
+                        let highlightIdentifiers = [];
 
-                        const is_declared_locally = !!ident.inFunction.declarations[ident.name];
-                        const is_state_var = !!contract.stateVars[ident.name];
-                        const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
+                        func.identifiers.forEach(ident => {
+                            if (ident.name === undefined) {
+                                return;
+                            }  //skip assemblyCall has no attrib .name
+                            // all idents in function
 
-                        if (is_declared_locally && !is_inherited && !is_state_var) {
-                            // local declaration
-                            switch (ident.scope) {
-                                case "argument":
-                                    highlightIdentifiers.push(ident);
-                                    break;
-                                case "returns":
-                                case "body":
-                                    break;
-                                case "storageRef":
-                                    decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
-                                    break;
-                                case "stateVar":
-                                    console.log("!!!! shadowed statevar"); // handled in a previous loop already
-                                    break;
-                                case "inheritedName":
-                                    console.log("!!!!! shadowed derived var");
-                                    decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                                    break;
-                                default:
-                                    break;
+                            const is_declared_locally = !!ident.inFunction.declarations[ident.name];
+                            const is_state_var = !!contract.stateVars[ident.name];
+                            const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
+
+                            if (is_declared_locally && !is_inherited && !is_state_var) {
+                                // local declaration
+                                switch (ident.scope) {
+                                    case "argument":
+                                        highlightIdentifiers.push(ident);
+                                        break;
+                                    case "returns":
+                                    case "body":
+                                        break;
+                                    case "storageRef":
+                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
+                                        break;
+                                    case "stateVar":
+                                        console.log("!!!! shadowed statevar"); // handled in a previous loop already
+                                        break;
+                                    case "inheritedName":
+                                        console.log("!!!!! shadowed derived var");
+                                        decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else if (is_declared_locally && is_inherited) {
+                                console.log("!!!!! shadowed derived var");
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                            } else if (is_state_var && is_inherited) {
+                                // no local declaration -> direct use of stateVar
+                                //shadowed inherited var
+                                console.log("!!! statevar shadows inherited");
+                                console.log("!!!!! shadowed derived var");
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                            } else if (is_inherited) {
+                                // normal inherited var
+                                decorations.push(mod_decorator.CreateDecoStyle.inheritedStateVar(ident, document, contract));
                             }
-                        } else if (is_declared_locally && is_inherited) {
-                            console.log("!!!!! shadowed derived var");
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                        } else if (is_state_var && is_inherited) {
-                            // no local declaration -> direct use of stateVar
-                            //shadowed inherited var
-                            console.log("!!! statevar shadows inherited");
-                            console.log("!!!!! shadowed derived var");
-                            decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
-                        } else if (is_inherited) {
-                            // normal inherited var
-                            decorations.push(mod_decorator.CreateDecoStyle.inheritedStateVar(ident, document, contract));
+                            //annotate external calls?
+                        });
+                        if (settings.extensionConfig().deco.arguments) {
+                            decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
                         }
 
-                        //annotate external calls?
-                    });
-                    if (settings.extensionConfig().deco.arguments) {
-                        decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+                        if (settings.extensionConfig().deco.warn.reserved) {
+                            decorations = decorations.concat(checkReservedIdentifiers(func.identifiers));
+                            decorations = decorations.concat(checkReservedIdentifiers(func.arguments));
+                            decorations = decorations.concat(checkReservedIdentifiers(func.returns));
+                        }
                     }
+                    //decorate modifiers (fixme copy pasta)
+                    for (let functionName in contract.modifiers) {
+                        //all modifiers
+                        let highlightIdentifiers = [];
+                        contract.modifiers[functionName].identifiers.forEach(ident => {
+                            if (ident.name === undefined) {
+                                return;
+                            }  //skip assemblyCall has no attrib .name
 
-                    if (settings.extensionConfig().deco.warn.reserved) {
-                        decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].identifiers));
-                        decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].arguments));
-                        decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].returns));
-                    }
+                            const is_declared_locally = !!ident.inFunction.declarations[ident.name];
+                            const is_state_var = !!contract.stateVars[ident.name];
+                            const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
 
-                }
-                //decorate events
-                for (var eventDef of contract.events) {
-                    if (settings.extensionConfig().deco.warn.reserved) {
-                        decorations = decorations.concat(checkReservedIdentifiers(eventDef.arguments));
+                            if (is_declared_locally && !is_inherited && !is_state_var) {
+                                // local declaration
+                                switch (ident.scope) {
+                                    case "argument":
+                                        highlightIdentifiers.push(ident);
+                                        break;
+                                    case "returns":
+                                    case "body":
+                                        break;
+                                    case "storageRef":
+                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
+                                        break;
+                                    case "stateVar":
+                                        console.log("!!!! shadowed statevar"); // handled in a previous loop already
+                                        break;
+                                    case "inheritedName":
+                                        console.log("!!!!! shadowed derived var");
+                                        decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else if (is_declared_locally && is_inherited) {
+                                console.log("!!!!! shadowed derived var");
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                            } else if (is_state_var && is_inherited) {
+                                // no local declaration -> direct use of stateVar
+                                //shadowed inherited var
+                                console.log("!!! statevar shadows inherited");
+                                console.log("!!!!! shadowed derived var");
+                                decorations.push(mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(ident, document, contract));
+                            } else if (is_inherited) {
+                                // normal inherited var
+                                decorations.push(mod_decorator.CreateDecoStyle.inheritedStateVar(ident, document, contract));
+                            }
+
+                            //annotate external calls?
+                        });
+                        if (settings.extensionConfig().deco.arguments) {
+                            decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
+                        }
+
+                        if (settings.extensionConfig().deco.warn.reserved) {
+                            decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].identifiers));
+                            decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].arguments));
+                            decorations = decorations.concat(checkReservedIdentifiers(contract.modifiers[functionName].returns));
+                        }
+
                     }
+                    //decorate events
+                    for (var eventDef of contract.events) {
+                        if (settings.extensionConfig().deco.warn.reserved) {
+                            decorations = decorations.concat(checkReservedIdentifiers(eventDef.arguments));
+                        }
+                    }
+                    console.log("✓ decorate scope (new) - identifier ");
                 }
-                console.log("✓ decorate scope (new) - identifier ");
             }
             console.log("✓ decorate scope done ");
             if (cancellationToken.isCancellationRequested) {
