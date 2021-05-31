@@ -245,7 +245,7 @@ function semanticHighlightFunctionParameters(arrIdents) {
     let index = 0;
     let colorAssign = {};
 
-    let funcNode = arrIdents[0].inFunction;  // just take the first items ref to function
+    let funcNode = arrIdents[0].extra.inFunction;  // just take the first items ref to function
     var decorations = [];
 
     for (let name in funcNode.arguments) {
@@ -269,7 +269,7 @@ function semanticHighlightFunctionParameters(arrIdents) {
 
 
     arrIdents.forEach(function (ident) {
-        let typeName = getVariableDeclarationType(ident.declaration);
+        let typeName = getVariableDeclarationType(ident.extra.declaration);
         decorations.push(
             {
                 range: new vscode.Range(
@@ -475,10 +475,10 @@ class CreateDecoStyle {
 
         return {
             range: new vscode.Range(
-                new vscode.Position(node.loc.start.line - 1, node.loc.start.column),
-                new vscode.Position(node.loc.end.line - 1, node.loc.end.column + node.name.length)
+                new vscode.Position(node.identifier.loc.start.line - 1, node.identifier.loc.start.column),
+                new vscode.Position(node.identifier.loc.end.line - 1, node.identifier.loc.end.column + node.identifier.name.length)
             ),
-            hoverMessage: prefix + "(*" + (node.typeName.type == "ElementaryTypeName" ? node.typeName.name : node.typeName.namePath) + "*) " + 'StateVar *' + contract.name + "*.**" + node.name + '**',
+            hoverMessage: prefix + "(*" + (node.typeName.type == "ElementaryTypeName" ? node.typeName.name : node.typeName.namePath) + "*) " + 'StateVar *' + contract.name + "*.**" + node.identifier.name + '**',
             decoStyle: decoStyle
         };
     }

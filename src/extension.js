@@ -214,9 +214,9 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
     
                         /*** annotate all identifiers */
                         //console.log(svar.usedAt)
-                        svar.usedAt.forEach(ident => {
+                        svar.extra.usedAt.forEach(ident => {
                             //check shadow in local declaration
-                            if (typeof ident.inFunction.declarations[ident.name] == "undefined") {
+                            if (typeof ident.extra.inFunction.declarations[ident.name] == "undefined") {
                                 // no local declaration. annotate as statevar
                                 decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, svar));
                             } else {
@@ -224,7 +224,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                                 console.log("SHADOWED STATEVAR --> " + ident.name);
                                 decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(ident, document, contract, svar));
                                 //declaration
-                                let declaration = ident.inFunction.declarations[ident.name];
+                                let declaration = ident.extra.inFunction.declarations[ident.name];
                                 decorations.push(mod_decorator.CreateDecoStyle.shadowedStateVar(declaration, document, contract, svar));
     
                             }
@@ -246,13 +246,13 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                             }  //skip assemblyCall has no attrib .name
                             // all idents in function
 
-                            const is_declared_locally = !!ident.inFunction.declarations[ident.name];
+                            const is_declared_locally = !!ident.extra.inFunction.declarations[ident.name];
                             const is_state_var = !!contract.stateVars[ident.name];
                             const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
 
                             if (is_declared_locally && !is_inherited && !is_state_var) {
                                 // local declaration
-                                switch (ident.scope) {
+                                switch (ident.extra.scope) {
                                     case "argument":
                                         highlightIdentifiers.push(ident);
                                         break;
@@ -260,7 +260,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                                     case "body":
                                         break;
                                     case "storageRef":
-                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
+                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.extra.declaration));
                                         break;
                                     case "stateVar":
                                         console.log("!!!! shadowed statevar"); // handled in a previous loop already
@@ -306,13 +306,13 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                                 return;
                             }  //skip assemblyCall has no attrib .name
 
-                            const is_declared_locally = !!ident.inFunction.declarations[ident.name];
+                            const is_declared_locally = !!ident.extra.inFunction.declarations[ident.name];
                             const is_state_var = !!contract.stateVars[ident.name];
                             const is_inherited = !!(contract.inherited_names[ident.name] && contract.inherited_names[ident.name] != contract);
 
                             if (is_declared_locally && !is_inherited && !is_state_var) {
                                 // local declaration
-                                switch (ident.scope) {
+                                switch (ident.extra.scope) {
                                     case "argument":
                                         highlightIdentifiers.push(ident);
                                         break;
@@ -320,7 +320,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                                     case "body":
                                         break;
                                     case "storageRef":
-                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.declaration));
+                                        decorations.push(mod_decorator.CreateDecoStyle.stateVarIdent(ident, document, contract, ident.extra.declaration));
                                         break;
                                     case "stateVar":
                                         console.log("!!!! shadowed statevar"); // handled in a previous loop already
