@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.0.31",
+    "version": "0.0.33",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -465,7 +465,7 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.11.0",
+        "@solidity-parser/parser": "^0.12.2",
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.1",
         "surya": "^0.4.2"

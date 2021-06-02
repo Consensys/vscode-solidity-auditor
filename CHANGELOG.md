@@ -1,8 +1,13 @@
 # Change Log
 
-## v0.0.32
+## v0.0.32 - v0.0.33
+
+Maintenance release until v0.1.0 is ready.
 
 - new: graphviz view titles were adjusted
+- fix: vscode API adjustments ("crippled" events): "Cannot read property length of 'undefined'"
+- fix: check if statevar highlighting is enabled - #73
+- update: solidity parser to 0.12.2
 
 ## v0.0.31
 

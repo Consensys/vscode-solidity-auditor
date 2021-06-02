@@ -235,7 +235,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
 
 
 
-                decorations.push({ 
+                currentConfig.deco.statevars && decorations.push({ 
                         range: new vscode.Range(
                             new vscode.Position(svar.loc.start.line-1, svar.loc.start.column),
                             new vscode.Position(svar.loc.end.line-1, svar.loc.end.column+svar.name.length)
@@ -252,7 +252,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                     //check shadow in local declaration
                     if(typeof ident.inFunction.declarations[ident.name]=="undefined"){
                         // no local declaration. annotate as statevar
-                        decorations.push(
+                        currentConfig.deco.statevars && decorations.push(
                             { 
                                 range: new vscode.Range(
                                     new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -266,7 +266,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                         console.log("SHADOWED STATEVAR --> "+ident.name);
                         decoStyle = "decoStyleLightOrange";
                         prefix += "❗SHADOWED❗";
-                        decorations.push({ 
+                        currentConfig.deco.statevars && decorations.push({ 
                             range: new vscode.Range(
                                 new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
                                 new vscode.Position(ident.loc.end.line-1, ident.loc.end.column+ident.name.length)
@@ -276,7 +276,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                         });
                         //declaration
                         let declaration = ident.inFunction.declarations[ident.name];
-                        decorations.push({ 
+                        currentConfig.deco.statevars && decorations.push({ 
                             range: new vscode.Range(
                                 new vscode.Position(declaration.loc.start.line-1, declaration.loc.start.column),
                                 new vscode.Position(declaration.loc.end.line-1, declaration.loc.end.column+ident.name.length)
@@ -334,7 +334,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -360,7 +360,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -382,7 +382,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                         let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                        decorations.push(
+                        currentConfig.deco.statevars && decorations.push(
                             { 
                                 range: new vscode.Range(
                                     new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -447,7 +447,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -466,7 +466,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -492,7 +492,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -512,7 +512,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                             } 
                             let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
 
-                            decorations.push(
+                            currentConfig.deco.statevars && decorations.push(
                                 { 
                                     range: new vscode.Range(
                                         new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
@@ -532,7 +532,7 @@ function analyzeSourceUnit(cancellationToken, document, editor){
                         let subcontract =  insights.contracts[contract].inherited_names[ident.name];
                         let decl_uri = "([Declaration: #"+(ident.loc.start.line)+"]("+document.uri+"#"+(ident.loc.start.line)+"))";
                         
-                        decorations.push(
+                        currentConfig.deco.statevars && decorations.push(
                             { 
                                 range: new vscode.Range(
                                     new vscode.Position(ident.loc.start.line-1, ident.loc.start.column),
