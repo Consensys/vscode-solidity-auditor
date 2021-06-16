@@ -7,12 +7,24 @@
 - new: major parser refactor #67
 - new: 🎯 highlighting of external calls (yellow gutter icon)
   - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
-  - do not completly rely on this feature :) 
+
+  ![image](https://user-images.githubusercontent.com/2865694/120013974-c47ceb80-bfe1-11eb-9a02-c6d461e44d8e.png)
+
 - new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
-- fix: misplaced decoration when document changes
-- new: decorate identifiers that are storage references (treating them like state-vars)
-- update: code cleanup; refactored decoration logic and moved it to submodule
+
+  ![image](https://user-images.githubusercontent.com/2865694/120014136-f8f0a780-bfe1-11eb-9e1a-f3fb41d5e61b.png)
+
 - new: resolve inherited names (hover: declaration link)
+  
+  ![image](https://user-images.githubusercontent.com/2865694/120014274-26d5ec00-bfe2-11eb-99f7-64d4a57277a0.png)
+
+- new: decorate identifiers that are storage references (treating them like state-vars)
+- new: code-lenses enabled for abstract contracts
+- new: UnitTest stub support for Hardhat/Ethers #70 (`preferences → Settings → Solidity Visual Developer: solidity-va.test.defaultUnittestTemplate`)
+- new: (debug) option to enable/disable stacktraces for parser errors (`preferences → Settings → Solidity Visual Developer: solidity-va.debug`)
+- fix: misplaced decoration when document changes
+- update: code cleanup; refactored decoration logic and moved it to submodule
+
 
 ## v0.0.32 - v0.0.33
 
