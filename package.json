@@ -199,11 +199,6 @@
                 "category": "Solidity Visual Developer"
             },
             {
-                "command": "solidity-va.test.hardhat.createTemplate",
-                "title": "Unittest - create Hardhat stub for current contract",
-                "category": "Solidity Visual Developer"
-            },
-            {
                 "command": "solidity-va.surya.mdreport",
                 "title": "Surya - generate report",
                 "category": "Solidity Visual Developer"
@@ -451,6 +446,15 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable update notifications"
+                },
+                "solidity-va.test.defaultUnittestTemplate": {
+                    "type": "string",
+                    "enum": [
+                        "hardhat",
+                        "truffle"
+                    ],
+                    "default": "truffle",
+                    "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat)"
                 }
             }
         }

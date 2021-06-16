@@ -132,7 +132,7 @@ class SolidityCodeLensProvider  {
             );
         }
 
-        let annotateContractTypes = ["contract","library"];
+        let annotateContractTypes = ["contract","library", "abstract"];
         /** all contract decls */
         for(let name in parser.contracts){
             if(token.isCancellationRequested){
@@ -182,13 +182,6 @@ class SolidityCodeLensProvider  {
             command: 'solidity-va.uml.contract.outline',
             title: 'uml',
             arguments: [document, [item]]
-            })
-        );
-
-        lenses.push(new vscode.CodeLens(range, {
-            command: 'solidity-va.test.createTemplate',
-            title: 'UnitTest stub',
-            arguments: [document, item.name]
             })
         );
 
