@@ -463,6 +463,7 @@ function onActivate(context) {
                 }
             )
         );
+
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.mdreport',

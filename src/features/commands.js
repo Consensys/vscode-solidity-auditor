@@ -114,7 +114,12 @@ class Commands{
     async generateUnittestStubForContract(document, contractName) {
         this._checkIsSolidity(document);
 
-        let content = mod_templates.generateUnittestStubForContract(document, this.g_workspace, contractName);
+        let content;
+        if(settings.extensionConfig().test.defaultUnittestTemplate==="hardhat"){
+            content = mod_templates.generateHardhatUnittestStubForContract(document, this.g_parser, contractName);
+        } else {
+            content = mod_templates.generateUnittestStubForContract(document, this.g_parser, contractName); 
+        } 
 
         vscode.workspace.openTextDocument({content: content, language: "javascript"})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));

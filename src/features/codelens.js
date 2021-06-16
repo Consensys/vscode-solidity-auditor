@@ -132,7 +132,7 @@ class SolidityCodeLensProvider  {
             );
         }
 
-        let annotateContractTypes = ["contract","library"];
+        let annotateContractTypes = ["contract","library", "abstract"];
         /** all contract decls */
         for(let contractObj of Object.values(parser.contracts)){
             if(token.isCancellationRequested){

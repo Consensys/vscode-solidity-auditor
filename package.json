@@ -456,6 +456,15 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable update notifications"
+                },
+                "solidity-va.test.defaultUnittestTemplate": {
+                    "type": "string",
+                    "enum": [
+                        "hardhat",
+                        "truffle"
+                    ],
+                    "default": "truffle",
+                    "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat)"
                 }
             }
         }
