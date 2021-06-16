@@ -110,16 +110,21 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
     }
 
     try {
-        g_workspace.add(document.fileName, { content: document.getText() }).then(
+        g_workspace.add(document.fileName, { content: document.getText()}).then(
             (sourceUnit) => {
                 console.log(`✓ inspect ${sourceUnit.filePath}`);
             }
         ).catch(e => {
-            console.error(document.fileName);
-            console.error(e);
+            console.warn(`Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`);
+            if(settings.extensionConfig().debug.parser.showExceptions){
+                console.error(e);
+            }
         });
     } catch (e){
-        console.error(e);
+        console.warn(`Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`);
+        if(settings.extensionConfig().debug.parser.showExceptions){
+            console.error(e);
+        }
     }
     
 

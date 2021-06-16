@@ -280,343 +280,356 @@ class SolidityDocumentSymbolProvider{
                 return;
             }
             //var insights = this.g_workspace.inspect(document.getText(), document.fileName, true, token);
-            this.g_workspace.add(document.fileName, { content: document.getText() }).then((insights)=>{
-                console.log(`✓ inspect ${insights.filePath}`);
-
-                console.log("--- preparing symbols for: "+ document.fileName);
-
-                if(token.isCancellationRequested){
-                    reject(token);
-                    return;
-                }
-
-                var topLevelNode;
-
-                if(settings.extensionConfig().outline.pragmas.show){
-                    topLevelNode = astNodeAsDocumentSymbol(
-                        document, 
-                        getFakeNode("pragma",1),
-                        vscode.SymbolKind.Namespace,
-                        "pragma",
-                        "... (" + insights.pragmas.length + ")"
-                    );
-                    symbols.push(topLevelNode);
-                    insights.pragmas.forEach(function(item){
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(
-                            document, 
-                            item, 
-                            vscode.SymbolKind.Namespace, 
-                            item.name + " → " + item.value));
-                    });
-                    console.log("✓ pragmas ");
-                }
-                
-                if(settings.extensionConfig().outline.imports.show){
-                    topLevelNode = astNodeAsDocumentSymbol(
-                        document, 
-                        getFakeNode("imports",1),
-                        vscode.SymbolKind.Namespace,
-                        "imports",
-                        "... (" + insights.imports.length + ")"
-                    );
-                    symbols.push(topLevelNode);
-                    insights.imports.forEach(function(item){
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(
-                            document, 
-                            item, 
-                            vscode.SymbolKind.File, 
-                            item.path));
-                        });
-                    
-                    console.log("✓ imports ");
-                }
-                
-                for (var contractName in insights.contracts) {
-                
-                    let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName]);
-                    topLevelNode = astNodeAsDocumentSymbol(
-                        document,
-                        insights.contracts[contractName]._node,
-                        symbolAnnotation.symbol,
-                        symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix
-                    );
-                    symbols.push(topLevelNode);
-
-                    /** the document */
-                    console.log("✓ contracts " + contractName);
-                    /** constructor - if known */
-                    if (insights.contracts[contractName].constructor){
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(document, insights.contracts[contractName].constructor._node, vscode.SymbolKind.Constructor));
+            try {
+                this.g_workspace.add(document.fileName, { content: document.getText() }).then((insights)=>{
+                    console.log(`✓ inspect ${insights.filePath}`);
+    
+                    console.log("--- preparing symbols for: "+ document.fileName);
+    
+                    if(token.isCancellationRequested){
+                        reject(token);
+                        return;
                     }
-                    console.log("✓ constructor");
-                    /** stateVars */
-                    for (var svar in insights.contracts[contractName].stateVars){
-                        let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].stateVars[svar]);
-                        
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(
+    
+                    var topLevelNode;
+    
+                    if(settings.extensionConfig().outline.pragmas.show){
+                        topLevelNode = astNodeAsDocumentSymbol(
                             document, 
-                            insights.contracts[contractName].stateVars[svar], 
-                            symbolAnnotation.symbol,
-                            symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                            symbolAnnotation.details));
-                    
-                    } 
-                    console.log("✓ statevars");
-                    
-                    for (let name in insights.contracts[contractName].enums){
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(
-                            document, 
-                            insights.contracts[contractName].enums[name], 
-                            vscode.SymbolKind.Enum));
-                    }
-                    console.log("✓ enums");
-                    for (let name in insights.contracts[contractName].structs){
-                        topLevelNode.children.push(astNodeAsDocumentSymbol(document, insights.contracts[contractName].structs[name], vscode.SymbolKind.Struct));
-                    } 
-                    console.log("✓ structs");
-                    var functionLevelNode;
-                    /** functions - may include constructor / fallback */
-                    for (let funcObj of insights.contracts[contractName].functions){
-
-                        
-                        let symbolAnnotation = getSymbolKindForDeclaration(funcObj);
-                        functionLevelNode = astNodeAsDocumentSymbol(
-                            document, 
-                            funcObj._node, 
-                            symbolAnnotation.symbol, 
-                            symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                            symbolAnnotation.details);
-        
-                        topLevelNode.children.push(functionLevelNode);
-                        // add a fake modifiers list to outline
-                        // add pseudonode modifiers
-                        let numModifiers = Object.keys(funcObj.modifiers).length;
-                        if(numModifiers!==0){
-                            let modifiersLevelNode = astNodeAsDocumentSymbol(
-                                document, 
-                                getFakeNode("modifiers",1),
-                                vscode.SymbolKind.Namespace,
-                                "modifiers",
-                                "... (" + numModifiers + ")"
-                                );
-                            functionLevelNode.children.push(modifiersLevelNode);
-                            // add modifiers
-                            for (let modifierName in funcObj.modifiers){
-                                let vardec = funcObj.modifiers[modifierName];
-                                
-                                let symbolAnnotation = getSymbolKindForDeclaration(vardec);
-                                
-                                modifiersLevelNode.children.push(astNodeAsDocumentSymbol(
-                                    document, 
-                                    vardec, 
-                                    symbolAnnotation.symbol,
-                                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                    symbolAnnotation.details
-                                    ));
-                            }
-                        }
-
-                        // add fake assembly functions list to outline
-                        let numAssemblyFuncDefs = Object.keys(funcObj.assemblyFunctions).length;
-                        if(numAssemblyFuncDefs!==0){
-                            let assemblyLevelNode = astNodeAsDocumentSymbol(
-                                document, 
-                                getFakeNode("assembly..",1),
-                                vscode.SymbolKind.Namespace,
-                                "assembly",
-                                "... (" + numAssemblyFuncDefs + ")"
-                                );
-                            
-                            functionLevelNode.children.push(assemblyLevelNode);
-                            // add modifiers
-                            for (let modifierName in funcObj.assemblyFunctions){
-                                let vardec = funcObj.assemblyFunctions[modifierName];
-                                
-                                let symbolAnnotation = getSymbolKindForDeclaration(vardec);
-                                
-                                assemblyLevelNode.children.push(astNodeAsDocumentSymbol(
-                                    document, 
-                                    vardec, 
-                                    symbolAnnotation.symbol,
-                                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                    symbolAnnotation.details
-                                    ));
-                            }
-                        }
-                        //get all declarations in function
-                        
-
-                        for (let declaration in funcObj.declarations){
-                            let vardec = funcObj.declarations[declaration];
-                            if(declaration=="null")
-                                continue;
-                            
-                            let symbolAnnotation = getSymbolKindForDeclaration(vardec);
-                            
-                            functionLevelNode.children.push(astNodeAsDocumentSymbol(
-                                document, 
-                                vardec, 
-                                symbolAnnotation.symbol,
-                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                symbolAnnotation.details
-                                ));
-                        }
-                        
-                    }
-                    console.log("✓ functions");
-                    
-                    /** modifiers */
-                    for (let functionName in insights.contracts[contractName].modifiers){
-
-                        let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].modifiers[functionName]);
-                        functionLevelNode = astNodeAsDocumentSymbol(
-                            document, 
-                            insights.contracts[contractName].modifiers[functionName]._node, 
-                            symbolAnnotation.symbol, 
-                            symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                            symbolAnnotation.details);
-
-                        topLevelNode.children.push(functionLevelNode);
-                        //get all declarations in function
-                        for (let declaration in insights.contracts[contractName].modifiers[functionName].declarations){
-                            let vardec = insights.contracts[contractName].modifiers[functionName].declarations[declaration];
-                            if(declaration=="null")
-                                continue;
-                            let symbolAnnotation = getSymbolKindForDeclaration(vardec);
-                            functionLevelNode.children.push(astNodeAsDocumentSymbol(
-                                document, 
-                                vardec, 
-                                symbolAnnotation.symbol,
-                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                symbolAnnotation.details
-                            ));
-                    
-                        }
-                    }
-                    console.log("✓ modifiers");
-                    /** events */
-                    for (let eventObj of insights.contracts[contractName].events){
-
-                        let symbolAnnotation = getSymbolKindForDeclaration(eventObj);
-                        functionLevelNode = astNodeAsDocumentSymbol(
-                            document, 
-                            eventObj._node, 
-                            symbolAnnotation.symbol, 
-                            symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                            symbolAnnotation.details);
-
-                        topLevelNode.children.push(functionLevelNode);
-
-                        //get all declarations in function
-                        for (let declaration in eventObj.declarations){
-                            let vardec = eventObj.declarations[declaration];
-                            if(declaration=="null")
-                                continue;
-                            let symbolAnnotation = getSymbolKindForDeclaration(vardec);
-                            functionLevelNode.children.push(astNodeAsDocumentSymbol(
-                                document, 
-                                vardec, 
-                                symbolAnnotation.symbol,
-                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                symbolAnnotation.details
-                                ));
-                        }
-                    }
-                    console.log("✓ events");
-                    /** functions - may include constructor / fallback */
-                    if(settings.extensionConfig().outline.inheritance.show){
-
-                        var inheritedLevelNode = astNodeAsDocumentSymbol(
-                            document, 
-                            getFakeNode("↖ ...", 1),
+                            getFakeNode("pragma",1),
                             vscode.SymbolKind.Namespace,
-                            );
-                        topLevelNode.children.push(inheritedLevelNode);
-
-                        let contractCache = {};
-                        let contractNodes = {};
-                        for (var name in insights.contracts[contractName].inherited_names){
-                            //skip self
-                            let inheritedFromContract = insights.contracts[contractName].inherited_names[name];
-                            let inheritedFromContractName = inheritedFromContract.name;
-                            if(inheritedFromContractName==contractName)
-                                continue;
-                            //skip functions, modifiers, events of local contract
-                            if(typeof insights.contracts[contractName].names[name]!="undefined")
-                                continue;
-                            
-                            let _contract = contractCache[inheritedFromContractName];
-
-                            if(!_contract){
-                                let _contract = this.g_workspace.findContractsByNameSync(inheritedFromContractName);
-                                if(_contract.length==0){
-                                    console.warn(`symbol/inheritance: contract ${inheritedFromContractName} not found :/. skipping.`)
-                                    continue; 
-                                }
-                                _contract = _contract.pop(); //pop one item. ignore multiple results
-                                contractCache[inheritedFromContractName] = _contract;
-                            }
-                            
-
-                            let symbolAnnotation;
-                            if(typeof _contract=="undefined"){
-                                //contract not found :/
-                                symbolAnnotation = {
-                                    symbol:vscode.SymbolKind.Class,
-                                    name:inheritedFromContractName,
-                                    prefix:"",
-                                    suffix:"",
-                                    details:"<not found>",
-                                };
-                            } else {
-                                symbolAnnotation = getSymbolKindForDeclaration(_contract);
-                            }
-
-                            let currentContractNode = contractNodes[inheritedFromContractName];
-                            if(typeof currentContractNode=="undefined"){
-                                currentContractNode = astNodeAsDocumentSymbol(
-                                    document, 
-                                    getFakeNode(inheritedFromContractName, 1), 
-                                    symbolAnnotation.symbol,
-                                    "  ↖ "+ symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
-                                    symbolAnnotation.details);
-                                contractNodes[inheritedFromContractName] = currentContractNode;
-                                inheritedLevelNode.children.push(currentContractNode);
-                                
-                            }
-                            // get the item to calculate range/location
-                            let varSymbol;
-                            try {
-                                varSymbol = getSymbolKindForDeclaration(_contract.names[name]);
-                            } catch(e){
-                                varSymbol = {
-                                    symbol:vscode.SymbolKind.Variable,
-                                    name:name,
-                                    prefix:"",
-                                    suffix:"",
-                                    details:"<not found>",
-                                };
-                            }
-                            let inheritanceNode = astNodeAsDocumentSymbol(
+                            "pragma",
+                            "... (" + insights.pragmas.length + ")"
+                        );
+                        symbols.push(topLevelNode);
+                        insights.pragmas.forEach(function(item){
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(
                                 document, 
-                                getFakeNode(varSymbol.name, 1), 
-                                varSymbol.symbol, 
-                                "  ↖ "+ varSymbol.prefix + varSymbol.name + varSymbol.suffix,
-                                varSymbol.details);
-                            currentContractNode.children.push(inheritanceNode);
-                        }
-                        
+                                item, 
+                                vscode.SymbolKind.Namespace, 
+                                item.name + " → " + item.value));
+                        });
+                        console.log("✓ pragmas ");
                     }
-                    console.log("✓ inheritance");
+                    
+                    if(settings.extensionConfig().outline.imports.show){
+                        topLevelNode = astNodeAsDocumentSymbol(
+                            document, 
+                            getFakeNode("imports",1),
+                            vscode.SymbolKind.Namespace,
+                            "imports",
+                            "... (" + insights.imports.length + ")"
+                        );
+                        symbols.push(topLevelNode);
+                        insights.imports.forEach(function(item){
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(
+                                document, 
+                                item, 
+                                vscode.SymbolKind.File, 
+                                item.path));
+                            });
+                        
+                        console.log("✓ imports ");
+                    }
+                    
+                    for (var contractName in insights.contracts) {
+                    
+                        let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName]);
+                        topLevelNode = astNodeAsDocumentSymbol(
+                            document,
+                            insights.contracts[contractName]._node,
+                            symbolAnnotation.symbol,
+                            symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix
+                        );
+                        symbols.push(topLevelNode);
+    
+                        /** the document */
+                        console.log("✓ contracts " + contractName);
+                        /** constructor - if known */
+                        if (insights.contracts[contractName].constructor){
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(document, insights.contracts[contractName].constructor._node, vscode.SymbolKind.Constructor));
+                        }
+                        console.log("✓ constructor");
+                        /** stateVars */
+                        for (var svar in insights.contracts[contractName].stateVars){
+                            let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].stateVars[svar]);
+                            
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(
+                                document, 
+                                insights.contracts[contractName].stateVars[svar], 
+                                symbolAnnotation.symbol,
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details));
+                        
+                        } 
+                        console.log("✓ statevars");
+                        
+                        for (let name in insights.contracts[contractName].enums){
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(
+                                document, 
+                                insights.contracts[contractName].enums[name], 
+                                vscode.SymbolKind.Enum));
+                        }
+                        console.log("✓ enums");
+                        for (let name in insights.contracts[contractName].structs){
+                            topLevelNode.children.push(astNodeAsDocumentSymbol(document, insights.contracts[contractName].structs[name], vscode.SymbolKind.Struct));
+                        } 
+                        console.log("✓ structs");
+                        var functionLevelNode;
+                        /** functions - may include constructor / fallback */
+                        for (let funcObj of insights.contracts[contractName].functions){
+    
+                            
+                            let symbolAnnotation = getSymbolKindForDeclaration(funcObj);
+                            functionLevelNode = astNodeAsDocumentSymbol(
+                                document, 
+                                funcObj._node, 
+                                symbolAnnotation.symbol, 
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details);
+            
+                            topLevelNode.children.push(functionLevelNode);
+                            // add a fake modifiers list to outline
+                            // add pseudonode modifiers
+                            let numModifiers = Object.keys(funcObj.modifiers).length;
+                            if(numModifiers!==0){
+                                let modifiersLevelNode = astNodeAsDocumentSymbol(
+                                    document, 
+                                    getFakeNode("modifiers",1),
+                                    vscode.SymbolKind.Namespace,
+                                    "modifiers",
+                                    "... (" + numModifiers + ")"
+                                    );
+                                functionLevelNode.children.push(modifiersLevelNode);
+                                // add modifiers
+                                for (let modifierName in funcObj.modifiers){
+                                    let vardec = funcObj.modifiers[modifierName];
+                                    
+                                    let symbolAnnotation = getSymbolKindForDeclaration(vardec);
+                                    
+                                    modifiersLevelNode.children.push(astNodeAsDocumentSymbol(
+                                        document, 
+                                        vardec, 
+                                        symbolAnnotation.symbol,
+                                        symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                        symbolAnnotation.details
+                                        ));
+                                }
+                            }
+    
+                            // add fake assembly functions list to outline
+                            let numAssemblyFuncDefs = Object.keys(funcObj.assemblyFunctions).length;
+                            if(numAssemblyFuncDefs!==0){
+                                let assemblyLevelNode = astNodeAsDocumentSymbol(
+                                    document, 
+                                    getFakeNode("assembly..",1),
+                                    vscode.SymbolKind.Namespace,
+                                    "assembly",
+                                    "... (" + numAssemblyFuncDefs + ")"
+                                    );
+                                
+                                functionLevelNode.children.push(assemblyLevelNode);
+                                // add modifiers
+                                for (let modifierName in funcObj.assemblyFunctions){
+                                    let vardec = funcObj.assemblyFunctions[modifierName];
+                                    
+                                    let symbolAnnotation = getSymbolKindForDeclaration(vardec);
+                                    
+                                    assemblyLevelNode.children.push(astNodeAsDocumentSymbol(
+                                        document, 
+                                        vardec, 
+                                        symbolAnnotation.symbol,
+                                        symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                        symbolAnnotation.details
+                                        ));
+                                }
+                            }
+                            //get all declarations in function
+                            
+    
+                            for (let declaration in funcObj.declarations){
+                                let vardec = funcObj.declarations[declaration];
+                                if(declaration=="null")
+                                    continue;
+                                
+                                let symbolAnnotation = getSymbolKindForDeclaration(vardec);
+                                
+                                functionLevelNode.children.push(astNodeAsDocumentSymbol(
+                                    document, 
+                                    vardec, 
+                                    symbolAnnotation.symbol,
+                                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                    symbolAnnotation.details
+                                    ));
+                            }
+                            
+                        }
+                        console.log("✓ functions");
+                        
+                        /** modifiers */
+                        for (let functionName in insights.contracts[contractName].modifiers){
+    
+                            let symbolAnnotation = getSymbolKindForDeclaration(insights.contracts[contractName].modifiers[functionName]);
+                            functionLevelNode = astNodeAsDocumentSymbol(
+                                document, 
+                                insights.contracts[contractName].modifiers[functionName]._node, 
+                                symbolAnnotation.symbol, 
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details);
+    
+                            topLevelNode.children.push(functionLevelNode);
+                            //get all declarations in function
+                            for (let declaration in insights.contracts[contractName].modifiers[functionName].declarations){
+                                let vardec = insights.contracts[contractName].modifiers[functionName].declarations[declaration];
+                                if(declaration=="null")
+                                    continue;
+                                let symbolAnnotation = getSymbolKindForDeclaration(vardec);
+                                functionLevelNode.children.push(astNodeAsDocumentSymbol(
+                                    document, 
+                                    vardec, 
+                                    symbolAnnotation.symbol,
+                                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                    symbolAnnotation.details
+                                ));
+                        
+                            }
+                        }
+                        console.log("✓ modifiers");
+                        /** events */
+                        for (let eventObj of insights.contracts[contractName].events){
+    
+                            let symbolAnnotation = getSymbolKindForDeclaration(eventObj);
+                            functionLevelNode = astNodeAsDocumentSymbol(
+                                document, 
+                                eventObj._node, 
+                                symbolAnnotation.symbol, 
+                                symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                symbolAnnotation.details);
+    
+                            topLevelNode.children.push(functionLevelNode);
+    
+                            //get all declarations in function
+                            for (let declaration in eventObj.declarations){
+                                let vardec = eventObj.declarations[declaration];
+                                if(declaration=="null")
+                                    continue;
+                                let symbolAnnotation = getSymbolKindForDeclaration(vardec);
+                                functionLevelNode.children.push(astNodeAsDocumentSymbol(
+                                    document, 
+                                    vardec, 
+                                    symbolAnnotation.symbol,
+                                    symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                    symbolAnnotation.details
+                                    ));
+                            }
+                        }
+                        console.log("✓ events");
+                        /** functions - may include constructor / fallback */
+                        if(settings.extensionConfig().outline.inheritance.show){
+    
+                            var inheritedLevelNode = astNodeAsDocumentSymbol(
+                                document, 
+                                getFakeNode("↖ ...", 1),
+                                vscode.SymbolKind.Namespace,
+                                );
+                            topLevelNode.children.push(inheritedLevelNode);
+    
+                            let contractCache = {};
+                            let contractNodes = {};
+                            for (var name in insights.contracts[contractName].inherited_names){
+                                //skip self
+                                let inheritedFromContract = insights.contracts[contractName].inherited_names[name];
+                                let inheritedFromContractName = inheritedFromContract.name;
+                                if(inheritedFromContractName==contractName)
+                                    continue;
+                                //skip functions, modifiers, events of local contract
+                                if(typeof insights.contracts[contractName].names[name]!="undefined")
+                                    continue;
+                                
+                                let _contract = contractCache[inheritedFromContractName];
+    
+                                if(!_contract){
+                                    let _contract = this.g_workspace.findContractsByNameSync(inheritedFromContractName);
+                                    if(_contract.length==0){
+                                        console.warn(`symbol/inheritance: contract ${inheritedFromContractName} not found :/. skipping.`)
+                                        continue; 
+                                    }
+                                    _contract = _contract.pop(); //pop one item. ignore multiple results
+                                    contractCache[inheritedFromContractName] = _contract;
+                                }
+                                
+    
+                                let symbolAnnotation;
+                                if(typeof _contract=="undefined"){
+                                    //contract not found :/
+                                    symbolAnnotation = {
+                                        symbol:vscode.SymbolKind.Class,
+                                        name:inheritedFromContractName,
+                                        prefix:"",
+                                        suffix:"",
+                                        details:"<not found>",
+                                    };
+                                } else {
+                                    symbolAnnotation = getSymbolKindForDeclaration(_contract);
+                                }
+    
+                                let currentContractNode = contractNodes[inheritedFromContractName];
+                                if(typeof currentContractNode=="undefined"){
+                                    currentContractNode = astNodeAsDocumentSymbol(
+                                        document, 
+                                        getFakeNode(inheritedFromContractName, 1), 
+                                        symbolAnnotation.symbol,
+                                        "  ↖ "+ symbolAnnotation.prefix + symbolAnnotation.name + symbolAnnotation.suffix,
+                                        symbolAnnotation.details);
+                                    contractNodes[inheritedFromContractName] = currentContractNode;
+                                    inheritedLevelNode.children.push(currentContractNode);
+                                    
+                                }
+                                // get the item to calculate range/location
+                                let varSymbol;
+                                try {
+                                    varSymbol = getSymbolKindForDeclaration(_contract.names[name]);
+                                } catch(e){
+                                    varSymbol = {
+                                        symbol:vscode.SymbolKind.Variable,
+                                        name:name,
+                                        prefix:"",
+                                        suffix:"",
+                                        details:"<not found>",
+                                    };
+                                }
+                                let inheritanceNode = astNodeAsDocumentSymbol(
+                                    document, 
+                                    getFakeNode(varSymbol.name, 1), 
+                                    varSymbol.symbol, 
+                                    "  ↖ "+ varSymbol.prefix + varSymbol.name + varSymbol.suffix,
+                                    varSymbol.details);
+                                currentContractNode.children.push(inheritanceNode);
+                            }
+                            
+                        }
+                        console.log("✓ inheritance");
+                    }
+                    if(token.isCancellationRequested){
+                        reject(token);
+                        return;
+                    }
+                    console.log("✓✓✓ done preparing symbols for: "+ document.fileName);
+                    resolve(symbols);
+    
+                }).catch(e => {
+                    console.warn(`Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`);
+                    if(settings.extensionConfig().debug.parser.showExceptions){
+                        console.error(e);
+                    }
+                });
+            } catch (e){
+                console.warn(`Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`);
+                if(settings.extensionConfig().debug.parser.showExceptions){
+                    console.error(e);
                 }
-                if(token.isCancellationRequested){
-                    reject(token);
-                    return;
-                }
-                console.log("✓✓✓ done preparing symbols for: "+ document.fileName);
-                resolve(symbols);
+            }
 
-            });
         });
 
     }

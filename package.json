@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.1.0-preview-3",
+    "version": "0.1.0-preview-4",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -465,6 +465,11 @@
                     ],
                     "default": "truffle",
                     "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat)"
+                },
+                "solidity-va.debug.parser.showExceptions": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable printing parser error / stacktraces to console log (noisy)"
                 }
             }
         }
