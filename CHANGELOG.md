@@ -1,18 +1,16 @@
 # Change Log
 
+Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
+
+
 ## v0.1.0
 
-🥳
-
-- new: major parser refactor #67
+- new: 🥳 major parser refactor #67
 - new: 🎯 highlighting of external calls (yellow gutter icon)
   - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
-
-  ![image](https://user-images.githubusercontent.com/2865694/120013974-c47ceb80-bfe1-11eb-9a02-c6d461e44d8e.png)
-
 - new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
 
-  ![image](https://user-images.githubusercontent.com/2865694/120014136-f8f0a780-bfe1-11eb-9e1a-f3fb41d5e61b.png)
+  ![image](https://user-images.githubusercontent.com/2865694/122222447-90933880-ceb2-11eb-91c3-c59549d40c8c.png)
 
 - new: resolve inherited names (hover: declaration link)
   
