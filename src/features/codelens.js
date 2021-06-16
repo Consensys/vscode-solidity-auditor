@@ -185,6 +185,13 @@ class SolidityCodeLensProvider  {
             })
         );
 
+        lenses.push(new vscode.CodeLens(range, {
+            command: 'solidity-va.test.createTemplate',
+            title: 'UnitTest stub',
+            arguments: [document, item.name]
+            })
+        );
+
         if(settings.extensionConfig().codelens.drawio.enable){
             lenses.push(new vscode.CodeLens(range, {
                 command: 'solidity-va.uml.contract.export.drawio.csv',

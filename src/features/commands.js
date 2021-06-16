@@ -120,6 +120,15 @@ class Commands{
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
     }
 
+    async generateHardhatUnittestStubForContract(document, contractName) {
+        this._checkIsSolidity(document);
+
+        let content = mod_templates.generateHardhatUnittestStubForContract(document, this.g_parser, contractName);
+
+        vscode.workspace.openTextDocument({content: content, language: "javascript"})
+            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
+    }
+
     async surya(documentOrListItems, command, args) {
         //check if input was document or listItem
         if(!documentOrListItems){
