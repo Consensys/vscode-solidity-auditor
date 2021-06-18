@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.0.33",
+    "version": "0.1.0-preview-4",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -52,7 +52,8 @@
         "onView:solidity-va-cockpit-flatFiles",
         "onView:solidity-va-cockpit-settings",
         "onView:solidity-va-cockpit-ftrace",
-        "onView:solidity-va-cockpit-publicMethods"
+        "onView:solidity-va-cockpit-publicMethods",
+        "onView:solidity-va-cockpit-externalCalls"
     ],
     "main": "./src/extension",
     "capabilities": {
@@ -125,6 +126,10 @@
                 {
                     "id": "solidity-va-cockpit-publicMethods",
                     "name": "Context: Public StateChanging Methods"
+                },
+                {
+                    "id": "solidity-va-cockpit-externalCalls",
+                    "name": "Context: External Calls"
                 },
                 {
                     "id": "solidity-va-cockpit-ftrace",
@@ -210,7 +215,12 @@
             },
             {
                 "command": "solidity-va.surya.graph",
-                "title": "Surya - call graph",
+                "title": "Surya - call graph (all processed)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.surya.graphThis",
+                "title": "Surya - call graph for active editor (graph this)",
                 "category": "Solidity Visual Developer"
             },
             {
@@ -339,6 +349,11 @@
                     "default": true,
                     "description": "Enable/Disable warning decoration when overriding reserved names"
                 },
+                "solidity-va.deco.warn.externalCalls": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable gutter-icon decorations for lines performing external address calls"
+                },
                 "solidity-va.outline.enable": {
                     "type": "boolean",
                     "default": true,
@@ -406,17 +421,72 @@
                 "solidity-va.codelens.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Enable/Disable codelens - inline action"
+                    "description": "Enable/Disable all codelenses - inline action (master switch)"
+                },
+                "solidity-va.codelens.report.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.graph.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'graph'"
+                },
+                "solidity-va.codelens.graphThis.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'graphThis'"
+                },
+                "solidity-va.codelens.inheritance.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'inheritance'"
+                },
+                "solidity-va.codelens.parse.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'parse'"
+                },
+                "solidity-va.codelens.flatten.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.funcSigs.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'funcSigs'"
+                },
+                "solidity-va.codelens.uml.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'uml'"
+                },
+                "solidity-va.codelens.unittestStub.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'UnitTest Stub'"
+                },
+                "solidity-va.codelens.dependencies.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.ftrace.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'ftrace'"
+                },
+                "solidity-va.codelens.drawio.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'draw.io' uml export"
                 },
                 "solidity-va.findAllReferences.enable": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable right-click -> Find All References. Note: This allows you to disable the built-in reference provider in favor of one of another extension. Takes effect after restart."
-                },
-                "solidity-va.codelens.drawio.enable": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Enable/Disable draw.io uml export"
                 },
                 "solidity-va.mode.active": {
                     "type": "boolean",
@@ -455,6 +525,20 @@
                     ],
                     "default": "truffle",
                     "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat)"
+                },
+                "solidity-va.debug.parser.showExceptions": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable/Disable printing parser error / stacktraces to console log (noisy)"
+                },
+                "solidity-va.flatten.mode": {
+                    "type": "string",
+                    "enum": [
+                        "internal (lexical)",
+                        "truffle"
+                    ],
+                    "default": "default",
+                    "description": "Select which flattener to use (e.g. default=lexical flattener, truffle=truffle-flattener)"
                 }
             }
         }
@@ -469,9 +553,9 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "@solidity-parser/parser": "^0.12.2",
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.1",
+        "solidity-workspace": "^0.1.4",
         "surya": "^0.4.2"
     }
 }

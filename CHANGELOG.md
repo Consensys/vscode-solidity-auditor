@@ -1,5 +1,34 @@
 # Change Log
 
+Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
+
+
+## v0.1.0 - with a lot of new features 🥳
+
+- new: 🥳 major parser refactoring #67 and we published the parser as standalone lib "[solidity-workspace](https://github.com/tintinweb/solidity-workspace)"
+- new: ⚠️ annotations for potential external calls (yellow gutter icon)
+  - best effort - might miss some external calls depending on whether it is possible to easily resolve them (e.g. accessing addresses in nested structures/mappings).
+- new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
+
+  ![image](https://user-images.githubusercontent.com/2865694/122222447-90933880-ceb2-11eb-91c3-c59549d40c8c.png)
+
+- new: we can now resolve inherited names (hover: declaration link)
+  
+  ![image](https://user-images.githubusercontent.com/2865694/120014274-26d5ec00-bfe2-11eb-99f7-64d4a57277a0.png)
+
+- new: we now decorate identifiers that are storage references (treating them like state-vars)
+- new: unit-test stub/template for Hardhat/Ethers #70 (`preferences → Settings → Solidity Visual Developer: solidity-va.test.defaultUnittestTemplate`)
+- new: (debug) option to enable/disable stacktraces for parser errors (`preferences → Settings → Solidity Visual Developer: solidity-va.debug`)
+- new: show codelenses (inline actions) for abstract contracts
+- new: customize which codelenses to show or hide (`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*`) #76
+- new: expose new command `solidity-va.surya.graphThis` #76
+- new: use internal ("dumb" lexical) flattener by default. Optionally allow to select `truffle-flattener` (`preferences → Settings → Solidity Visual Developer: solidity-va.flatten.mode`)
+- update: enable `draw.io csv export` codelens by default
+- fix: misplaced decoration when document changes
+- fix: function selector is incorrect if there's a comment in the function signature definition #68
+- update: code cleanup; refactored decoration logic and moved it to its own submodule
+
+
 ## v0.0.32 - v0.0.33
 
 Maintenance release until v0.1.0 is ready.

@@ -73,12 +73,9 @@ function functionSignatureExtractor(content) {
     let match;
     let sighashes = {};
     let collisions = [];
-
+    // cleanup newlines, cleanup comment blocks
     while (match = funcSigRegex.exec(content)) {
-        let args = [];
-        match.groups.args.split(",").forEach(item => {
-            args.push(canonicalizeEvmType(item.trim().split(" ")[0]));
-        });
+        let args = match.groups.args.replace(commentRegex(), "").split(",").map(item => canonicalizeEvmType(item.trim().split(" ")[0]));
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
         let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
 

@@ -77,23 +77,23 @@ function createHover(name, snippet, type) {
     }
 }
 
-function provideHoverHandler(document, position, token, type, g_parser) {
+function provideHoverHandler(document, position, token, type, g_workspace) {
     if (settings.extensionConfig().hover === false) {
         return;
     }
 
-    return builtInsHoverHandler(document, position, token, type, g_parser);
+    return builtInsHoverHandler(document, position, token, type, g_workspace);
 }
 
 
-function builtInsHoverHandler(document, position, token, type, g_parser) {
+function builtInsHoverHandler(document, position, token, type, g_workspace) {
     
     const range = document.getWordRangeAtPosition(position, /(tx\.gasprice|tx\.origin|msg\.data|msg\.sender|msg\.sig|msg\.value|block\.coinbase|block\.difficulty|block\.gaslimit|block\.number|block\.timestamp|abi\.encodePacked|abi\.encodeWithSelector|abi\.encodeWithSignature|abi\.decode|abi\.encode|\.?[0-9_\w>]+)/);
     if (!range || range.length<=0) {
         return;
     }
 
-    const sourceUnit = g_parser.sourceUnits[document.uri.fsPath];
+    const sourceUnit = g_workspace.sourceUnits[document.uri.fsPath];
     if(!sourceUnit || sourceUnit.commentMapper && sourceUnit.commentMapper.isRangeOffsetInComment(document.offsetAt(range.start), document.offsetAt(range.end))){
         return;  // is in comment
     }

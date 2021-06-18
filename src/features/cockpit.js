@@ -11,6 +11,21 @@ const surya = require('surya');
 const path = require('path');
 const fs = require('fs');
 
+function elemLocToRange(elem){
+    return new vscode.Range(
+        new vscode.Position(elem.loc.start.line-1, elem.loc.start.column),
+        new vscode.Position(elem.loc.end.line-1, elem.loc.end.column)
+    );
+}
+
+function nodeTypeName(node){
+    if(!node.typeName && node.type==="Identifier"){
+        return node.name;
+    }
+    return node.typeName.type === "ElementaryTypeName" ? node.typeName.name : node.typeName.namePath;
+}
+
+
 /** views */
 
 class BaseView {
@@ -301,56 +316,6 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     }
 }
 
-
-class DEPRECATED__TopLevelContractsViewDataProviderx extends BaseDataProvider {
-
-    constructor(treeView) {
-        super();
-        this.treeView = treeView;
-        this._onDidChangeTreeData = new vscode.EventEmitter();
-        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
-
-        this.data = null;
-    }
-
-    async dataGetRoot() {
-        if (this.data === null) {
-            return [];
-            await this.refresh();  //first time: get data
-        }
-        return Object.keys(this.data).map(k => {
-            return {
-                resource: this.data[k], //uri
-                tooltip: k,
-                name: k,
-                parent: null,
-                iconPath: vscode.ThemeIcon.File,
-            };
-        });
-    }
-
-    dataGetChildren() {
-        return null; //no children :)
-    }
-
-    /** events */
-
-    /** tree methods */
-    // inherited.
-
-    /** other methods */
-    refresh() {
-        return new Promise((resolve, reject) => {
-            this.treeView.cockpit.commands._findTopLevelContracts().then(data => {
-                this.data = data;
-                this._onDidChangeTreeData.fire();
-                resolve();
-            });
-        });
-    }
-}
-
-
 class TopLevelContractsView extends BaseView {
     constructor(cockpit) {
         super();
@@ -447,8 +412,8 @@ class FTraceView extends BaseView {
         let focus = event.selections[0].anchor;
         let commands = this.cockpit.commands;
 
-        let contractObj = commands.g_parser.sourceUnits[documentUri.fsPath];
-        let knownFiles = Object.keys(commands.g_parser.sourceUnits).filter(f => f.endsWith(".sol"));
+        let contractObj = commands.g_workspace.sourceUnits[documentUri.fsPath];
+        let knownFiles = Object.keys(commands.g_workspace.sourceUnits).filter(f => f.endsWith(".sol"));
 
 
         if (!contractObj) {
@@ -493,12 +458,12 @@ class FTraceView extends BaseView {
             retj = surya.ftrace(contractName + "::" + functionName, 'all', files, { jsonOutput: true }, true);
         } catch (e) {
             //console.error(e);
-            retj = {"💣💥 - sorry! we've encountered an unrecoverable error :/ Please file an issue in our github repository and provide (mention codebase). thanks!":null};
+            retj = { "💣💥 - sorry! we've encountered an unrecoverable error :/ Please file an issue in our github repository and provide (mention codebase). thanks!": null };
         }
         this.dataProvider.documentUri = documentUri;
         this.dataProvider.data = retj;
         this.refresh();
-        
+
     }
 }
 
@@ -587,7 +552,7 @@ class PublicMethodsView extends BaseView {
         let focus = event.selections[0].anchor;
         let commands = this.cockpit.commands;
 
-        let contractObj = commands.g_parser.sourceUnits[documentUri.fsPath];
+        let contractObj = commands.g_workspace.sourceUnits[documentUri.fsPath];
 
 
         if (!contractObj) {
@@ -604,19 +569,18 @@ class PublicMethodsView extends BaseView {
         let filterNotVisibility = ["private", "internal"];
         let filterNotStateMutability = ["view", "pure", "constant"];
 
-        let publicFunctions = Object.keys(focusSolidityElement.contract.functions)
+        let publicFunctions = focusSolidityElement.contract.functions
             .filter(f => {
-                let node = focusSolidityElement.contract.functions[f]._node;
+                let node = f._node;
                 //filter only for state changing public functions
                 return !filterNotVisibility.includes(node.visibility) && !filterNotStateMutability.includes(node.stateMutability);
             })
-            .reduce((obj, key) => {
-                let newKey = key;
-                let func = focusSolidityElement.contract.functions[key];
+            .reduce((obj, func) => {
+                let newKey = func.name;
 
-                if (key === null || func._node.isConstructor) {
+                if (newKey === null || func._node.isConstructor) {
                     newKey = "<Constructor>";
-                } else if (key === "" || func._node.isFallback) {
+                } else if (newKey === "" || func._node.isFallback) {
                     newKey = "<Fallback>";
                 }
                 func.resource = documentUri;
@@ -834,6 +798,131 @@ class SettingsView extends BaseView {
     }
 }
 
+/* ExtCall View */
+
+class ExtCallViewDataProvider extends BaseDataProvider {
+
+    constructor(treeView) {
+        super();
+        this.treeView = treeView;
+        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+        this.data = null;
+        this.documentUri = null;
+    }
+
+    async dataGetRoot() {
+        if (this.data === null || this.documentUri === null) {
+            return [];
+        }
+
+        return Object.keys(this.data)
+            .reduce((ret, key) => {
+
+                if (this.data[key].length <= 0) {
+                    return ret;
+                }
+
+                let first = this.data[key][0];
+
+                let item = {
+                    resource: first.resource,
+                    contextValue: first.resource.fsPath,
+                    range: elemLocToRange(first.parent.function._node),
+                    label: first.parent.function._node.stateMutability == "payable" ? key + " 💰 " : key,
+                    tooltip: key,
+                    name: key,
+                    iconPath: vscode.ThemeIcon.File,
+                    collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+                    parent: null,
+                    children: this.data[key].map(element => {
+                        return {
+                            //resource: element.resource,
+                            label: `⇢  ${element.call.declaration.name ? element.call.declaration.name : ""}.${element.call.name} (${nodeTypeName(element.call.declaration) || ""})`,
+                            //iconPath: 0,
+                            command: {
+                                command: 'solidity-va.cockpit.jumpToRange',
+                                arguments: [element.resource, elemLocToRange(element.call._node)],
+                                title: 'JumpTo'
+                            }
+                        };
+                    }),
+                    command: {
+                        command: 'solidity-va.cockpit.jumpToRange',
+                        arguments: [first.resource,  elemLocToRange(first.parent.function._node)],
+                        title: 'JumpTo'
+                    },
+                };
+                ret.push(item);
+                return ret;
+            }, []);
+    }
+
+    dataGetChildren(element) {
+        return element.children;
+    }
+
+    /** events */
+
+    /** tree methods */
+    // inherited.
+
+}
+
+class ExtCallView extends BaseView {
+    constructor(cockpit) {
+        super();
+        this.cockpit = cockpit;
+        this.id = "externalCalls";
+        this.dataProvider = new ExtCallViewDataProvider(this);
+        this.treeView = vscode.window.createTreeView(`solidity-va-cockpit-${this.id}`, { treeDataProvider: this.dataProvider });
+        this.treeView.message = "click into the editor to update view...";
+    }
+
+    async onDidSelectionChange(event) {
+
+        let documentUri = event.textEditor.document.uri;
+        let commands = this.cockpit.commands;
+        let focus = event.selections[0].anchor;
+
+        let sourceUnit = commands.g_workspace.sourceUnits[documentUri.fsPath];
+
+        if (!sourceUnit) {
+            console.warn("cockpit.extcall: not a file: " + documentUri.fsPath);
+            return;
+        }
+
+        let focusSolidityElement = sourceUnit.getContractAtLocation(focus.line, focus.character);
+        if (!focusSolidityElement) {
+            console.warn("surya.ftrace: contract not found: " + documentUri.fsPath);
+            return;
+        }
+
+        // data format:  obj[contract][function][calls]=[target, target];        
+        let extcalls = focusSolidityElement.getExternalCalls().reduce((obj, c) => {
+
+            let result = sourceUnit.getFunctionAtLocation(c._node.loc.start.line, 0);
+            let key = `${result.function.name}`;
+            let data = obj[key];
+
+            if (!data) {
+                data = [];
+            }
+
+            data.push({ resource: documentUri, call: c, parent: result });
+
+            obj[key] = data;
+            return obj;
+        }, []);
+        //  contract::func, all, files 
+        this.dataProvider.documentUri = documentUri;
+        this.dataProvider.data = extcalls;
+        this.refresh();
+    }
+}
+
+
 /** -- cockpit handler -- */
 class Cockpit {
 
@@ -847,6 +936,7 @@ class Cockpit {
         this.registerView(new FTraceView(this));
         this.registerView(new SettingsView(this));
         this.registerView(new PublicMethodsView(this));
+        this.registerView(new ExtCallView(this));
     }
 
     registerView(view) {
@@ -859,11 +949,8 @@ class Cockpit {
             return;  // no visible range open; no selection
         }
 
-        Object.keys(this.views).forEach(k => {
-            let v = this.views[k];
-            if (v.treeView.visible) {
-                v.onDidSelectionChange(event);
-            }
+        Object.values(this.views).filter(v => v.treeView.visible).forEach(v => {
+            v.onDidSelectionChange(event);
         });
     }
 }

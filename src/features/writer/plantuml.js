@@ -82,7 +82,7 @@ ${Object.values(contractObj.stateVars).reduce((umlSvarTxt, astNode) => {
     }, "")
 }
     ' -- methods --
-${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
+${contractObj.functions.reduce((umlFuncTxt, funcObj) => {
         return umlFuncTxt + `\t${functionVisibility[funcObj._node.visibility] || ""}${stateMutabilityToIcon[funcObj._node.stateMutability]||""}${_mapAstFunctionName(funcObj._node.name)}()\n`;
     }, "")
 }
@@ -108,8 +108,7 @@ ${Object.values(contractObj.functions).reduce((umlFuncTxt, funcObj) => {
 
             for (let contractObj of contractObjects) {
                 addresses = addresses.concat(Object.values(contractObj.stateVars).filter(astNode => !astNode.isDeclaredConst && astNode.typeName.name =="address").map(astNode => astNode.name));
-                for (let fidx in contractObj.functions){
-                    let functionObj = contractObj.functions[fidx];
+                for (let functionObj of contractObj.functions){
                     addresses = addresses.concat(Object.values(functionObj.arguments).filter(astNode => astNode.typeName.name =="address").map(astNode => astNode.name));
                 }
             }
