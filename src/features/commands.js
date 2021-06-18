@@ -419,8 +419,9 @@ ${topLevelContractsText}`;
     }
         
     flattenInternal(files, callback, showErrors){
-        files.forEach(uri => {
+        files.forEach(async uri => {
             let sourceUnit = this.g_workspace.sourceUnits[uri.fsPath];//get sourceUnit object
+            sourceUnit = sourceUnit || await this.g_workspace.add(uri.fsPath); //retry & force analysis
             if(!sourceUnit){
                 return;
             }
@@ -502,10 +503,6 @@ ${topLevelContractsText}`;
         // takes object key=contractName value=fsPath
         let topLevelContracts = candidates || await this._findTopLevelContracts();
         let content = "";
-
-        //Object.values(topLevelContracts).forEach(uri => this.g_workspace.add(uri.fsPath).catch()); // not sure if we have to force an analysis first ?:)
-       
-
         
         this.solidityFlattener(Object.values(topLevelContracts), (filepath, trufflepath, content) => {
             let outpath = path.parse(filepath);

@@ -561,7 +561,7 @@ function onActivate(context) {
             vscode.commands.registerCommand(
                 'solidity-va.tools.flaterra',
                 function (doc) {
-                    commands.solidityFlattener([doc.uri || vscode.window.activeTextEditor.document.uri]);
+                    commands.solidityFlattener([doc && doc.uri || vscode.window.activeTextEditor.document.uri]);
                 }
             )
         );
@@ -572,6 +572,8 @@ function onActivate(context) {
                 async function (treeItem, multiSelectTreeItems) {
                     multiSelectTreeItems = multiSelectTreeItems || [];
                     [...multiSelectTreeItems, treeItem].forEach(async treeItem => {
+                        commands.solidityFlattener([treeItem.resource]);
+                        /*
                         await vscode.extensions
                             .getExtension('tintinweb.vscode-solidity-flattener')
                             .activate()
@@ -581,6 +583,7 @@ function onActivate(context) {
                                         .executeCommand('vscode-solidity-flattener.contextMenu.flatten', [], [treeItem.resource])
                                         .then(async (done) => { });
                                 });
+                        */
                     });
                 }
             )
