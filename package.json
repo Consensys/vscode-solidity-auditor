@@ -215,7 +215,7 @@
             },
             {
                 "command": "solidity-va.surya.graph",
-                "title": "Surya - call graph (all processed)",
+                "title": "Surya - call graph",
                 "category": "Solidity Visual Developer"
             },
             {
