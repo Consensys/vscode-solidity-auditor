@@ -20,8 +20,9 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 - new: code-lenses enabled for abstract contracts
 - new: UnitTest stub support for Hardhat/Ethers #70 (`preferences → Settings → Solidity Visual Developer: solidity-va.test.defaultUnittestTemplate`)
 - new: (debug) option to enable/disable stacktraces for parser errors (`preferences → Settings → Solidity Visual Developer: solidity-va.debug`)
-- new: customize which codelenses to show or hide (inline actions) (`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*`)
-- new: enable `draw.io csv export` codelens by default
+- new: customize which codelenses to show or hide (inline actions) (`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*`) #76
+- new: new command `solidity-va.surya.graphThis` #76
+- update: enable `draw.io csv export` codelens by default
 - fix: misplaced decoration when document changes
 - update: code cleanup; refactored decoration logic and moved it to submodule
 
