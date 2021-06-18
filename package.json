@@ -530,6 +530,15 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable/Disable printing parser error / stacktraces to console log (noisy)"
+                },
+                "solidity-va.flatten.mode": {
+                    "type": "string",
+                    "enum": [
+                        "internal (lexical)",
+                        "truffle"
+                    ],
+                    "default": "default",
+                    "description": "Select which flattener to use (e.g. default=lexical flattener, truffle=truffle-flattener)"
                 }
             }
         }

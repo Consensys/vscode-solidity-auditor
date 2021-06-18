@@ -56,6 +56,7 @@ The complete changelog can be found [here](https://github.com/ConsenSys/vscode-s
 - new: show codelenses (inline actions) for abstract contracts
 - new: customize which codelenses to show or hide (\`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*\`) #76
 - new: expose new command \`solidity-va.surya.graphThis\` #76
+- new: use internal ("dumb" lexical) flattener by default. Optionally allow to select \`truffle-flattener\` (\`preferences → Settings → Solidity Visual Developer: solidity-va.flatten.mode\`)
 - update: enable \`draw.io csv export\` codelens by default
 - fix: misplaced decoration when document changes
 - fix: function selector is incorrect if there's a comment in the function signature definition #68

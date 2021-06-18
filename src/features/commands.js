@@ -399,18 +399,49 @@ ${topLevelContractsText}`;
 
     async solidityFlattener(files, callback, showErrors) {
 
-        vscode.extensions.getExtension("tintinweb.vscode-solidity-flattener").activate().then(
-            (active) => {
-                vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
-                    .catch(error =>{
-                        // command not available
-                        vscode.window.showWarningMessage("Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" + error);
-                    });
-            },
-            (err) => { throw new Error(`Solidity Auditor: Failed to activate "tintinweb.vscode-solidity-flattener". Make sure the extension is installed from the marketplace. Details: ${err}`); }
-        );
+        switch(settings.extensionConfig().flatten.mode){
+            case "truffle":
+                vscode.extensions.getExtension("tintinweb.vscode-solidity-flattener").activate().then(
+                    (active) => {
+                        vscode.commands.executeCommand("vscode-solidity-flattener.flatten", {files: files, callback:callback, showErrors:showErrors})
+                            .catch(error =>{
+                                // command not available
+                                vscode.window.showWarningMessage("Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" + error);
+                            });
+                    },
+                    (err) => { throw new Error(`Solidity Auditor: Failed to activate "tintinweb.vscode-solidity-flattener". Make sure the extension is installed from the marketplace. Details: ${err}`); }
+                );
+            break;
+            default:
+                this.flattenInternal(files, callback, showErrors);
+            break;
+        }
     }
         
+    flattenInternal(files, callback, showErrors){
+        files.forEach(fpath => {
+            let sourceUnit = this.g_workspace.sourceUnits[fpath.fsPath];//get sourceUnit object
+            if(!sourceUnit){
+                return;
+            }
+            try {
+                let flat = sourceUnit.flatten();
+                if(callback){
+                    callback(fpath, undefined, flat);
+                } else {
+                    vscode.workspace.openTextDocument({content: flat, language: "solidity"})
+                    .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
+                }
+                
+            } catch(e) {
+                console.warn(`ERROR - flattening file: ${fpath}`)
+                console.error(e);
+            }
+            
+        });
+        
+    }
+
     async flaterra(documentOrUri, noTryInstall) {
         let docUri = documentOrUri;
         if(documentOrUri.hasOwnProperty("uri")){
@@ -471,7 +502,6 @@ ${topLevelContractsText}`;
         // takes object key=contractName value=fsPath
         let topLevelContracts = candidates || await this._findTopLevelContracts();
         let content = "";
-        let trufflepath;
 
         
         this.solidityFlattener(Object.values(topLevelContracts), (filepath, trufflepath, content) => {
