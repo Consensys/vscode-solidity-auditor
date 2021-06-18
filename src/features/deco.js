@@ -8,7 +8,7 @@
 
 const vscode = require('vscode');
 const path = require('path');
-const mod_parser = require('solidity-parser-object');
+const mod_parser = require('solidity-workspace');
 const { getAstValueForExpression } = require('./symbols');
 
 const decoStyleRedLine = vscode.window.createTextEditorDecorationType({

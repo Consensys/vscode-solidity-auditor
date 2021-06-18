@@ -546,7 +546,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.1",
-        "solidity-parser-object": "file:../../js/solidity-parser-object",
+        "solidity-workspace": "^0.1.4",
         "surya": "^0.4.2"
     }
 }
