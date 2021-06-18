@@ -5,7 +5,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 ## v0.1.0
 
-- new: 🥳 major parser refactor #67
+- new: 🥳 major parser refactor #67 and publish parser as node lib (https://github.com/tintinweb/solidity-workspace)
 - new: 🎯 highlighting of external calls (yellow gutter icon)
   - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
 - new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
@@ -17,14 +17,14 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
   ![image](https://user-images.githubusercontent.com/2865694/120014274-26d5ec00-bfe2-11eb-99f7-64d4a57277a0.png)
 
 - new: decorate identifiers that are storage references (treating them like state-vars)
-- new: code-lenses enabled for abstract contracts
 - new: UnitTest stub support for Hardhat/Ethers #70 (`preferences → Settings → Solidity Visual Developer: solidity-va.test.defaultUnittestTemplate`)
 - new: (debug) option to enable/disable stacktraces for parser errors (`preferences → Settings → Solidity Visual Developer: solidity-va.debug`)
-- new: customize which codelenses to show or hide (inline actions) (`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*`) #76
+- new: show codelenses (inline actions) for abstract contracts
+- new: customize which codelenses to show or hide (`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*`) #76
 - new: new command `solidity-va.surya.graphThis` #76
 - update: enable `draw.io csv export` codelens by default
 - fix: misplaced decoration when document changes
-- fix: Function selector is incorrect if there's a comment in the function signature definition #68
+- fix: function selector is incorrect if there's a comment in the function signature definition #68
 - update: code cleanup; refactored decoration logic and moved it to submodule
 
 
