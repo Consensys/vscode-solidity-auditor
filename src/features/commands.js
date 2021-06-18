@@ -419,22 +419,22 @@ ${topLevelContractsText}`;
     }
         
     flattenInternal(files, callback, showErrors){
-        files.forEach(fpath => {
-            let sourceUnit = this.g_workspace.sourceUnits[fpath.fsPath];//get sourceUnit object
+        files.forEach(uri => {
+            let sourceUnit = this.g_workspace.sourceUnits[uri.fsPath];//get sourceUnit object
             if(!sourceUnit){
                 return;
             }
             try {
                 let flat = sourceUnit.flatten();
                 if(callback){
-                    callback(fpath, undefined, flat);
+                    callback(uri.fsPath, undefined, flat);
                 } else {
                     vscode.workspace.openTextDocument({content: flat, language: "solidity"})
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
                 }
                 
             } catch(e) {
-                console.warn(`ERROR - flattening file: ${fpath}`)
+                console.warn(`ERROR - flattening file: ${uri}`)
                 console.error(e);
             }
             
@@ -502,6 +502,9 @@ ${topLevelContractsText}`;
         // takes object key=contractName value=fsPath
         let topLevelContracts = candidates || await this._findTopLevelContracts();
         let content = "";
+
+        //Object.values(topLevelContracts).forEach(uri => this.g_workspace.add(uri.fsPath).catch()); // not sure if we have to force an analysis first ?:)
+       
 
         
         this.solidityFlattener(Object.values(topLevelContracts), (filepath, trufflepath, content) => {
