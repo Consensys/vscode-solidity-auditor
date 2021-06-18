@@ -215,7 +215,12 @@
             },
             {
                 "command": "solidity-va.surya.graph",
-                "title": "Surya - call graph",
+                "title": "Surya - call graph (all processed)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.surya.graphThis",
+                "title": "Surya - call graph for active editor (graph this)",
                 "category": "Solidity Visual Developer"
             },
             {

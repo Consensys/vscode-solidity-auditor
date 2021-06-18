@@ -492,6 +492,15 @@ function onActivate(context) {
                 }
             )
         );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.surya.graphThis',
+                function () {
+                    commands.surya(vscode.window.activeTextEditor.document, "graph", [vscode.window.activeTextEditor.document.uri.fsPath]);
+                }
+            )
+        );
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 'solidity-va.surya.graphSimple',
