@@ -24,6 +24,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 - new: new command `solidity-va.surya.graphThis` #76
 - update: enable `draw.io csv export` codelens by default
 - fix: misplaced decoration when document changes
+- fix: Function selector is incorrect if there's a comment in the function signature definition #68
 - update: code cleanup; refactored decoration logic and moved it to submodule
 
 
