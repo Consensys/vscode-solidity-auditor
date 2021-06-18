@@ -5,8 +5,8 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 ## v0.1.0
 
-- new: 🥳 major parser refactor #67 and publish parser as node lib (https://github.com/tintinweb/solidity-workspace)
-- new: 🎯 highlighting of external calls (yellow gutter icon)
+- new: 🥳 major parser refactor #67 and publish parser as standalone lib [solidity-workspace](https://github.com/tintinweb/solidity-workspace)
+- new: ⚠️ highlighting of external calls (yellow gutter icon)
   - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
 - new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
 

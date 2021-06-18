@@ -28,20 +28,37 @@ const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" s
 
 Thanks for using **Solidity Visual Developer** 🤜🤛
 
-**Note**: Almost anything can be customized/disabled in the extension settings. Make this extension fit your needs!
+___
+**⚠️ Note**: Make this extension fit your needs! Show/Hide/Enable/Disable features in \`preferences → Settings → Solidity Visual Developer: solidity-va.*\`
+___
 
 ### What's New?
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-#### v0.0.32 - v0.0.33
+## v0.1.0
 
-Maintenance release until v0.1.0 is ready.
+- new: 🥳 major parser refactor #67 and publish parser as standalone lib [solidity-workspace](https://github.com/tintinweb/solidity-workspace)
+- new: ⚠️ highlighting of external calls (yellow gutter icon)
+    - this is best effort highlighting and we might miss some external calls depending on whether it is possible to resolve them.
+- new: cockpit view that lists external calls in the currently selected contract (click into a contract in the editor for the view to update)
 
-- new: graphviz view titles were adjusted
-- fix: vscode API adjustments ("crippled" events): "Cannot read property length of 'undefined'"
-- fix: check if statevar highlighting is enabled - #73
-- update: solidity parser to 0.12.2
+  ![image](https://user-images.githubusercontent.com/2865694/122222447-90933880-ceb2-11eb-91c3-c59549d40c8c.png)
+
+- new: resolve inherited names (hover: declaration link)
+  
+  ![image](https://user-images.githubusercontent.com/2865694/120014274-26d5ec00-bfe2-11eb-99f7-64d4a57277a0.png)
+
+- new: decorate identifiers that are storage references (treating them like state-vars)
+- new: UnitTest stub support for Hardhat/Ethers #70 (\`preferences → Settings → Solidity Visual Developer: solidity-va.test.defaultUnittestTemplate\`)
+- new: (debug) option to enable/disable stacktraces for parser errors (\`preferences → Settings → Solidity Visual Developer: solidity-va.debug\`)
+- new: show codelenses (inline actions) for abstract contracts
+- new: customize which codelenses to show or hide (\`preferences → Settings → Solidity Visual Developer: solidity-va.codelens.*\`) #76
+- new: new command \`solidity-va.surya.graphThis\` #76
+- update: enable \`draw.io csv export\` codelens by default
+- fix: misplaced decoration when document changes
+- fix: function selector is incorrect if there's a comment in the function signature definition #68
+- update: code cleanup; refactored decoration logic and moved it to submodule
 
 
 <sub>
