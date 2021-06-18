@@ -1,0 +1,10 @@
+**/*.ts
+**/tsconfig.json
+!file.ts
+**/*.zip
+*.gitignore
+*.py
+*.vsix
+**/examples/*
+**/.vscode/*
+**/tmp/**
