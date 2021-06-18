@@ -416,17 +416,72 @@
                 "solidity-va.codelens.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Enable/Disable codelens - inline action"
+                    "description": "Enable/Disable all codelenses - inline action (master switch)"
+                },
+                "solidity-va.codelens.report.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.graph.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'graph'"
+                },
+                "solidity-va.codelens.graphThis.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'graphThis'"
+                },
+                "solidity-va.codelens.inheritance.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'inheritance'"
+                },
+                "solidity-va.codelens.parse.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'parse'"
+                },
+                "solidity-va.codelens.flatten.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.funcSigs.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'funcSigs'"
+                },
+                "solidity-va.codelens.uml.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'uml'"
+                },
+                "solidity-va.codelens.unittestStub.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'UnitTest Stub'"
+                },
+                "solidity-va.codelens.dependencies.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'report'"
+                },
+                "solidity-va.codelens.ftrace.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'ftrace'"
+                },
+                "solidity-va.codelens.drawio.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'draw.io' uml export"
                 },
                 "solidity-va.findAllReferences.enable": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable right-click -> Find All References. Note: This allows you to disable the built-in reference provider in favor of one of another extension. Takes effect after restart."
-                },
-                "solidity-va.codelens.drawio.enable": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Enable/Disable draw.io uml export"
                 },
                 "solidity-va.mode.active": {
                     "type": "boolean",
