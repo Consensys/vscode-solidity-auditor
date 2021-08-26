@@ -549,14 +549,15 @@ class CreateDecoStyle {
         let decoStyle = "decoStyleLightBlue";
         let prefix = "**INHERITED**  ";
         declaration = declaration || node;
-        let decl_uri = "([Declaration: #" + (node.loc.start.line) + "](" + document.uri + "#" + (node.loc.start.line) + "))";
-        let knownType = "?";
+        let decl_uri = "([Declaration: #" + (declaration.loc.start.line) + "](" + document.uri + "#" + (declaration.loc.start.line) + "))";
+        let knownType = getVariableDeclarationType(declaration);
 
         let subcontract = contract.inherited_names[node.name];
         if(subcontract){
             let foreignSourceUnit = subcontract._parent;
             let uri = vscode.Uri.file(foreignSourceUnit.filePath);
-            declaration = subcontract.names[node.name]._node || node;
+            declaration = subcontract.names[node.name] || node;
+            declaration = declaration.hasOwnProperty("_node") ? declaration._node : declaration;
             decl_uri = "([Declaration: " + subcontract.name + "#" + (declaration.loc.start.line) + "](" + uri + "#" + (declaration.loc.start.line) + "))";
             knownType = getVariableDeclarationType(declaration);
         }
@@ -566,7 +567,7 @@ class CreateDecoStyle {
                 new vscode.Position(node.loc.start.line - 1, node.loc.start.column),
                 new vscode.Position(node.loc.end.line - 1, node.loc.end.column + node.name.length)
             ),
-            hoverMessage: prefix + "(*" + (knownType || "?") + "*) " + '**StateVar** *' + subcontract.name + "*.**" + node.name + '**' + " " + decl_uri,
+            hoverMessage: prefix + "(*" + (knownType || "?") + "*) " + '**StateVar** *' + (subcontract ? subcontract.name : "Unknown") + "*.**" + node.name + '**' + " " + decl_uri,
             decoStyle: decoStyle
         };
     }
