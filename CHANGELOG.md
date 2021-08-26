@@ -3,6 +3,10 @@
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
 
+## v0.1.1
+
+- fix: type resolving and declaration link for inherited statevars
+
 ## v0.1.0 - with a lot of new features 🥳
 
 - new: 🥳 major parser refactoring #67 and we published the parser as standalone lib "[solidity-workspace](https://github.com/tintinweb/solidity-workspace)"
