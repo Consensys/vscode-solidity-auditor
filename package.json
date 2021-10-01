@@ -60,46 +60,6 @@
         "hoverProvider": "true"
     },
     "contributes": {
-        "languages": [
-            {
-                "id": "solidity",
-                "aliases": [
-                    "solidity",
-                    "solidity"
-                ],
-                "extensions": [
-                    ".sol"
-                ],
-                "configuration": "./src/language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "solidity",
-                "scopeName": "source.solidity.security",
-                "path": "./src/syntaxes/solidity.tmLanguage.json",
-                "injectTo": [
-                    "source.solidity"
-                ]
-            }
-        ],
-        "themes": [
-            {
-                "label": "Solidity Visual Developer Dark",
-                "uiTheme": "vs-dark",
-                "path": "./src/themes/OneDarkAuditor.json"
-            },
-            {
-                "label": "Solidity Visual Developer Solarized Light",
-                "uiTheme": "vs",
-                "path": "./src/themes/solarized-light-color-theme.json"
-            },
-            {
-                "label": "Solidity Visual Developer Light (Visual Studio)",
-                "uiTheme": "vs",
-                "path": "./src/themes/light_vs.json"
-            }
-        ],
         "viewsContainers": {
             "activitybar": [
                 {
@@ -544,6 +504,7 @@
         }
     },
     "extensionDependencies": [
+        "tintinweb.vscode-solidity-language",
         "tintinweb.graphviz-interactive-preview"
     ],
     "extensionPack": [
