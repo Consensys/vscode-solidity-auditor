@@ -3,6 +3,10 @@
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
 
+## v0.1.2
+- update: move language specific logic to a web compatible extension
+  - https://github.com/tintinweb/vscode-solidity-language (https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-language)
+
 ## v0.1.1
 
 - fix: type resolving and declaration link for inherited statevars
