@@ -17,7 +17,7 @@ This extension contributes **security centric** syntax and semantic highlighting
 
 ____
 
-**⚠️ Note**: Make this extension fit your needs! Show/Hide/Enable/Disable features in `preferences → Settings → Solidity Visual Developer: solidity-va.*`
+**⚠️ Note**: Customize this extension to fit your needs! Show/Hide/Enable/Disable features in `Preference → Settings → Solidity Visual Developer: solidity-va.*`, select one of the customized security-aware color themes in `Preferences → Color Themes`.
 
 
 We ❤ feedback → [get in touch!](https://github.com/tintinweb/vscode-solidity-auditor/issues)

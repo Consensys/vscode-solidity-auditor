@@ -36,13 +36,16 @@ ___
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-## v0.1.1 - maintenance release
+## v0.1.1 - ❄️🎄🏂🎄❄️
 
 - fix: type resolving and declaration link for inherited statevars
 - update: move language specific logic to a web compatible extension
     - https://github.com/tintinweb/vscode-solidity-language (https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-language)
-- update: support for latest solidity parser (extension + surya) #84
+    - The language ships with three security centered Color Themes that can be selected from the **Solidity Language & Themes (only)** extension page or \`Code → Preferences → Color Themes\` 
+    
+    ![image](https://user-images.githubusercontent.com/2865694/145625639-a54178d1-5cee-45b6-bf10-44da09875f0e.png)
 
+- update: support for latest solidity parser (extension + surya) #84
 
 ## v0.1.0 - with a lot of new features 🥳
 
