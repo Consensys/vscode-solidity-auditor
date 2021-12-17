@@ -517,6 +517,6 @@
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.2",
         "solidity-workspace": "^0.1.5",
-        "surya": "^0.4.6-dev.1"
+        "surya": "^0.4.6-dev.3"
     }
 }
