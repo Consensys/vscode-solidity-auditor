@@ -29,7 +29,7 @@ const MESSAGE = `[<img width="130" alt="get in touch with Consensys Diligence" s
 Thanks for using **Solidity Visual Developer** 🤜🤛
 
 ___
-**⚠️ Note**: Make this extension fit your needs! Show/Hide/Enable/Disable features in \`preferences → Settings → Solidity Visual Developer: solidity-va.*\`
+ℹ️ Customize this extension to fit your needs! Show/Hide/Enable/Disable features in \`Preference → Settings → Solidity Visual Developer: solidity-va.*\`, select one of the customized security-aware color themes in \`Preferences → Color Themes\`.
 ___
 
 ### What's New?
