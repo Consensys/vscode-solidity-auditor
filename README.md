@@ -410,7 +410,11 @@ Please refer to the extension's contribution section to show an up-to-date list 
 
 </details>
 
+## FAQ
 
+* **Q:** The `uml` feature does not seem to work. How can I set it up?
+* **A:** We are relying on a properly set-up [plantuml](https://plantuml.com/) installation. Please follow the set-up guide at [jebbs-plantuml vscode extension](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml).
+ 
 ## Known Issues
 
 * outline view does not always refresh. **TempFix**: modify and save the file to trigger a refresh.
