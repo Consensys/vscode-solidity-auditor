@@ -41,6 +41,21 @@ const decoStyleStateVar = vscode.window.createTextEditorDecorationType({
     },
 });
 
+const decoStyleStateVarImmutable = vscode.window.createTextEditorDecorationType({
+    borderWidth: '1px',
+    borderStyle: 'dotted',
+    //overviewRulerColor: 'blue',
+    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    light: {
+        // this color will be used in light color themes
+        borderColor: 'DarkOrchid'
+    },
+    dark: {
+        // this color will be used in dark color themes
+        borderColor: 'Orchid'
+    },
+});
+
 const decoStyleLightGreen = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'dotted',
@@ -115,6 +130,7 @@ const decoStyleBlueBoldForeground = vscode.window.createTextEditorDecorationType
 
 var styles = {
     decoStyleStateVar: decoStyleStateVar,
+    decoStyleStateVarImmutable: decoStyleStateVarImmutable,
     decoStyleLightGreen: decoStyleLightGreen,
     decoStyleLightOrange: decoStyleLightOrange,
     decoStyleLightBlue: decoStyleLightBlue,
@@ -473,6 +489,11 @@ class CreateDecoStyle {
             knownValue = knownValue ? ` = **${knownValue}** ` : '';
         }
 
+        if (node.hasOwnProperty('isImmutable') && node.isImmutable) {
+            prefix = "**IMMUTABLE**  ";
+            decoStyle = "decoStyleStateVarImmutable";
+        }
+
         return {
             range: new vscode.Range(
                 new vscode.Position(node.identifier.loc.start.line - 1, node.identifier.loc.start.column),
@@ -494,6 +515,11 @@ class CreateDecoStyle {
             decoStyle = "decoStyleLightGreen";
             knownValue = getAstValueForExpression(svar.expression);
             knownValue = knownValue ? ` = **${knownValue}** ` : '';
+        }
+
+        if (svar.hasOwnProperty('isImmutable') && svar.isImmutable) {
+            prefix = "**IMMUTABLE**  ";
+            decoStyle = "decoStyleStateVarImmutable";
         }
 
         return {
