@@ -95,7 +95,7 @@ Code fragments passively draw your attention to statements that typically <span 
 ##### Views
 
 * Cockpit View
-  * Explor and focus on solidity files in your workspace
+  * Explore and focus on solidity files in your workspace
   * Generate report/graphs for any files/folders selected in the explorer views
   * Selectively flatten files
   * Search for contracts that are likely to be deployed in the system
