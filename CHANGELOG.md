@@ -4,7 +4,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 ## v0.1.2
 
-- new: decorations for immutables - #97 (thanks @RomiRand)
+- new: decorate/highlight immutable state vars (<span style="color:#9932cc">![#9932cc](https://via.placeholder.com/15/9932cc/000000?text=+)</span>) - #97 (thanks @RomiRand)
 - update: dependencies (surya@0.4.6)
 - new: configuration option to enable the `surya.mdreport` "negative Modifiers" feature, see [surya#162](https://github.com/ConsenSys/surya/pull/162)
   - enabling `solidity-va.tools.surya.option.negModifiers` will list all modifiers observed in the file with the ones that are not being used with the listed method being  ~~striked-through~~
