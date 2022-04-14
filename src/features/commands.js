@@ -297,7 +297,7 @@ class Commands{
                 
                 break;
             case "mdreport":
-                ret = surya.mdreport(files);
+                ret = surya.mdreport(files, {negModifiers: settings.extensionConfig().tools.surya.option.negModifiers});
                 if(!ret) {
                     return;
                 }

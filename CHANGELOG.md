@@ -2,6 +2,24 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
+## v0.1.2
+
+- new: decorations for immutables - #97 (thanks @RomiRand)
+- update: dependencies (surya@0.4.6)
+- new: configuration option to enable the `surya.mdreport` "negative Modifiers" feature, see [surya#162](https://github.com/ConsenSys/surya/pull/162)
+  - enabling `solidity-va.tools.surya.option.negModifiers` will list all modifiers observed in the file with the ones that are not being used with the listed method being  ~~striked-through~~
+
+![image](https://user-images.githubusercontent.com/2998191/155733325-7a6187b8-e63e-4410-a312-aa2a1c940e31.png)
+
+  Note that the report can be generated either via the `report` codelense or by selecting files in the `Solidity Visual Developer View → right-click → Surya: generate report`.
+
+<img width="401" alt="image" src="https://user-images.githubusercontent.com/2865694/163411802-49e91a8d-df9e-44ca-8c62-23510d7c9a4a.png">
+
+<img width="398" alt="image" src="https://user-images.githubusercontent.com/2865694/163412288-20e621df-b715-4074-b8f8-033a4b758002.png">
+
+
+- fix: typos & links to placeholder[.]com - #93 #91 (thanks @almndbtr)
+
 ## v0.1.1 - ❄️🎄🏂🎄❄️
 
 - fix: type resolving and declaration link for inherited statevars

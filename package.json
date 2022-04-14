@@ -368,6 +368,11 @@
                     "default": "cached",
                     "description": "Define whether surya should take cached files or all contracts in the workspace as input"
                 },
+                "solidity-va.tools.surya.option.negModifiers": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Surya.mdreport: Also list modifiers that are not present ( ~~strikedthrough~~). This may help catch issues relating to missing modifiers."
+                },
                 "solidity-va.preview.dot": {
                     "type": "boolean",
                     "default": true,
@@ -517,6 +522,6 @@
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.2",
         "solidity-workspace": "^0.1.5",
-        "surya": "^0.4.6-dev.3"
+        "surya": "^0.4.6"
     }
 }
