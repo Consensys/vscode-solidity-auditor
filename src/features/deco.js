@@ -10,6 +10,8 @@ const vscode = require('vscode');
 const path = require('path');
 const mod_parser = require('solidity-workspace');
 const { getAstValueForExpression } = require('./symbols');
+const settings = require('../settings');
+
 
 const decoStyleRedLine = vscode.window.createTextEditorDecorationType({
     isWholeLine: true,
@@ -309,6 +311,8 @@ function init(context) {
         gutterIconSize: "50%",
     });
 
+    const decoSuffix = settings.extensionConfig().deco.argumentsSuffix;
+
     [...Array(15).keys()].forEach(function (idx) {
         styles["styleArgument" + idx] = vscode.window.createTextEditorDecorationType({
             //cursor: 'crosshair',
@@ -332,7 +336,7 @@ function init(context) {
                 borderColor: "black"
             },
             after: {
-                contentText: "⬆",
+                contentText: decoSuffix || undefined,
                 fontStyle: "normal",
                 color: RGBtoHex(...HSLtoRGB(((6 + idx) * 19) % 255 / 255, 0.85, 0.75)) + "95"
             }
