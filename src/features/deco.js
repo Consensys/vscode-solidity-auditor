@@ -234,7 +234,7 @@ function varDecIsUserDefined(node) {
 }
 
 function getVariableDeclarationType(node) {
-    if (typeof node.typeName != "undefined") {
+    if (typeof node.typeName != "undefined" && node.typeName != null) {
         if (varDecIsArray(node)) {
             node = node.typeName.baseTypeName;
         } else {
