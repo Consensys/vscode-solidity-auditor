@@ -380,7 +380,9 @@ Please refer to the extension's contribution section to show an up-to-date list 
 * `Solidity-va.parser.parseImports` ... Whether to recursively parse imports or not
 * `Solidity-va.hover` ... Enable or Disable generic onHover information (asm instruction signatures, security notes)
 * `Solidity-va.deco.statevars` ... decorate statevars in code view (golden, green, blue boxes)
-* `Solidity-va.deco.arguments` ... whether to enable/disable semantic highlighting for function arguments
+* `Solidity-va.deco.arguments` ... enable/disable or select the mode for semantic highlighting of function arguments. (default: 'enable' = 'color and arrow')
+* `Solidity-va.deco.argumentsMode` ... select the mode for semantic highlighting of function arguments (may require a reload)
+* `Solidity-va.deco.argumentsSuffix` ... a custom Suffix/Symbol that is appended to the decoration when performing semantic highlighting for function arguments 
 * `Solidity-va.outline.enable` ... enable/disable outline and symbolprovider
 * `Solidity-va.outline.decorations` ... decorate functions according to state mutability function visibility
 * `Solidity-va.outline.inheritance.show` ... add inherited functions to outline view

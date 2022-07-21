@@ -311,7 +311,9 @@ function init(context) {
         gutterIconSize: "50%",
     });
 
-    const decoSuffix = settings.extensionConfig().deco.argumentsSuffix;
+
+    const decoSuffix = settings.extensionConfig().deco.argumentsMode != "color only" ? settings.extensionConfig().deco.argumentsSuffix : undefined;
+    const shouldHighlightArg = settings.extensionConfig().deco.argumentsMode != "symbol only";
 
     [...Array(15).keys()].forEach(function (idx) {
         styles["styleArgument" + idx] = vscode.window.createTextEditorDecorationType({
@@ -320,20 +322,13 @@ function init(context) {
             wholeLine: false,
             light: {
                 // this color will be used in light color themes
-                backgroundColor: RGBtoHex(...HSLtoRGB(((5 + idx) * 19) % 255 / 255, 0.85, 0.75)) + "50"
+                backgroundColor: shouldHighlightArg ? RGBtoHex(...HSLtoRGB(((5 + idx) * 19) % 255 / 255, 0.85, 0.75)) + "50" : undefined
             },
             dark: {
                 // this color will be used in dark color themes
-                backgroundColor: RGBtoHex(...HSLtoRGB(((8 + idx) * 19) % 255 / 255, 0.99, 0.55)) + "30"
+                backgroundColor: shouldHighlightArg ? RGBtoHex(...HSLtoRGB(((8 + idx) * 19) % 255 / 255, 0.99, 0.55)) + "30" : undefined
                 //color: RGBtoHex(...HSLtoRGB(((6+idx)*19)%255/255, 0.85, 0.75))+"95",
                 //textDecoration: "underline" + RGBtoHex(...HSLtoRGB(((6+idx)*19)%255/255, 0.85, 0.75))+"95"
-            },
-            xbefore: {
-                contentText: " " + idx + " ",
-                color: "black",
-                //fontStyle: "italic",
-                backgroundColor: RGBtoHex(...HSLtoRGB(((6 + idx) * 19) % 255 / 255, 0.85, 0.75)) + "95",
-                borderColor: "black"
             },
             after: {
                 contentText: decoSuffix || undefined,
