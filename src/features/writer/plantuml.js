@@ -73,7 +73,7 @@ ${Object.values(contractObj.dependencies).reduce((txt, name) => {
 }
     ' -- usingFor --
 ${Object.values(contractObj.usingFor).reduce((txt, astNode) => {
-        return txt + `\t{abstract}📚${astNode.libraryName} for [[${mod_symbols.getVariableDeclarationType(astNode)}]]\n`;
+        return txt + `\t{abstract}📚${astNode.libraryName} for [[${mod_symbols.getVariableDeclarationType(astNode) || '*'}]]\n`;
     },"")
 }
     ' -- vars --
@@ -96,7 +96,7 @@ ${contractObj.functions.reduce((umlFuncTxt, funcObj) => {
                     return txt + `${contractObj.name} --[#DarkGoldenRod]|> ${name}\n`;
                 }, "")
                 +  Object.values(contractObj.usingFor).reduce((txt, astNode) => {
-                    return txt + `${contractObj.name} ..[#DarkOliveGreen]|> ${astNode.libraryName} : //for ${mod_symbols.getVariableDeclarationType(astNode)}//\n`;
+                    return txt + `${contractObj.name} ..[#DarkOliveGreen]|> ${astNode.libraryName} : //for ${mod_symbols.getVariableDeclarationType(astNode) || '*'}//\n`;
                 }, "");
         }, "");
 

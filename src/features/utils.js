@@ -89,7 +89,7 @@ function functionSignatureExtractor(content) {
 
 function getCanonicalizedArgumentFromAstNode(node){
     let arraySuffix = '';
-    if (typeof node.typeName != "undefined"){
+    if (typeof node.typeName != "undefined" && node.typeName != null){
         if (node.typeName.type=="ArrayTypeName") { 
             //is array
             node = node.typeName.baseTypeName ;
