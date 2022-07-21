@@ -2,6 +2,18 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
+## v0.1.3
+- new: customize semantic highlighting mode #105 #108
+  - `color and symbol` - default (decorate + "arrow")
+  - `color only` - only decorate identifiers declared in the function argument scope 
+  - `symbol only` - only show an "arrow" next to an identifier declared in the function argument scope
+
+<img width="725" alt="image" src="https://user-images.githubusercontent.com/2865694/180291604-f1a3be47-5aaa-41d4-b734-13dfd813d8ff.png">
+
+- fix: uml - fix null-deref when parsing 'using-for *' #106 #107
+- update: configurable trailing "arrow" for semantic function argument highlighting #104 #100
+
+
 ## v0.1.2
 
 - new: decorate/highlight immutable state vars (<span style="color:#9932cc">![#9932cc](https://via.placeholder.com/15/9932cc/000000?text=+)</span>) - #97 (thanks @RomiRand)

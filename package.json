@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.1.2",
+    "version": "0.1.3",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
@@ -536,7 +536,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.2",
-        "solidity-workspace": "^0.1.5",
+        "solidity-workspace": "^0.1.6",
         "surya": "^0.4.6"
     }
 }
