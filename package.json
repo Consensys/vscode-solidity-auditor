@@ -302,12 +302,22 @@
                 "solidity-va.deco.arguments": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether to enable/disable semantic highlighting for function arguments"
+                    "description": "Whether to enable/disable semantic highlighting for function arguments. (May require a reload)."
+                },
+                "solidity-va.deco.argumentsMode": {
+                    "type": "string",
+                    "enum": [
+                        "color and symbol",
+                        "color only",
+                        "symbol only"
+                    ],
+                    "default": "color and symbol",
+                    "description": "Select the mode for semantic highlighting of function arguments. (May require a reload)."
                 },
                 "solidity-va.deco.argumentsSuffix": {
                     "type": "string",
                     "default": "⬆",
-                    "description": "custom Suffix/Character that is appended to the decoration when performing semantic highlighting for function arguments"
+                    "description": "custom Suffix/Symbol that is appended to the decoration when performing semantic highlighting for function arguments"
                 },
                 "solidity-va.deco.warn.reserved": {
                     "type": "boolean",

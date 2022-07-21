@@ -353,7 +353,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
 
                             //annotate external calls?
                         });
-                        if (settings.extensionConfig().deco.arguments) {
+                        if (settings.extensionConfig().deco.arguments ) {
                             decorations = decorations.concat(mod_decorator.semanticHighlightFunctionParameters(highlightIdentifiers));
                         }
 
