@@ -36,6 +36,10 @@ ___
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
+## v0.1.4
+
+- fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
+
 ## v0.1.3 - 🧸
 
 - new: customize semantic highlighting mode #105 #108

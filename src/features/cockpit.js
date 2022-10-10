@@ -55,18 +55,16 @@ class BaseDataProvider {
     }
 
     getTreeItem(element) {
-        return {
-            resourceUri: element.resource,
-            label: element.label,
-            iconPath: element.iconPath,
-            collapsibleState: element.collapsibleState,
-            children: element.children,
-            command: element.command || {
+        let ret = new vscode.TreeItem(element.label, element.collapsibleState);
+        ret.resourceUri = element.resource;
+        ret.iconPath = element.iconPath;
+        ret.children = element.children;
+        ret.command = element.command || {
                 command: 'solidity-va.cockpit.jumpToRange',
                 arguments: [element.resource],
                 title: 'JumpTo'
             }
-        };
+        return ret;
     }
 
     /** other methods */
@@ -284,17 +282,14 @@ class TopLevelContractsViewDataProvider extends FilePathTreeDataProvider {
     // inherited.
 
     getTreeItem(element) {
-        let ret = {
-            resourceUri: element.resource,
-            label: element.label,
-            iconPath: element.iconPath,
-            collapsibleState: element.collapsibleState,
-            command: element.type === FilePathTreeDataProvider.TYPE_FILE ? {
+        let ret = new vscode.TreeItem(element.label, element.collapsibleState);
+        ret.resourceUri = element.resource;
+        ret.iconPath = element.iconPath;
+        ret.command = element.type === FilePathTreeDataProvider.TYPE_FILE ? {
                 command: 'solidity-va.cockpit.jumpToRange',
                 arguments: [element.resource],
                 title: 'JumpTo'
-            } : 0,
-        };
+            } : 0;
         return ret;
     }
 
@@ -620,18 +615,15 @@ class ExplorerViewDataProvider extends FilePathTreeDataProvider {
     // inherited.
 
     getTreeItem(element) {
-        let ret = {
-            resourceUri: element.resource,
-            contextValue: element.resource.fsPath,
-            label: element.label,
-            iconPath: element.iconPath,
-            collapsibleState: element.collapsibleState,
-            command: element.type === FilePathTreeDataProvider.TYPE_FILE ? {
-                command: 'solidity-va.cockpit.jumpToRange',
-                arguments: [element.resource],
-                title: 'JumpTo'
-            } : 0,
-        };
+        let ret = new vscode.TreeItem(element.label, element.collapsibleState);
+        ret.resourceUri = element.resource;
+        ret.contextValue = element.resource.fsPath;
+        ret.iconPath = element.iconPath;
+        ret.command = element.type === FilePathTreeDataProvider.TYPE_FILE ? {
+                    command: 'solidity-va.cockpit.jumpToRange',
+                    arguments: [element.resource],
+                    title: 'JumpTo'
+                } : 0;
         return ret;
     }
 
@@ -681,18 +673,15 @@ class FlatFilesDataProvider extends FilePathTreeDataProvider {
     // inherited.
 
     getTreeItem(element) {
-        let ret = {
-            resourceUri: element.resource,
-            contextValue: element.resource.fsPath,
-            label: element.label,
-            iconPath: element.iconPath,
-            collapsibleState: element.collapsibleState,
-            command: element.type === FilePathTreeDataProvider.TYPE_FILE ? {
+        let ret = new vscode.TreeItem(element.label, element.collapsibleState)
+        ret.resourceUri = element.resource;
+        ret.contextValue = element.resource.fsPath;
+        ret.iconPath = element.iconPath;
+        ret.command = element.type === FilePathTreeDataProvider.TYPE_FILE ? {
                 command: 'solidity-va.cockpit.jumpToRange',
                 arguments: [element.resource],
                 title: 'JumpTo'
-            } : 0,
-        };
+            } : 0;
         return ret;
     }
 
@@ -752,20 +741,20 @@ class SettingsViewDataProvider extends VirtualPathTreeDataProvider {
     // inherited.
 
     getTreeItem(element) {
-        let ret = {
-            resourceUri: element.resource,
-            metadata: element.metadata,
-            contextValue: element.type,
-            label: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? (element.metadata.currentValue === true ? "☑  " : "☐  ") + element.label : element.label,
-            //tooltip: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? element.metadata.description : null, /* fixes proposed api warning */
-            iconPath: element.iconPath,
-            collapsibleState: element.collapsibleState,
-            command: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? {
+        let ret = new vscode.TreeItem(
+            element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? (element.metadata.currentValue === true ? "☑  " : "☐  ") + element.label : element.label,
+            element.collapsibleState
+        );
+        ret.resourceUri = element.resource;
+        ret.metadata = element.metadata;
+        ret.contextValue = element.type;
+        //tooltip: element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? element.metadata.description : null, /* fixes proposed api warning */
+        ret.iconPath = element.iconPath;
+        ret.command =  element.type === VirtualPathTreeDataProvider.TYPE_LEAF ? {
                 command: 'solidity-va.cockpit.settings.toggle',
                 arguments: [element],
                 title: 'Toggle'
-            } : 0,
-        };
+            } : 0;
         return ret;
     }
 
