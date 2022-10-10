@@ -541,7 +541,7 @@
     "dependencies": {
         "c3-linearization": "^0.3.0",
         "keccak": "^3.0.2",
-        "solidity-workspace": "^0.1.6",
+        "solidity-workspace": "^0.1.7",
         "surya": "^0.4.6"
     }
 }
