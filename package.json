@@ -364,6 +364,11 @@
                     "default": true,
                     "description": "Whether to show/hide imports in the outline view"
                 },
+                "solidity-va.overviewruler.decorations.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable decorations in the overview ruler"
+                },
                 "solidity-va.parser.parseImports": {
                     "type": "boolean",
                     "default": true,
