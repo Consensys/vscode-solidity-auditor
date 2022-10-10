@@ -13,7 +13,7 @@
         "solidity security",
         "solidity audit"
     ],
-    "version": "0.1.3",
+    "version": "0.1.4",
     "publisher": "tintinweb",
     "icon": "images/icon.png",
     "engines": {
