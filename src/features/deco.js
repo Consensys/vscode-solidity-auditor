@@ -15,14 +15,12 @@ const settings = require('../settings');
 
 const decoStyleRedLine = vscode.window.createTextEditorDecorationType({
     isWholeLine: true,
-    overviewRulerColor: 'blue',
-    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    overviewRulerColor: settings.extensionConfig().overviewruler.decorations.enable ? 'blue' : undefined,
+    overviewRulerLane: settings.extensionConfig().overviewruler.decorations.enable ? vscode.OverviewRulerLane.Right : undefined,
     light: {
-        // this color will be used in light color themes
         backgroundColor: `#E8625250`
     },
     dark: {
-        // this color will be used in dark color themes
         backgroundColor: `#E9190F50`
     },
 });
@@ -31,14 +29,12 @@ const decoStyleRedLine = vscode.window.createTextEditorDecorationType({
 const decoStyleStateVar = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'dotted',
-    overviewRulerColor: 'blue',
-    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    overviewRulerColor: settings.extensionConfig().overviewruler.decorations.enable ? 'blue' : undefined,
+    overviewRulerLane: settings.extensionConfig().overviewruler.decorations.enable ? vscode.OverviewRulerLane.Right : undefined,
     light: {
-        // this color will be used in light color themes
         borderColor: 'DarkGoldenRod'
     },
     dark: {
-        // this color will be used in dark color themes
         borderColor: 'GoldenRod'
     },
 });
@@ -46,14 +42,11 @@ const decoStyleStateVar = vscode.window.createTextEditorDecorationType({
 const decoStyleStateVarImmutable = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'dotted',
-    //overviewRulerColor: 'blue',
-    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    overviewRulerLane: settings.extensionConfig().overviewruler.decorations.enable ? vscode.OverviewRulerLane.Right : undefined,
     light: {
-        // this color will be used in light color themes
         borderColor: 'DarkOrchid'
     },
     dark: {
-        // this color will be used in dark color themes
         borderColor: 'Orchid'
     },
 });
@@ -61,14 +54,10 @@ const decoStyleStateVarImmutable = vscode.window.createTextEditorDecorationType(
 const decoStyleLightGreen = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'dotted',
-    //overviewRulerColor: 'blue',
-    //overviewRulerLane: vscode.OverviewRulerLane.Right,
     light: {
-        // this color will be used in light color themes
         borderColor: 'darkgreen'
     },
     dark: {
-        // this color will be used in dark color themes
         borderColor: 'green'
     },
 });
@@ -76,14 +65,12 @@ const decoStyleLightGreen = vscode.window.createTextEditorDecorationType({
 const decoStyleLightOrange = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'solid',
-    overviewRulerColor: 'red',
-    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    overviewRulerColor: settings.extensionConfig().overviewruler.decorations.enable ? 'red' : undefined,
+    overviewRulerLane: settings.extensionConfig().overviewruler.decorations.enable ? vscode.OverviewRulerLane.Right : undefined,
     light: {
-        // this color will be used in light color themes
         borderColor: 'red'
     },
     dark: {
-        // this color will be used in dark color themes
         borderColor: 'red'
     },
 });
@@ -91,42 +78,23 @@ const decoStyleLightOrange = vscode.window.createTextEditorDecorationType({
 const decoStyleLightBlue = vscode.window.createTextEditorDecorationType({
     borderWidth: '1px',
     borderStyle: 'dotted',
-    overviewRulerColor: 'blue',
-    overviewRulerLane: vscode.OverviewRulerLane.Right,
+    overviewRulerColor: settings.extensionConfig().overviewruler.decorations.enable ? 'blue' : undefined,
+    overviewRulerLane: settings.extensionConfig().overviewruler.decorations.enable ? vscode.OverviewRulerLane.Right : undefined,
     light: {
-        // this color will be used in light color themes
         borderColor: 'darkblue'
     },
     dark: {
-        // this color will be used in dark color themes
         borderColor: 'lightblue'
     },
 });
 
 const decoStyleBlueBoldForeground = vscode.window.createTextEditorDecorationType({
     light: {
-        // this color will be used in light color themes
-        //color: 'GoldenRod',
         fontWeight: 'bold',
-        //backgroundColor: 'DarkSlateGray'
     },
     dark: {
-        // this color will be used in dark color themes
-        color: 'Chocolate',
-        //backgroundColor: 'Black',
-        //fontWeight: 'bold',
-        //textDecoration: 'underline overline #FF3028',
-        //borderColor: 'GoldenRod',
-        //borderStyle: 'solid',
-        //borderWidth: '0.1px'
+        color: 'Chocolate'
     },
-    /*
-    after: {
-        textDecoration: "underline overline #FF3028",
-        contentText: "<--"
-
-    }
-    */
 });
 
 
@@ -321,11 +289,11 @@ function init(context) {
             // use a themable color. See package.json for the declaration and default values.
             wholeLine: false,
             light: {
-                // this color will be used in light color themes
+
                 backgroundColor: shouldHighlightArg ? RGBtoHex(...HSLtoRGB(((5 + idx) * 19) % 255 / 255, 0.85, 0.75)) + "50" : undefined
             },
             dark: {
-                // this color will be used in dark color themes
+
                 backgroundColor: shouldHighlightArg ? RGBtoHex(...HSLtoRGB(((8 + idx) * 19) % 255 / 255, 0.99, 0.55)) + "30" : undefined
                 //color: RGBtoHex(...HSLtoRGB(((6+idx)*19)%255/255, 0.85, 0.75))+"95",
                 //textDecoration: "underline" + RGBtoHex(...HSLtoRGB(((6+idx)*19)%255/255, 0.85, 0.75))+"95"
@@ -346,13 +314,13 @@ function init(context) {
     styles.decoStyleBookmarkRed = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.red,
         light: {
-            // this color will be used in light color themes
+
             //color: 'GoldenRod',
             fontWeight: 'bold',
             //backgroundColor: 'DarkSlateGray'
         },
         dark: {
-            // this color will be used in dark color themes
+
             color: 'Chocolate',
             //backgroundColor: 'Black',
             //fontWeight: 'bold',
@@ -372,13 +340,13 @@ function init(context) {
     styles.decoStyleBookmarkGreen = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.green,
         light: {
-            // this color will be used in light color themes
+
             //color: 'GoldenRod',
             fontWeight: 'bold',
             //backgroundColor: 'DarkSlateGray'
         },
         dark: {
-            // this color will be used in dark color themes
+
             color: 'Chocolate',
             //backgroundColor: 'Black',
             //fontWeight: 'bold',
@@ -398,13 +366,13 @@ function init(context) {
     styles.decoStyleBookmarkBlue = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.blue,
         light: {
-            // this color will be used in light color themes
+
             //color: 'GoldenRod',
             fontWeight: 'bold',
             //backgroundColor: 'DarkSlateGray'
         },
         dark: {
-            // this color will be used in dark color themes
+
             color: 'Chocolate',
             //backgroundColor: 'Black',
             //fontWeight: 'bold',
@@ -424,13 +392,13 @@ function init(context) {
     styles.decoStyleBookmarkIssue = vscode.window.createTextEditorDecorationType({
         gutterIconPath: gutterIcons.issue,
         light: {
-            // this color will be used in light color themes
+
             //color: 'GoldenRod',
             fontWeight: 'bold',
             //backgroundColor: 'DarkSlateGray'
         },
         dark: {
-            // this color will be used in dark color themes
+
             color: 'Chocolate',
             //backgroundColor: 'Black',
             //fontWeight: 'bold',
@@ -508,7 +476,7 @@ class CreateDecoStyle {
         var decoStyle = "decoStyleStateVar";
 
         let decl_uri = "([Declaration: #" + (svar.loc.start.line) + "](" + document.uri + "#" + (svar.loc.start.line) + "))";
-        
+
         if (svar.isDeclaredConst) {
             prefix = "**CONST**  ";
             decoStyle = "decoStyleLightGreen";
@@ -552,14 +520,14 @@ class CreateDecoStyle {
         let knownType = "undef";
 
         let subcontract = contract.inherited_names[node.name];
-        if(subcontract){
+        if (subcontract) {
             let foreignSourceUnit = subcontract._parent;
             let uri = vscode.Uri.file(foreignSourceUnit.filePath);
             declaration = subcontract.names[node.name]._node || node;
             decl_uri = "([Declaration: " + subcontract + "#" + (declaration.loc.start.line) + "](" + uri + "#" + (declaration.loc.start.line) + "))";
             knownType = getVariableDeclarationType(declaration);
         }
-        
+
 
         return {
             range: new vscode.Range(
@@ -570,7 +538,7 @@ class CreateDecoStyle {
             decoStyle: decoStyle
         };
     }
-    static inheritedStateVar(node, document, contract, declaration){
+    static inheritedStateVar(node, document, contract, declaration) {
         let decoStyle = "decoStyleLightBlue";
         let prefix = "**INHERITED**  ";
         declaration = declaration || node;
@@ -578,7 +546,7 @@ class CreateDecoStyle {
         let knownType = getVariableDeclarationType(declaration);
 
         let subcontract = contract.inherited_names[node.name];
-        if(subcontract){
+        if (subcontract) {
             let foreignSourceUnit = subcontract._parent;
             let uri = vscode.Uri.file(foreignSourceUnit.filePath);
             declaration = subcontract.names[node.name] || node;
@@ -586,7 +554,7 @@ class CreateDecoStyle {
             decl_uri = "([Declaration: " + subcontract.name + "#" + (declaration.loc.start.line) + "](" + uri + "#" + (declaration.loc.start.line) + "))";
             knownType = getVariableDeclarationType(declaration);
         }
-    
+
         return {
             range: new vscode.Range(
                 new vscode.Position(node.loc.start.line - 1, node.loc.start.column),
