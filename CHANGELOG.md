@@ -14,6 +14,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
   - clicking on a function name highlights the first line of the function instead of the full function block in the editor
   - clicking on an external call/modifier highlights the invocation in the editor
 
+- fix: semantic highlighting for supercall and modifier arguments - #112 #117
 
 ## v0.1.3
 - new: customize semantic highlighting mode #105 #108

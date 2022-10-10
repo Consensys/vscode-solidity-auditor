@@ -194,14 +194,18 @@ var gutterIcons = {};
 
 
 function varDecIsArray(node) {
-    return node.typeName.type == "ArrayTypeName";
+    return node && node.typeName && node.typeName.type == "ArrayTypeName";
 }
 
 function varDecIsUserDefined(node) {
-    return node.typeName.type == "UserDefinedTypeName";
+    return node && node.typeName && node.typeName.type == "UserDefinedTypeName";
 }
 
 function getVariableDeclarationType(node) {
+    if(!node){
+        return null;
+    }
+
     if (typeof node.typeName != "undefined" && node.typeName != null) {
         if (varDecIsArray(node)) {
             node = node.typeName.baseTypeName;

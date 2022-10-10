@@ -259,6 +259,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
                                 // local declaration
                                 switch (ident.extra.scope) {
                                     case "argument":
+                                    case "super":
                                         highlightIdentifiers.push(ident);
                                         break;
                                     case "returns":
