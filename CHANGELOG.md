@@ -4,6 +4,16 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 ## v0.1.4
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
+- new: optionally disable highlighting in the overview ruler - #115
+
+<img width="440" alt="image" src="https://user-images.githubusercontent.com/2865694/194864316-88b89bf4-331d-43b4-bb0a-324cdcee99da.png">
+
+<img width="185" alt="image" src="https://user-images.githubusercontent.com/2865694/194864195-a1449bb3-9c04-43bb-a011-8d2faf8ffb5a.png"> <img width="181" alt="image" src="https://user-images.githubusercontent.com/2865694/194864429-5d8c42d4-e45b-406d-ad66-e207718aced0.png">
+
+- fix: more consistent highlighting when clicking on an item in the cockpit ExternalCalls/PublicStatechanging views - #110
+  - clicking on a function name highlights the first line of the function instead of the full function block in the editor
+  - clicking on an external call/modifier highlights the invocation in the editor
+
 
 ## v0.1.3
 - new: customize semantic highlighting mode #105 #108

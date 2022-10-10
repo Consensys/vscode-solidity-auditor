@@ -18,6 +18,13 @@ function elemLocToRange(elem){
     );
 }
 
+function elemLocToFirstLineRange(elem){
+    return new vscode.Range(
+        new vscode.Position(elem.loc.start.line-1, elem.loc.start.column),
+        new vscode.Position(elem.loc.start.line-1, elem.loc.start.column)
+    );
+}
+
 function nodeTypeName(node){
     if(!node.typeName && node.type==="Identifier"){
         return node.name;
@@ -485,7 +492,7 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
         return Object.keys(this.data)
             .reduce((ret, key) => {
                 let element = this.data[key];
-                let range = new vscode.Range(element._node.loc.start.line, element._node.loc.start.column, element._node.loc.end.line, element._node.loc.end.column);
+                let range = elemLocToRange(element._node)
                 let modifiers = Object.keys(element.modifiers);
                 let item = {
                     resource: element.resource,
@@ -504,14 +511,14 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
                             //iconPath: 0,
                             command: {
                                 command: 'solidity-va.cockpit.jumpToRange',
-                                arguments: [element.resource, range],
+                                arguments: [element.resource, elemLocToRange(element.modifiers[name])],
                                 title: 'JumpTo'
                             }
                         };
                     }),
                     command: {
                         command: 'solidity-va.cockpit.jumpToRange',
-                        arguments: [element.resource, range],
+                        arguments: [element.resource, elemLocToFirstLineRange(element._node)],
                         title: 'JumpTo'
                     },
                 };
@@ -839,7 +846,7 @@ class ExtCallViewDataProvider extends BaseDataProvider {
                     }),
                     command: {
                         command: 'solidity-va.cockpit.jumpToRange',
-                        arguments: [first.resource,  elemLocToRange(first.parent.function._node)],
+                        arguments: [first.resource,  elemLocToFirstLineRange(first.parent.function._node)],
                         title: 'JumpTo'
                     },
                 };
