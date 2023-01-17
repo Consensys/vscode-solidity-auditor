@@ -60,7 +60,7 @@ function indicesToVscodeRange(uri, indices, data, cb) {
             new vscode.Position(lineNumber + 1, i.index - lineIndex),
             new vscode.Position(lineNumber + 1, i.index - lineIndex + i.len)
         );
-        cb(vscode.Location(uri, pos));
+        cb(new vscode.Location(uri, pos));
     });
 }
 

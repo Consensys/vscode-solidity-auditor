@@ -36,7 +36,11 @@ ___
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-## v0.1.4
+## v0.1.5 - 🏂
+
+- fix: find all references not working - #119
+
+## v0.1.4 - 🍁
 
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
 - new: optionally disable highlighting in the overview ruler - #115
@@ -46,17 +50,17 @@ The complete changelog can be found [here](https://github.com/ConsenSys/vscode-s
 <img width="185" alt="image" src="https://user-images.githubusercontent.com/2865694/194864195-a1449bb3-9c04-43bb-a011-8d2faf8ffb5a.png"> <img width="181" alt="image" src="https://user-images.githubusercontent.com/2865694/194864429-5d8c42d4-e45b-406d-ad66-e207718aced0.png">
 
 - fix: more consistent highlighting when clicking on an item in the cockpit ExternalCalls/PublicStatechanging views - #110
-  - clicking on a function name highlights the first line of the function instead of the full function block in the editor
-  - clicking on an external call/modifier highlights the invocation in the editor
+    - clicking on a function name highlights the first line of the function instead of the full function block in the editor
+    - clicking on an external call/modifier highlights the invocation in the editor
 
 - fix: semantic highlighting for supercall and modifier arguments - #112 #117
 
 ## v0.1.3 - 🧸
 
 - new: customize semantic highlighting mode #105 #108
-  - \`color and symbol\` - default (decorate + "arrow")
-  - \`color only\` - only decorate identifiers declared in the function argument scope 
-  - \`symbol only\` - only show an "arrow" next to an identifier declared in the function argument scope
+    - \`color and symbol\` - default (decorate + "arrow")
+    - \`color only\` - only decorate identifiers declared in the function argument scope 
+    - \`symbol only\` - only show an "arrow" next to an identifier declared in the function argument scope
 
 <img width="725" alt="image" src="https://user-images.githubusercontent.com/2865694/180291604-f1a3be47-5aaa-41d4-b734-13dfd813d8ff.png">
 
