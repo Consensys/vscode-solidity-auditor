@@ -2,6 +2,10 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
+
+## v0.1.5 - 🏂
+- fix: find all references not working - #119
+
 ## v0.1.4 - 🍁
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
 - new: optionally disable highlighting in the overview ruler - #115

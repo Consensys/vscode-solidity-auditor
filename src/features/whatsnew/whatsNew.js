@@ -36,6 +36,10 @@ ___
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
+## v0.1.5 - 🏂
+
+- fix: find all references not working - #119
+
 ## v0.1.4 - 🍁
 
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
