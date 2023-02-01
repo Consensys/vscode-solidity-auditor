@@ -47,112 +47,15 @@ class CommentMapperRex {
   }
 }
 
-const createKeccakHash = require('keccak');
-
-// https://github.com/ethereum/eth-abi/blob/b02fc85b01a9674add88483b0d6144029c09e0a0/eth_abi/grammar.py#L402-L408
-const TYPE_ALIASES = {
-  int: 'int256',
-  uint: 'uint256',
-  fixed: 'fixed128x18',
-  ufixed: 'ufixed128x18',
-  function: 'bytes24',
-};
-const evmTypeRegex = new RegExp(
-  `(?<type>(${Object.keys(TYPE_ALIASES).join('|')}))(?<tail>(\\[[^\\]]*\\])?)$`,
-  'g'
-);
-
-function canonicalizeEvmType(evmArg) {
-  function replacer(...groups) {
-    const foundings = groups.pop();
-    return `${TYPE_ALIASES[foundings.type]}${foundings.tail}`;
-  }
-  return evmArg.replace(evmTypeRegex, replacer);
-}
-
-function getCanonicalizedArgumentFromAstNode(
-  node,
-  _parent,
-  array = false,
-  isStruct = false
-) {
-  if (!array && !node.typeName) {
-    console.log(node);
-    throw new Error('Failed to unpack function argument type');
-  }
-  const argStorageLocation = node.storageLocation;
-  const argTypeNode = !array ? node.typeName : node;
-  switch (argTypeNode.type) {
-    case 'ElementaryTypeName':
-      return argTypeNode.name;
-    case 'ArrayTypeName':
-      const repr =
-        getCanonicalizedArgumentFromAstNode(
-          argTypeNode.baseTypeName,
-          _parent,
-          true
-        ) + '[]';
-      return repr;
-    case 'UserDefinedTypeName':
-      if (!argStorageLocation && !isStruct) {
-        return 'address';
-      }
-      const contract = _parent.parent;
-      const sourceUnit = contract._parent;
-      const struct =
-        contract.structs[argTypeNode.namePath] ||
-        contract.inherited_structs[argTypeNode.namePath] ||
-        sourceUnit.structs[argTypeNode.namePath];
-      if (!struct) {
-        throw new Error(
-          `Failed to resolve struct ${node.namePath} in current scope.`
-        );
-      }
-      const structTypes = struct.members.map((m) =>
-        getCanonicalizedArgumentFromAstNode(m, _parent, false, true)
-      );
-      const structSig = '(' + structTypes.join(',') + ')';
-      return structSig;
-    default:
-      console.log(argTypeNode);
-      throw new Error('wrong argument type: ' + argTypeNode.name);
-  }
-}
-
-function signatureFromFunctionASTNode(item) {
-  let funcname = item._node.name;
-
-  let argsItem =
-    item._node.parameters.type === 'ParameterList'
-      ? item._node.parameters.parameters
-      : item._node.parameters;
-  let args = argsItem.map((o) =>
-    canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o, item))
-  );
-
-  let fnsig = `${funcname}(${args.join(',')})`;
-  let sighash = createKeccakHash('keccak256')
-    .update(fnsig)
-    .digest('hex')
-    .toString('hex')
-    .slice(0, 8);
-
-  return {
-    name: funcname,
-    signature: fnsig,
-    sighash: sighash,
-  };
-}
-
 function functionSignatureForASTItem(item) {
   switch (item._node?.type) {
     case 'FunctionDefinition':
-      const res = signatureFromFunctionASTNode(item);
+      const res = item.getFunctionSignature(); //call getFunctionSignature from Workspace on function node
       return [res];
     case 'ContractDefinition':
       return Object.values(item.functions)
         .filter((fn) => ['external', 'public'].includes(fn.visibility))
-        .map((fn) => signatureFromFunctionASTNode(fn));
+        .map((fn) => fn.getFunctionSignature());
     default:
       throw new Error('Unsupported node type');
   }

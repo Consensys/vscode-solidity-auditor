@@ -113,7 +113,7 @@ function checkReservedIdentifiers(identifiers) {
   return decorations;
 }
 
-function analyzeSourceUnit(cancellationToken, document, editor) {
+function analyzeSourceUnit(cancellationToken, document, editor, initialLoad=false) {
   console.log('inspect ...');
 
   if (!document) {
@@ -135,7 +135,7 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
       }
     });
 
-  g_workspace.withParserReady().then((finished) => {
+  g_workspace.withParserReady(document.fileName, initialLoad).then((finished) => {
     console.log('✓ workspace ready (linearized, resolved deps, ..)');
     if (
       cancellationToken.isCancellationRequested ||
@@ -171,64 +171,6 @@ function analyzeSourceUnit(cancellationToken, document, editor) {
 
       for (var contract of Object.values(this_sourceUnit.contracts)) {
         console.log('+ in contract: ' + contract.name);
-        console.log('resolve inheritance..');
-        //merge all contracts into one
-        contract.linearizedDependencies.forEach((subcontract) => {
-          if (!subcontract || typeof subcontract !== 'object') {
-            console.error(
-              'ERROR - contract object not available ' + subcontract
-            );
-            return;
-          }
-          if (subcontract.name == contract.name) {
-            return; //skip self
-          }
-
-          if (subcontract._node.kind === 'interface') {
-            //only consider structs
-            for (let _var in subcontract.structs) {
-              contract.inherited_names[_var] = subcontract;
-              contract.inherited_structs[_var] = subcontract.structs[_var];
-            }
-            return; //skip other inherited names from interfaces
-          }
-
-          for (let _var in subcontract.stateVars) {
-            if (subcontract.stateVars[_var].visibility != 'private') {
-              contract.inherited_names[_var] = subcontract;
-            }
-          }
-          for (let _var of subcontract.functions) {
-            if (_var._node.visibility != 'private') {
-              contract.inherited_names[_var.name] = subcontract;
-            }
-          }
-          for (let _var of subcontract.events) {
-            if (_var._node.visibility != 'private') {
-              contract.inherited_names[_var.name] = subcontract;
-            }
-          }
-          for (let _var in subcontract.modifiers) {
-            if (subcontract.modifiers[_var].visibility != 'private') {
-              contract.inherited_names[_var] = subcontract;
-            }
-          }
-          for (let _var in subcontract.enums) {
-            if (subcontract.enums[_var].visibility != 'private') {
-              contract.inherited_names[_var] = subcontract;
-            }
-          }
-          for (let _var in subcontract.structs) {
-            contract.inherited_names[_var] = subcontract;
-            contract.inherited_structs[_var] = subcontract.structs[_var];
-          }
-          for (let _var in subcontract.mappings) {
-            if (subcontract.mappings[_var].visibility != 'private') {
-              contract.inherited_names[_var] = subcontract;
-            }
-          }
-        });
-        console.log('✓ resolve inheritance');
 
         /** todo fixme: rework */
         if (currentConfig.deco.statevars) {
@@ -547,7 +489,7 @@ function onDidSave(document) {
   }
 }
 
-function refresh(editor) {
+function refresh(editor, initialLoad=false) {
   let document =
     editor && editor.document
       ? editor.document
@@ -569,7 +511,8 @@ function refresh(editor) {
     analyzeSourceUnit(
       currentCancellationTokens.onDidChange.token,
       document,
-      editor
+      editor,
+      initialLoad
     );
   } catch (err) {
     if (typeof err !== 'object') {
@@ -582,7 +525,6 @@ function refresh(editor) {
 
 function onDidChange(editor) {
   clearTimeout(debounceTimer);
-  // refresh(editor)
   debounceTimer = setTimeout(() => refresh(editor), 500); //only re-parse every 500ms
 }
 
@@ -606,7 +548,7 @@ function onActivate(context) {
     }
     /** module init */
     onInitModules(context, type);
-    onDidChange(activeEditor);
+    refresh(activeEditor, true);
 
     let commands = new Commands(g_workspace);
     let cockpit = new Cockpit(commands);
@@ -1024,7 +966,7 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerDocumentSymbolProvider(
           docSel,
-          new SolidityDocumentSymbolProvider(g_workspace, analyzeSourceUnit)
+          new SolidityDocumentSymbolProvider(g_workspace)
         )
       );
     }
@@ -1033,7 +975,7 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerCodeLensProvider(
           docSel,
-          new SolidityCodeLensProvider(g_workspace, analyzeSourceUnit)
+          new SolidityCodeLensProvider(g_workspace)
         )
       );
 

@@ -267,28 +267,20 @@ function getAstValueForExpression(astnode) {
 }
 
 class SolidityDocumentSymbolProvider {
-  constructor(g_workspace, cb_analyze) {
+  constructor(g_workspace) {
     this.g_workspace = g_workspace;
-    this.cb_analyze = cb_analyze;
   }
 
   provideDocumentSymbols(document, token) {
     console.log('preparing symbols...');
 
     return new Promise((resolve, reject) => {
-      var symbols = [];
-
-      //  console.log("force ast refresh..!"); //fixme!
-      // this.cb_analyze(token, document);  //remove this hack
-
-      if (token.isCancellationRequested) {
-        reject(token);
-        return;
-      }
-      //var insights = this.g_workspace.inspect(document.getText(), document.fileName, true, token);
-      this.g_workspace
+      return this.g_workspace
         .getSourceUnitByPath(document.fileName)
         .then((insights) => {
+
+          var symbols = [];
+
           console.log(`✓ inspect ${insights.filePath}`);
 
           console.log('--- preparing symbols for: ' + document.fileName);
@@ -688,11 +680,10 @@ class SolidityDocumentSymbolProvider {
             console.log('✓ inheritance');
           }
           if (token.isCancellationRequested) {
-            reject(token);
-            return;
+            return reject(token);
           }
           console.log('✓✓✓ done preparing symbols for: ' + document.fileName);
-          resolve(symbols);
+          return resolve(symbols);
         })
         .catch((e) => {
           console.warn(
@@ -701,6 +692,7 @@ class SolidityDocumentSymbolProvider {
           if (settings.extensionConfig().debug.parser.showExceptions) {
             console.error(e);
           }
+          return reject(e);
         });
     });
   }

@@ -24,9 +24,8 @@ function elemLocToRange(elem) {
 }
 
 class SolidityCodeLensProvider {
-  constructor(g_workspace, cb_analyze) {
+  constructor(g_workspace) {
     this.g_workspace = g_workspace;
-    this.cb_analyze = cb_analyze;
     this.codeLenses = [];
   }
 
