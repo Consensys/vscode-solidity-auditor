@@ -20,8 +20,8 @@ const mod_parser = require('solidity-workspace');
 const { DiliDiagnosticCollection } = require('./features/genericDiag');
 const { Commands } = require('./features/commands');
 const {
-  SolidityCodeLensProvider,
-  SolidityParserLensProvider,
+  StaticLensProvider,
+  ParserLensProvider,
 } = require('./features/codelens');
 const settings = require('./settings');
 const { Cockpit } = require('./features/cockpit.js');
@@ -975,14 +975,14 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerCodeLensProvider(
           docSel,
-          new SolidityCodeLensProvider(g_workspace)
+          new StaticLensProvider(g_workspace)
         )
       );
 
       context.subscriptions.push(
         vscode.languages.registerCodeLensProvider(
           docSel,
-          new SolidityParserLensProvider(g_workspace)
+          new ParserLensProvider(g_workspace)
         )
       );
     }

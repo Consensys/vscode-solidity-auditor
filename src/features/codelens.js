@@ -23,7 +23,7 @@ function elemLocToRange(elem) {
   );
 }
 
-class SolidityCodeLensProvider {
+class StaticLensProvider {
   constructor(g_workspace) {
     this.g_workspace = g_workspace;
     this.codeLenses = [];
@@ -105,7 +105,7 @@ class SolidityCodeLensProvider {
   }
 }
 
-class SolidityParserLensProvider {
+class ParserLensProvider {
   constructor(g_workspace) {
     this.g_workspace = g_workspace;
   }
@@ -253,6 +253,6 @@ class SolidityParserLensProvider {
 }
 
 module.exports = {
-  SolidityCodeLensProvider: SolidityCodeLensProvider,
-  SolidityParserLensProvider: SolidityParserLensProvider,
+  StaticLensProvider,
+  ParserLensProvider,
 };
