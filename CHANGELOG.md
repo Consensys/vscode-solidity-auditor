@@ -2,7 +2,11 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
-## v0.1.4
+
+## v0.1.5 - 🏂
+- fix: find all references not working - #119
+
+## v0.1.4 - 🍁
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
 - new: optionally disable highlighting in the overview ruler - #115
 
@@ -16,7 +20,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 - fix: semantic highlighting for supercall and modifier arguments - #112 #117
 
-## v0.1.3
+## v0.1.3 - 🧸
 - new: customize semantic highlighting mode #105 #108
   - `color and symbol` - default (decorate + "arrow")
   - `color only` - only decorate identifiers declared in the function argument scope 
