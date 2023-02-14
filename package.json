@@ -40,6 +40,7 @@
         "onCommand:solidity-va.tools.flattenCandidates",
         "onCommand:solidity-va.tools.function.signatures",
         "onCommand:solidity-va.tools.function.signatures.json",
+        "onCommand:solidity-va.tools.function.signatures.forWorkspace",
         "onCommand:solidity-va.tools.function.signatures.forWorkspace.json",
         "onCommand:solidity-va.tools.remix.openExternal",
         "onCommand:solidity-va.cockpit.explorer.refresh",
@@ -230,6 +231,11 @@
             {
                 "command": "solidity-va.tools.function.signatures.json",
                 "title": "Tools - list function signatures (json)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.function.signatures.forWorkspace",
+                "title": "Tools - list function signatures for all solidity files in workspace",
                 "category": "Solidity Visual Developer"
             },
             {
@@ -539,9 +545,7 @@
         "tintinweb.vscode-ethover"
     ],
     "dependencies": {
-        "c3-linearization": "^0.3.0",
-        "keccak": "^3.0.2",
-        "solidity-workspace": "file:../solidity-workspace",
+        "solidity-workspace": "file:../../js/solidity-workspace",
         "surya": "^0.4.6"
     }
 }
