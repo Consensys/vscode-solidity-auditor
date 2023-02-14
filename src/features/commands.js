@@ -191,10 +191,11 @@ class Commands {
             });
           });
       } else {
+        //better only add imported files. need to resolve that somehow
         files = [
           documentOrListItems.uri.fsPath,
           ...Object.keys(this.g_workspace.sourceUnits),
-        ]; //better only add imported files. need to resolve that somehow
+        ].filter(p => fs.existsSync(p)); //only feed existing files into surya or it might die 🥲
       }
     }
 
