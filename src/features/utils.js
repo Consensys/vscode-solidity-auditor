@@ -54,7 +54,7 @@ function functionSignatureForASTItem(item) {
       return [res];
     case 'ContractDefinition':
       return Object.values(item.functions)
-        .filter((fn) => ['external', 'public'].includes(fn.visibility))
+        .filter((fn) => fn.name && ['external', 'public'].includes(fn.visibility))
         .map((fn) => fn.getFunctionSignature());
     default:
       throw new Error('Unsupported node type');
