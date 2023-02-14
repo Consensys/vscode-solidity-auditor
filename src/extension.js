@@ -785,6 +785,15 @@ function onActivate(context) {
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
+        'solidity-va.tools.function.signatures.forWorkspace',
+        function (doc) {
+          commands.listFunctionSignaturesForWorkspace(false);
+        }
+      )
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(
         'solidity-va.tools.function.signatures.forWorkspace.json',
         function (doc) {
           commands.listFunctionSignaturesForWorkspace(true);
