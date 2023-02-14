@@ -36,14 +36,21 @@ const contractNameMapping = {
     "library":"abstract"
 };
 
-function _mapAstFunctionName(name) {
-    switch(name) {
+function _mapAstNodeToFunctionName(node) {
+    if(node.isConstructor){
+        return "**__constructor__**";
+    } else if(node.isReceiveEther){
+        return "**__receive__**";
+    } else if(node.isFallback){
+        return "**__fallback__**"; 
+    }
+    switch (node.name) {
         case null:
             return "**__constructor__**";
         case "":
             return "**__fallback__**";
         default:
-            return name;
+            return node.name;
     }
 }
 
@@ -83,7 +90,7 @@ ${Object.values(contractObj.stateVars).reduce((umlSvarTxt, astNode) => {
 }
     ' -- methods --
 ${contractObj.functions.reduce((umlFuncTxt, funcObj) => {
-        return umlFuncTxt + `\t${functionVisibility[funcObj._node.visibility] || ""}${stateMutabilityToIcon[funcObj._node.stateMutability]||""}${_mapAstFunctionName(funcObj._node.name)}()\n`;
+        return umlFuncTxt + `\t${functionVisibility[funcObj._node.visibility] || ""}${stateMutabilityToIcon[funcObj._node.stateMutability]||""}${_mapAstNodeToFunctionName(funcObj._node)}()\n`;
     }, "")
 }
 }
