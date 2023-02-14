@@ -134,6 +134,15 @@ class ParserLensProvider {
             })
           );
 
+        config.funcSigs.enable &&
+          codeLens.push(
+            new vscode.CodeLens(firstLine, {
+              command: 'solidity-va.tools.function.signatureForAstItem',
+              title: 'funcSigs',
+              arguments: [Object.values(parser.contracts)],
+            })
+          );
+
         let annotateContractTypes = ['contract', 'library', 'abstract'];
         /** all contract decls */
         for (let contractObj of Object.values(parser.contracts)) {
