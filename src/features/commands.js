@@ -451,7 +451,7 @@ class Commands {
                   sourceUnit.contracts[contractName].dependencies;
                 contractToFile[contractName] = solfile;
               }
-            } catch (e) {}
+            } catch (e) { }
           });
         });
     } else {
@@ -518,7 +518,7 @@ ${topLevelContractsText}`;
                   // command not available
                   vscode.window.showWarningMessage(
                     'Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n' +
-                      error
+                    error
                   );
                 });
             },
@@ -671,9 +671,8 @@ ${topLevelContractsText}`;
       let outpath_flat = vscode.Uri.file(
         path.join(outpath.dir, 'flat_' + outpath.base)
       );
-      content += `${
-        !fs.existsSync(outpath_flat.fsPath) ? '[ERR]   ' : ''
-      }${name}  =>  ${outpath_flat} \n`;
+      content += `${!fs.existsSync(outpath_flat.fsPath) ? '[ERR]   ' : ''
+        }${name}  =>  ${outpath_flat} \n`;
     }
     vscode.workspace
       .openTextDocument({ content: content, language: 'markdown' })
@@ -682,115 +681,112 @@ ${topLevelContractsText}`;
       );
   }
 
-  // async listFunctionSignatures(document, asJson) {
-  //   let sighash_colls = mod_utils.functionSignaturesForSourceUnit(
-  //     document.
-  //   );
-  //   let sighashes = sighash_colls.sighashes;
+  async listFunctionSignatures(document, asJson) {
+    this.g_workspace
+      .add(document.fileName)
+      .then(async (sourceUnit) => {
+        const signatures = await this._signatureForAstItem(Object.values(sourceUnit.contracts));
+        await this.revealSignatures(signatures, asJson ? 'json' : undefined);
+      });
+  }
 
-  //   if (sighash_colls.collisions.length) {
-  //     vscode.window.showErrorMessage(
-  //       "🔥 FuncSig collisions detected! " + sighash_colls.collisions.join(",")
-  //     );
-  //   }
+  async listFunctionSignaturesForWorkspace(asJson) {
+    // 1) find all solidity files
+    // 2) parse
+    // 3) wait for parser to finish
+    // 4) get all function signatures
+    // -- this is kinda resource intensive 🤷‍♂️
+    await vscode.workspace
+      .findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
+      .then((uris) => {
+        uris.forEach((uri) => {
+          this.g_workspace.add(uri.fsPath);
+        });
+      });
+    await this.g_workspace.withParserReady(undefined, true);
+    console.log("done");
+    const signatures = await this._signatureForAstItem(this.g_workspace.getAllContracts());
+    await this.revealSignatures(signatures, asJson ? 'json' : undefined);
 
-  //   let content;
-  //   if (asJson) {
-  //     content = JSON.stringify(sighashes);
-  //   } else {
-  //     content = "Sighash   |   Function Signature\n========================\n";
-  //     for (let hash in sighashes) {
-  //       content += hash + "  =>  " + sighashes[hash] + "\n";
-  //     }
-  //     if (sighash_colls.collisions.length) {
-  //       content += "\n\n";
-  //       content +=
-  //         "collisions 🔥🔥🔥                 \n========================\n";
-  //       content += sighash_colls.collisions.join("\n");
-  //     }
-  //   }
-  //   vscode.workspace
-  //     .openTextDocument({ content: content, language: "markdown" })
-  //     .then((doc) =>
-  //       vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-  //     );
-  // }
+  }
 
-  // async listFunctionSignaturesForWorkspace(asJson) {
-  //   let sighashes = {};
-  //   let collisions = [];
+  async signatureForAstItem(items){
+    const signatures = await this._signatureForAstItem(items);
+    await this.revealSignatures(signatures);
+  }
 
-  //   await vscode.workspace
-  //     .findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
-  //     .then((uris) => {
-  //       uris.forEach((uri) => {
-  //         try {
-  //           let sig_colls = mod_utils.functionSignatureExtractor(
-  //             fs.readFileSync(uri.fsPath).toString("utf-8")
-  //           );
-  //           collisions = collisions.concat(sig_colls.collisions); //we're not yet checking sighash collisions across contracts
-
-  //           let currSigs = sig_colls.sighashes;
-  //           for (let k in currSigs) {
-  //             sighashes[k] = currSigs[k];
-  //           }
-  //         } catch (e) {}
-  //       });
-  //     });
-
-  //   if (collisions.length) {
-  //     vscode.window.showErrorMessage(
-  //       "🔥 FuncSig collisions detected! " + collisions.join(",")
-  //     );
-  //   }
-
-  //   let content;
-  //   if (asJson) {
-  //     content = JSON.stringify(sighashes);
-  //   } else {
-  //     content =
-  //       "Sighash   |   Function Signature\n========================  \n";
-  //     for (let hash in sighashes) {
-  //       content += hash + "  =>  " + sighashes[hash] + "  \n";
-  //     }
-  //     if (collisions.length) {
-  //       content += "\n\n";
-  //       content +=
-  //         "collisions 🔥🔥🔥                 \n========================\n";
-  //       content += collisions.join("\n");
-  //     }
-  //   }
-  //   vscode.workspace
-  //     .openTextDocument({ content: content, language: "markdown" })
-  //     .then((doc) =>
-  //       vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
-  //     );
-  // }
-
-  async signatureForAstItem(item) {
-    let results;
-    let err;
-    try {
-      results = mod_utils.functionSignatureForASTItem(item);
-    } catch (e) {
-      console.log(e.message);
-      err = e.message;
+  async _signatureForAstItem(items) {
+    let results = [];
+    
+    if (!Array.isArray(items)) {
+      items = [items];  //arrayify
     }
+    for (let item of items) {
+      try {
+        results.push(...mod_utils.functionSignatureForASTItem(item));
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+    return results;
+  }
+
+  async revealSignatures(signatures, format){
+    format = format || 'markdown';
+    let errs = [];
+
+    const res = {};
+
+    for (const sig of signatures) {
+      if (sig.hasOwnProperty('err')) {
+        errs.push(sig.err);
+        continue; //skip errors
+      }
+      if (!res.hasOwnProperty(sig.sighash)) {
+        res[sig.sighash] = new Set([sig.signature]);
+      } else {
+        res[sig.sighash].add(sig.signature);
+      }
+    }
+
     let content;
-    if (!err) {
-      const header =
-        'Function Name | Sighash | Function Signature | \n ------------ | ------------ | ------------ |\n';
-      content =
-        header +
-        results
-          .map((r) => `${r.name} | ${r.sighash} | ${r.signature} |`)
-          .join('\n');
-    } else {
-      content = 'Failed to compute function signature: ' + err;
+
+    switch (format) {
+      case 'json':
+        content = JSON.stringify(
+          { signatures: res, errors: [...new Set(errs)], collisions: Object.values(res).filter(v => v.size > 1) },
+          (_key, value) => (value instanceof Set ? [...value] : value));
+        break;
+
+      default:
+        // markdown
+
+        const header =
+          '| Function Name | Sighash | Function Signature | \n | ------------ | ------------ | ------------ |\n';
+        content =
+          header +
+          signatures
+            .map((r) => `| ${r.name} | ${r.sighash} | ${r.signature} |`)
+            .join('\n');
+
+        const collisions = Object.values(res).filter(v => v.size > 1);
+        if (collisions.length) {
+          content += "\n\n";
+          content +=
+            "🔥 Collisions                  \n========================\n";
+          content += collisions.map(s => [...s]).join("\n");
+        }
+
+        if (errs.length) {
+          content += "\n\n";
+          content +=
+            "🐞 Errors                 \n========================\n";
+          content += [...new Set(errs)].join('\n');
+        }
     }
 
     vscode.workspace
-      .openTextDocument({ content: content, language: 'markdown' })
+      .openTextDocument({ content: content, language: format })
       .then((doc) =>
         vscode.window.showTextDocument(doc, {
           viewColumn: vscode.ViewColumn.Beside,
