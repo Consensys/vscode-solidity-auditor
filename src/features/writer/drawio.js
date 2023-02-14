@@ -53,14 +53,21 @@ const contractNameColorMapping = {
     "library": "#d5e8d4" //strokeColor=#82b366
 };
 
-function _mapAstFunctionName(name) {
-    switch (name) {
+function _mapAstNodeToFunctionName(node) {
+    if(node.isConstructor){
+        return "<b>__constr__<b>";
+    } else if(node.isReceiveEther){
+        return "<b>__receive__<b>";
+    } else if(node.isFallback){
+        return "<b>__fallback__<b>"; 
+    }
+    switch (node.name) {
         case null:
             return "<b>__constr__<b>";
         case "":
             return "<b>__fallback__<b>";
         default:
-            return name;
+            return node.name;
     }
 }
 
@@ -150,7 +157,7 @@ class DrawioContract {
         ), this);
         // add methods: 2,test,1, 
         this.methods.forEach((funcObj, i) => {
-            let method = `${stateMutabilityToIcon[funcObj._node.stateMutability] || ""}${_mapAstFunctionName(funcObj._node.name)}`;
+            let method = `${stateMutabilityToIcon[funcObj._node.stateMutability] || ""}${_mapAstNodeToFunctionName(funcObj._node)}`;
             content.push(serializeCsv({
                 "id": `${this.id}_f${i}`,
                 "rparent": `${this.id}`,
