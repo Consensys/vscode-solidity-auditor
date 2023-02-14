@@ -898,7 +898,7 @@ class ExtCallView extends BaseView {
         // data format:  obj[contract][function][calls]=[target, target];        
         let extcalls = focusSolidityElement.getExternalCalls().reduce((obj, c) => {
 
-            let result = sourceUnit.getFunctionAtLocation(c._node.loc.start.line, 0);
+            let result = sourceUnit.getFunctionAtLocation(c._node.loc.start.line, c._node.loc.start.column);
             let key = `${result.function.name}`;
             let data = obj[key];
 
