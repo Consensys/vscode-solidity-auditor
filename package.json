@@ -249,22 +249,22 @@
             },
             {
                 "command": "solidity-va.tools.error.signatures",
-                "title": "Tools - list error signatures",
+                "title": "Tools - list custom error signatures",
                 "category": "Solidity Visual Developer"
             },
             {
                 "command": "solidity-va.tools.error.signatures.json",
-                "title": "Tools - list error signatures (json)",
+                "title": "Tools - list custom error signatures (json)",
                 "category": "Solidity Visual Developer"
             },
             {
                 "command": "solidity-va.tools.error.signatures.forWorkspace",
-                "title": "Tools - list error signatures for workspace",
+                "title": "Tools - list custom error signatures for workspace",
                 "category": "Solidity Visual Developer"
             },
             {
                 "command": "solidity-va.tools.error.signatures.forWorkspace.json",
-                "title": "Tools - list error signatures for workspace (json)",
+                "title": "Tools - list custom error signatures for workspace (json)",
                 "category": "Solidity Visual Developer"
             },
             {
