@@ -527,17 +527,66 @@ ${topLevelContractsText}`;
 
     async listFunctionSignatures(document, asJson) {
         let sighash_colls = mod_utils.functionSignatureExtractor(document.getText());
+        this._showSignatures(sighash_colls, 'Function', asJson);
+    }
+
+    async listFunctionSignaturesForWorkspace(asJson) {
+        this._listSignaturesForWorkspace('functionSignatureExtractor', 'Function', asJson);
+    }
+
+    async listFunctionSignatureForAstItem(item, asJson) {
+        let sighashes = mod_utils.functionSignatureFromAstNode(item);
+
+        this._showSignatures({sighashes, collisions: []}, 'AST Function', asJson);
+    }
+
+    async listErrorSignatures(document, asJson) {
+        let sighash_colls = mod_utils.errorSignatureExtractor(document.getText());
+
+        this._showSignatures(sighash_colls, 'Custom Error', asJson);
+    }
+
+    async listErrorSignaturesForWorkspace(asJson) {
+        this._listSignaturesForWorkspace('errorSignatureExtractor', 'Custom Error', asJson);
+    }
+
+    async _listSignaturesForWorkspace(functionName, sigType, asJson) {
+        let sighashes = {};
+        let collisions = [];
+
+        await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
+            .then(uris => {
+                uris.forEach(uri => {
+                    try {
+                        let sig_colls = mod_utils[functionName](fs.readFileSync(uri.fsPath).toString('utf-8'));
+                        collisions = collisions.concat(sig_colls.collisions);  //we're not yet checking sighash collisions across contracts
+
+                        let currSigs = sig_colls.sighashes;
+                        for(let k in currSigs){
+                            sighashes[k]=currSigs[k];
+                        }
+                    } catch (e) {}
+                });
+            });
+
+        this._showSignatures({sighashes: sighashes, collisions: collisions}, 'Workspace ' + sigType, asJson);
+    }
+
+    async _showSignatures(sighash_colls, sigType, asJson) {
+
         let sighashes = sighash_colls.sighashes;
 
         if(sighash_colls.collisions.length){
-            vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + sighash_colls.collisions.join(","));
+            vscode.window.showErrorMessage('🔥 ' + sigType + ' signature collisions detected! ' + sighash_colls.collisions.join(","));
         }
 
         let content;
+        let language = 'markdown';
         if(asJson){
-            content = JSON.stringify(sighashes);
+            content = JSON.stringify(sighashes, null, 2);
+            language = 'json'
         } else {
-            content = "Sighash   |   Function Signature\n========================\n";
+            content = "Sighash   |   " + sigType + " Signatures\n========================\n";
             for(let hash in sighashes){
                 content += hash + "  =>  " + sighashes[hash] + "\n";
             }
@@ -547,66 +596,8 @@ ${topLevelContractsText}`;
                 content += sighash_colls.collisions.join("\n");
             }
         }
-        vscode.workspace.openTextDocument({content: content, language: "markdown"})
-            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
-    }
 
-    async listFunctionSignaturesForWorkspace(asJson) {
-
-        let sighashes = {};
-        let collisions = [];
-
-        await vscode.workspace.findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
-                .then(uris => {
-                    uris.forEach(uri => {
-                        try {
-                            let sig_colls = mod_utils.functionSignatureExtractor(fs.readFileSync(uri.fsPath).toString('utf-8'));
-                            collisions = collisions.concat(sig_colls.collisions);  //we're not yet checking sighash collisions across contracts
-
-                            let currSigs = sig_colls.sighashes;
-                            for(let k in currSigs){
-                                sighashes[k]=currSigs[k];
-                            }
-                        } catch (e) {}
-                    });
-                });
-
-        if(collisions.length){
-            vscode.window.showErrorMessage('🔥 FuncSig collisions detected! ' + collisions.join(","));
-        }
-
-        let content;
-        if(asJson){
-            content = JSON.stringify(sighashes);
-        } else {
-            content = "Sighash   |   Function Signature\n========================  \n";
-            for(let hash in sighashes){
-                content += hash + "  =>  " + sighashes[hash] + "  \n";
-            }
-            if(collisions.length){
-                content += "\n\n";
-                content += "collisions 🔥🔥🔥                 \n========================\n";
-                content += collisions.join("\n");
-            }
-        }
-        vscode.workspace.openTextDocument({content: content, language: "markdown"})
-            .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
-    }
-
-    async listFunctionSignatureForAstItem(item, asJson) {
-
-        let sighashes = mod_utils.functionSignatureFromAstNode(item);
-
-        let content;
-        if(asJson){
-            content = JSON.stringify(sighashes);
-        } else {
-            content = "Sighash   |   Function Signature\n========================  \n";
-            for(let hash in sighashes){
-                content += hash + "  =>  " + sighashes[hash] + "  \n";
-            }
-        }
-        vscode.workspace.openTextDocument({content: content, language: "markdown"})
+        vscode.workspace.openTextDocument({content: content, language: language})
             .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside));
     }
 

@@ -69,12 +69,20 @@ function canonicalizeEvmType(evmArg) {
 }
 
 function functionSignatureExtractor(content) {
-    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g;
+    return _signatureExtractor("function", content);
+}
+
+function errorSignatureExtractor(content) {
+    return _signatureExtractor("error", content);
+}
+
+function _signatureExtractor(sigType, content) {
+    const errorSigRegex =  new RegExp(`${sigType}\\s+(?<name>[^\\(\\s]+)\\s?\\((?<args>[^\\)]*)\\)`, 'g');
     let match;
     let sighashes = {};
     let collisions = [];
     // cleanup newlines, cleanup comment blocks
-    while (match = funcSigRegex.exec(content)) {
+    while (match = errorSigRegex.exec(content)) {
         let args = match.groups.args.replace(commentRegex(), "").split(",").map(item => canonicalizeEvmType(item.trim().split(" ")[0]));
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
         let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
@@ -127,5 +135,6 @@ function functionSignatureFromAstNode(item){
 module.exports = {
     CommentMapperRex : CommentMapperRex,
     functionSignatureExtractor : functionSignatureExtractor,
+    errorSignatureExtractor : errorSignatureExtractor,
     functionSignatureFromAstNode : functionSignatureFromAstNode
 };

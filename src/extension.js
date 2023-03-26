@@ -633,9 +633,54 @@ function onActivate(context) {
 
         context.subscriptions.push(
             vscode.commands.registerCommand(
+                'solidity-va.tools.function.signatures.forWorkspace',
+                function (doc) {
+                    commands.listFunctionSignaturesForWorkspace(false);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
                 'solidity-va.tools.function.signatures.forWorkspace.json',
                 function (doc) {
                     commands.listFunctionSignaturesForWorkspace(true);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures',
+                function (doc, asJson) {
+                    commands.listErrorSignatures(doc || vscode.window.activeTextEditor.document, asJson);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.json',
+                function (doc) {
+                    commands.listErrorSignatures(doc || vscode.window.activeTextEditor.document, true);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.forWorkspace',
+                function (doc) {
+                    commands.listErrorSignaturesForWorkspace(false);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.forWorkspace.json',
+                function (doc) {
+                    commands.listErrorSignaturesForWorkspace(true);
                 }
             )
         );
