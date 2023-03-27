@@ -537,7 +537,7 @@ ${topLevelContractsText}`;
 
     async listFunctionSignatureForAstItem(item, asJson) {
         let sighashes = mod_utils.functionSignatureFromAstNode(item);
-        this._showSignatures({ AST: {sighashes, collisions: [] } }, 'AST Function', asJson);
+        this._showSignatures({ '': {sighashes, collisions: [] } }, 'Function', asJson);
     }
 
     async listErrorSignatures(document, asJson) {
@@ -548,6 +548,11 @@ ${topLevelContractsText}`;
 
     async listErrorSignaturesForWorkspace(asJson) {
         this._listSignaturesForWorkspace('errorSignatureExtractor', 'Custom Error', asJson);
+    }
+
+    async listErrorSignatureForAstItem(item, asJson) {
+        let sighashes = mod_utils.errorSignatureFromAstNode(item);
+        this._showSignatures({ '': {sighashes, collisions: [] } }, 'Custom Error', asJson);
     }
 
     async listEventSignatures(document, asJson) {

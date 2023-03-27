@@ -119,20 +119,20 @@ function getCanonicalizedArgumentFromAstNode(node){
     } else {
         return null;
     }
-} 
+}
 
-function functionSignatureFromAstNode(item){
+function signatureFromAstNode(item){
+    const node = item._node || item;
+    const funcname = node.name;
 
-    let funcname = item._node.name;
+    const argsItem = node.parameters.type === "ParameterList" ? node.parameters.parameters : node.parameters;
+    const args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
 
-    let argsItem = item._node.parameters.type === "ParameterList" ? item._node.parameters.parameters : item._node.parameters;
-    let args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
+    const sig = `${funcname}(${args.join(',')})`;
+    const sighash = createKeccakHash('keccak256').update(sig).digest('hex').toString('hex').slice(0, 8);
 
-    let fnsig = `${funcname}(${args.join(',')})`;
-    let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
-
-    let result = {};
-    result[sighash] = fnsig;
+    const result = {};
+    result[sighash] = sig;
     return result;
 }
 
@@ -141,5 +141,6 @@ module.exports = {
     functionSignatureExtractor : functionSignatureExtractor,
     errorSignatureExtractor : errorSignatureExtractor,
     eventSignatureExtractor : eventSignatureExtractor,
-    functionSignatureFromAstNode : functionSignatureFromAstNode
+    functionSignatureFromAstNode : signatureFromAstNode,
+    errorSignatureFromAstNode : signatureFromAstNode,
 };
