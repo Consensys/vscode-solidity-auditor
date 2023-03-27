@@ -76,6 +76,10 @@ function errorSignatureExtractor(content) {
     return _signatureExtractor("error", content);
 }
 
+function eventSignatureExtractor(content) {
+    return _signatureExtractor("event", content);
+}
+
 function _signatureExtractor(sigType, content) {
     const sigRegex =  new RegExp(`${sigType}\\s+(?<name>[^\\(\\s]+)\\s?\\((?<args>[^\\)]*)\\)`, 'g');
     let match;
@@ -136,5 +140,6 @@ module.exports = {
     CommentMapperRex : CommentMapperRex,
     functionSignatureExtractor : functionSignatureExtractor,
     errorSignatureExtractor : errorSignatureExtractor,
+    eventSignatureExtractor : eventSignatureExtractor,
     functionSignatureFromAstNode : functionSignatureFromAstNode
 };

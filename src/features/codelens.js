@@ -122,6 +122,16 @@ class SolidityCodeLensProvider  {
             )
         );
 
+        config.eventSigs.enable && codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.tools.event.signatures',
+                    title: 'eventSigs',
+                    arguments: [document]
+                }
+            )
+        );
+
         let parser = this.g_workspace.sourceUnits[document.uri.fsPath];
         if(!parser) {
             console.warn("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.");
