@@ -69,24 +69,26 @@ function canonicalizeEvmType(evmArg) {
 }
 
 function functionSignatureExtractor(content) {
-    return _signatureExtractor("function", content);
+    return _signatureExtractor(/function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)(?<extra>[^{]*)/g, content);
 }
 
 function errorSignatureExtractor(content) {
-    return _signatureExtractor("error", content);
+    return _signatureExtractor(/error\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g, content);
 }
 
 function eventSignatureExtractor(content) {
-    return _signatureExtractor("event", content);
+    return _signatureExtractor(/event\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g, content);
 }
 
-function _signatureExtractor(sigType, content) {
-    const sigRegex =  new RegExp(`${sigType}\\s+(?<name>[^\\(\\s]+)\\s?\\((?<args>[^\\)]*)\\)`, 'g');
+function _signatureExtractor(regex, content) {
     let match;
     let sighashes = {};
     let collisions = [];
     // cleanup newlines, cleanup comment blocks
-    while (match = sigRegex.exec(content)) {
+    while (match = regex.exec(content)) {
+        if (/private|internal/.test(match.groups.extra)) {
+            continue;
+        }
         let args = match.groups.args.replace(commentRegex(), "").split(",").map(item => canonicalizeEvmType(item.trim().split(" ")[0]));
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
         let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
@@ -123,12 +125,12 @@ function getCanonicalizedArgumentFromAstNode(node){
 
 function signatureFromAstNode(item){
     const node = item._node || item;
-    const funcname = node.name;
+    const name = node.name;
 
     const argsItem = node.parameters.type === "ParameterList" ? node.parameters.parameters : node.parameters;
     const args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
 
-    const sig = `${funcname}(${args.join(',')})`;
+    const sig = `${name}(${args.join(',')})`;
     const sighash = createKeccakHash('keccak256').update(sig).digest('hex').toString('hex').slice(0, 8);
 
     const result = {};

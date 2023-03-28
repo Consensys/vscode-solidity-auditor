@@ -239,7 +239,7 @@ class SolidityCodeLensProvider  {
             })
         );
         //exclude constructor (item._node.name == null)
-        config.funcSigs.enable && item._node.name && lenses.push(new vscode.CodeLens(range, {
+        config.funcSigs.enable && item._node.name && ['public', 'external'].includes(item._node.visibility) && lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.tools.function.signatureForAstItem',
             title: 'funcSig',
             arguments: [item]
