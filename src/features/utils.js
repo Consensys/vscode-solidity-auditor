@@ -65,7 +65,7 @@ function canonicalizeEvmType(evmArg) {
         const foundings = groups.pop();
         return `${TYPE_ALIASES[foundings.type]}${foundings.tail}`;
     }
-    return evmArg.replace(evmTypeRegex, replacer);
+    return evmArg && evmArg.replace(evmTypeRegex, replacer);
 }
 
 function functionSignatureExtractor(content) {
