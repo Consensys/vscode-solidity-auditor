@@ -65,16 +65,30 @@ function canonicalizeEvmType(evmArg) {
         const foundings = groups.pop();
         return `${TYPE_ALIASES[foundings.type]}${foundings.tail}`;
     }
-    return evmArg.replace(evmTypeRegex, replacer);
+    return evmArg && evmArg.replace(evmTypeRegex, replacer);
 }
 
 function functionSignatureExtractor(content) {
-    const funcSigRegex = /function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g;
+    return _signatureExtractor(/function\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)(?<extra>[^{]*)/g, content);
+}
+
+function errorSignatureExtractor(content) {
+    return _signatureExtractor(/error\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g, content);
+}
+
+function eventSignatureExtractor(content) {
+    return _signatureExtractor(/event\s+(?<name>[^\(\s]+)\s?\((?<args>[^\)]*)\)/g, content);
+}
+
+function _signatureExtractor(regex, content) {
     let match;
     let sighashes = {};
     let collisions = [];
     // cleanup newlines, cleanup comment blocks
-    while (match = funcSigRegex.exec(content)) {
+    while (match = regex.exec(content)) {
+        if (/private|internal/.test(match.groups.extra)) {
+            continue;
+        }
         let args = match.groups.args.replace(commentRegex(), "").split(",").map(item => canonicalizeEvmType(item.trim().split(" ")[0]));
         let fnsig = `${match.groups.name.trim()}(${args.join(',')})`;
         let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
@@ -107,25 +121,28 @@ function getCanonicalizedArgumentFromAstNode(node){
     } else {
         return null;
     }
-} 
+}
 
-function functionSignatureFromAstNode(item){
+function signatureFromAstNode(item){
+    const node = item._node || item;
+    const name = node.name;
 
-    let funcname = item._node.name;
+    const argsItem = node.parameters.type === "ParameterList" ? node.parameters.parameters : node.parameters;
+    const args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
 
-    let argsItem = item._node.parameters.type === "ParameterList" ? item._node.parameters.parameters : item._node.parameters;
-    let args = argsItem.map(o => canonicalizeEvmType(getCanonicalizedArgumentFromAstNode(o)));
+    const sig = `${name}(${args.join(',')})`;
+    const sighash = createKeccakHash('keccak256').update(sig).digest('hex').toString('hex').slice(0, 8);
 
-    let fnsig = `${funcname}(${args.join(',')})`;
-    let sighash = createKeccakHash('keccak256').update(fnsig).digest('hex').toString('hex').slice(0, 8);
-
-    let result = {};
-    result[sighash] = fnsig;
+    const result = {};
+    result[sighash] = sig;
     return result;
 }
 
 module.exports = {
     CommentMapperRex : CommentMapperRex,
     functionSignatureExtractor : functionSignatureExtractor,
-    functionSignatureFromAstNode : functionSignatureFromAstNode
+    errorSignatureExtractor : errorSignatureExtractor,
+    eventSignatureExtractor : eventSignatureExtractor,
+    functionSignatureFromAstNode : signatureFromAstNode,
+    errorSignatureFromAstNode : signatureFromAstNode,
 };

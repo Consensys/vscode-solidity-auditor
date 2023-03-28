@@ -40,7 +40,16 @@
         "onCommand:solidity-va.tools.flattenCandidates",
         "onCommand:solidity-va.tools.function.signatures",
         "onCommand:solidity-va.tools.function.signatures.json",
+        "onCommand:solidity-va.tools.function.signatures.forWorkspace",
         "onCommand:solidity-va.tools.function.signatures.forWorkspace.json",
+        "onCommand:solidity-va.tools.error.signatures",
+        "onCommand:solidity-va.tools.error.signatures.json",
+        "onCommand:solidity-va.tools.error.signatures.forWorkspace",
+        "onCommand:solidity-va.tools.error.signatures.forWorkspace.json",
+        "onCommand:solidity-va.tools.event.signatures",
+        "onCommand:solidity-va.tools.event.signatures.json",
+        "onCommand:solidity-va.tools.event.signatures.forWorkspace",
+        "onCommand:solidity-va.tools.event.signatures.forWorkspace.json",
         "onCommand:solidity-va.tools.remix.openExternal",
         "onCommand:solidity-va.cockpit.explorer.refresh",
         "onCommand:solidity-va.cockpit.topLevelContracts.refresh",
@@ -233,8 +242,53 @@
                 "category": "Solidity Visual Developer"
             },
             {
+                "command": "solidity-va.tools.function.signatures.forWorkspace",
+                "title": "Tools - list function signatures for workspace",
+                "category": "Solidity Visual Developer"
+            },
+            {
                 "command": "solidity-va.tools.function.signatures.forWorkspace.json",
-                "title": "Tools - list function signatures for all solidity files in workspace (json)",
+                "title": "Tools - list function signatures for workspace (json)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.error.signatures",
+                "title": "Tools - list custom error signatures",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.error.signatures.json",
+                "title": "Tools - list custom error signatures (json)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.error.signatures.forWorkspace",
+                "title": "Tools - list custom error signatures for workspace",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.error.signatures.forWorkspace.json",
+                "title": "Tools - list custom error signatures for workspace (json)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.event.signatures",
+                "title": "Tools - list event signatures",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.event.signatures.json",
+                "title": "Tools - list event signatures (json)",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.event.signatures.forWorkspace",
+                "title": "Tools - list event signatures for workspace",
+                "category": "Solidity Visual Developer"
+            },
+            {
+                "command": "solidity-va.tools.event.signatures.forWorkspace.json",
+                "title": "Tools - list event signatures for workspace (json)",
                 "category": "Solidity Visual Developer"
             },
             {
@@ -442,6 +496,16 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable/Disable codelens 'funcSigs'"
+                },
+                "solidity-va.codelens.errorSigs.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'errorSigs'"
+                },
+                "solidity-va.codelens.eventSigs.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable codelens 'eventSigs'"
                 },
                 "solidity-va.codelens.uml.enable": {
                     "type": "boolean",

@@ -112,6 +112,26 @@ class SolidityCodeLensProvider  {
             )
         );
 
+        config.errorSigs.enable && codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.tools.error.signatures',
+                    title: 'errorSigs',
+                    arguments: [document]
+                }
+            )
+        );
+
+        config.eventSigs.enable && codeLens.push(
+            new vscode.CodeLens(
+                firstLine, {
+                    command: 'solidity-va.tools.event.signatures',
+                    title: 'eventSigs',
+                    arguments: [document]
+                }
+            )
+        );
+
         let parser = this.g_workspace.sourceUnits[document.uri.fsPath];
         if(!parser) {
             console.warn("[ERR] parser was not ready while adding codelenses. omitting contract specific lenses.");
@@ -134,7 +154,7 @@ class SolidityCodeLensProvider  {
         );
         
 
-        let annotateContractTypes = ["contract","library", "abstract"];
+        let annotateContractTypes = ["contract", "library", "abstract"];
         /** all contract decls */
         for(let contractObj of Object.values(parser.contracts)){
             if(token.isCancellationRequested){
@@ -147,6 +167,12 @@ class SolidityCodeLensProvider  {
                 /** all function decls */
                 for(let funcObj of contractObj.functions){
                     codeLens = codeLens.concat(this.onFunctionDecl(document, contractObj.name, funcObj));
+                }
+
+                for(let node of contractObj._node.subNodes){
+                    if (node.type == 'CustomErrorDefinition') {
+                        codeLens = codeLens.concat(this.onCustomErrorDecl(node));
+                    }
                 }
             } else if (contractObj._node.kind == "interface"){
                 // add uml to interface
@@ -213,9 +239,25 @@ class SolidityCodeLensProvider  {
             })
         );
         //exclude constructor (item._node.name == null)
-        config.funcSigs.enable && item._node.name && lenses.push(new vscode.CodeLens(range, {
+        config.funcSigs.enable && item._node.name && ['public', 'external'].includes(item._node.visibility) && lenses.push(new vscode.CodeLens(range, {
             command: 'solidity-va.tools.function.signatureForAstItem',
             title: 'funcSig',
+            arguments: [item]
+            })
+        );
+
+        return lenses;
+    }
+
+    onCustomErrorDecl(item) {
+        let lenses = [];
+        let range = elemLocToRange(item);
+
+        let config = settings.extensionConfig().codelens;
+
+        config.errorSigs.enable && lenses.push(new vscode.CodeLens(range, {
+            command: 'solidity-va.tools.error.signatureForAstItem',
+            title: 'errorSig',
             arguments: [item]
             })
         );

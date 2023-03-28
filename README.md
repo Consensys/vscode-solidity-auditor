@@ -329,6 +329,8 @@ And there is more to come 🙌 stay tuned!
 ![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
 * list all function signatures (human readable or json format)  
 ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+* list all custom error signatures (human readable or json format)
+* list all event signatures (human readable or json format)
 * open remix in external browser
 
 Please refer to the extension's contribution section to show an up-to-date list of commands.

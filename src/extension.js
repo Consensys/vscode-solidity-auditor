@@ -633,6 +633,15 @@ function onActivate(context) {
 
         context.subscriptions.push(
             vscode.commands.registerCommand(
+                'solidity-va.tools.function.signatures.forWorkspace',
+                function (doc) {
+                    commands.listFunctionSignaturesForWorkspace(false);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
                 'solidity-va.tools.function.signatures.forWorkspace.json',
                 function (doc) {
                     commands.listFunctionSignaturesForWorkspace(true);
@@ -645,6 +654,87 @@ function onActivate(context) {
                 'solidity-va.tools.function.signatureForAstItem',
                 function (item) {
                     commands.listFunctionSignatureForAstItem(item);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures',
+                function (doc, asJson) {
+                    commands.listErrorSignatures(doc || vscode.window.activeTextEditor.document, asJson);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.json',
+                function (doc) {
+                    commands.listErrorSignatures(doc || vscode.window.activeTextEditor.document, true);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.forWorkspace',
+                function (doc) {
+                    commands.listErrorSignaturesForWorkspace(false);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatures.forWorkspace.json',
+                function (doc) {
+                    commands.listErrorSignaturesForWorkspace(true);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.error.signatureForAstItem',
+                function (item) {
+                    commands.listErrorSignatureForAstItem(item);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.event.signatures',
+                function (doc, asJson) {
+                    commands.listEventSignatures(doc || vscode.window.activeTextEditor.document, asJson);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.event.signatures.json',
+                function (doc) {
+                    commands.listEventSignatures(doc || vscode.window.activeTextEditor.document, true);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.event.signatures.forWorkspace',
+                function (doc) {
+                    commands.listEventSignaturesForWorkspace(false);
+                }
+            )
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                'solidity-va.tools.event.signatures.forWorkspace.json',
+                function (doc) {
+                    commands.listEventSignaturesForWorkspace(true);
                 }
             )
         );
