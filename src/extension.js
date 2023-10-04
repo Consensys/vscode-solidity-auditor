@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 /**
  * @author github.com/tintinweb
  * @license GPLv3
@@ -6,35 +6,35 @@
  *
  * */
 /** imports */
-const vscode = require('vscode');
-const { CancellationTokenSource } = require('vscode');
-const path = require('path');
+const vscode = require("vscode");
+const { CancellationTokenSource } = require("vscode");
+const path = require("path");
 
-const mod_hover = require('./features/hover');
-const mod_decorator = require('./features/deco');
+const mod_hover = require("./features/hover");
+const mod_decorator = require("./features/deco");
 const {
   SolidityDocumentSymbolProvider,
   getAstValueForExpression,
-} = require('./features/symbols');
-const mod_parser = require('solidity-workspace');
-const { DiliDiagnosticCollection } = require('./features/genericDiag');
-const { Commands } = require('./features/commands');
+} = require("./features/symbols");
+const mod_parser = require("solidity-workspace");
+const { DiliDiagnosticCollection } = require("./features/genericDiag");
+const { Commands } = require("./features/commands");
 const {
   StaticLensProvider,
   ParserLensProvider,
-} = require('./features/codelens');
-const settings = require('./settings');
-const { Cockpit } = require('./features/cockpit.js');
-const { SolidityReferenceProvider } = require('./features/references');
+} = require("./features/codelens");
+const settings = require("./settings");
+const { Cockpit } = require("./features/cockpit.js");
+const { SolidityReferenceProvider } = require("./features/references");
 
-const { WhatsNewHandler } = require('./features/whatsnew/whatsNew');
+const { WhatsNewHandler } = require("./features/whatsnew/whatsNew");
 
 /** globals - const */
 const languageId = settings.languageId;
 const docSelector = settings.docSelector;
 
 const g_workspace = new mod_parser.Workspace(
-  vscode.workspace.workspaceFolders.map((wf) => wf.uri.fsPath)
+  vscode.workspace.workspaceFolders.map((wf) => wf.uri.fsPath),
 );
 var activeEditor;
 var g_diagnostics;
@@ -53,7 +53,7 @@ function editorJumptoRange(editor, range) {
     range.start.line,
     range.start.character,
     range.end.line,
-    range.end.character
+    range.end.character,
   );
   if (range.start.line === editor.selection.active.line) {
     revealType = vscode.TextEditorRevealType.InCenterIfOutsideViewport;
@@ -61,25 +61,6 @@ function editorJumptoRange(editor, range) {
 
   editor.selection = selection;
   editor.revealRange(selection, revealType);
-}
-
-async function setDecorations(editor, decorations) {
-  if (!editor) {
-    return;
-  }
-  let deco_map = {};
-
-  for (var styleKey in mod_decorator.styles) {
-    deco_map[styleKey] = [];
-  }
-
-  decorations.forEach(function (deco) {
-    deco_map[deco.decoStyle].push(deco);
-  });
-
-  for (let styleKey in deco_map) {
-    editor.setDecorations(mod_decorator.styles[styleKey], deco_map[styleKey]);
-  }
 }
 
 /*** EVENTS *********************************************** */
@@ -90,34 +71,20 @@ function onInitModules(context, type) {
   //globals init
   g_diagnostics = new DiliDiagnosticCollection(
     context,
-    vscode.workspace.rootPath
+    vscode.workspace.rootPath,
   );
 }
 
-/** func decs */
-
-function checkReservedIdentifiers(identifiers) {
-  let decorations = [];
-  if (!identifiers) {
-    return decorations;
-  }
-
-  if (typeof identifiers.forEach !== 'function') {
-    identifiers = Object.values(identifiers);
-  }
-  identifiers.forEach(function (ident) {
-    if (mod_parser.RESERVED_KEYWORDS.indexOf(ident.name) >= 0) {
-      decorations.push(mod_decorator.CreateDecoStyle.reserved(ident));
-    }
-  });
-  return decorations;
-}
-
-function analyzeSourceUnit(cancellationToken, document, editor, initialLoad=false) {
-  console.log('inspect ...');
+function analyzeSourceUnit(
+  cancellationToken,
+  document,
+  editor,
+  initialLoad = false,
+) {
+  console.log("inspect ...");
 
   if (!document) {
-    console.error('-BUG- cannot analyze empty document!');
+    console.error("-BUG- cannot analyze empty document!");
     return;
   }
 
@@ -128,351 +95,40 @@ function analyzeSourceUnit(cancellationToken, document, editor, initialLoad=fals
     })
     .catch((e) => {
       console.warn(
-        `Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`
+        `Error adding file or one of its dependencies to workspace (parser error): ${document.fileName}`,
       );
       if (settings.extensionConfig().debug.parser.showExceptions) {
         console.error(e);
       }
     });
 
-  g_workspace.withParserReady(document.fileName, initialLoad).then((finished) => {
-    console.log('✓ workspace ready (linearized, resolved deps, ..)');
-    if (
-      cancellationToken.isCancellationRequested ||
-      !finished.some(
-        (fp) => fp.value && fp.value.filePath === document.fileName
-      )
-    ) {
-      //abort - new analysis running already OR our finished task is not in the tasklist :/
-      return;
-    }
-
-    let currentConfig = settings.extensionConfig();
-    let shouldDecorate =
-      currentConfig.deco.statevars ||
-      currentConfig.deco.arguments ||
-      currentConfig.deco.warn.reserved;
-
-    if (shouldDecorate && editor) {
-      var decorations = [];
-
-      let this_sourceUnit = g_workspace.get(document.fileName);
-
-      console.log('+ (decorate) in sourceunit: ' + this_sourceUnit.filePath);
-
-      if (settings.extensionConfig().deco.warn.externalCalls) {
-        decorations = decorations.concat(
-          this_sourceUnit.getExternalCalls().map((c) => {
-            return mod_decorator.CreateDecoStyle.extCall(c._node);
-          })
-        );
-        console.log('✓ highlight external calls');
-      }
-
-      for (var contract of Object.values(this_sourceUnit.contracts)) {
-        console.log('+ in contract: ' + contract.name);
-
-        /** todo fixme: rework */
-        if (currentConfig.deco.statevars) {
-          for (var stateVar in contract.stateVars) {
-            let svar = contract.stateVars[stateVar];
-            //check for shadowing
-            decorations.push(
-              mod_decorator.CreateDecoStyle.stateVarDecl(
-                svar,
-                document,
-                contract
-              )
-            );
-
-            /*** annotate all identifiers */
-            //console.log(svar.usedAt)
-            svar.extra.usedAt.forEach((ident) => {
-              //check shadow in local declaration
-              if (
-                typeof ident.extra.inFunction.declarations[ident.name] ==
-                'undefined'
-              ) {
-                // no local declaration. annotate as statevar
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.stateVarIdent(
-                    ident,
-                    document,
-                    contract,
-                    svar
-                  )
-                );
-              } else {
-                //shadowed!
-                console.log('SHADOWED STATEVAR --> ' + ident.name);
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedStateVar(
-                    ident,
-                    document,
-                    contract,
-                    svar
-                  )
-                );
-                //declaration
-                let declaration =
-                  ident.extra.inFunction.declarations[ident.name];
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedStateVar(
-                    declaration,
-                    document,
-                    contract,
-                    svar
-                  )
-                );
-              }
-            });
-          }
-          console.log('✓ decorate scope');
-
-          /*** inherited vars */
-          /** have to get all identifiers :// */
-          /** fixme ugly hack ... */
-          for (let func of contract.functions) {
-            //all functions
-            let highlightIdentifiers = [];
-
-            func.identifiers.forEach((ident) => {
-              if (ident.name === undefined) {
-                return;
-              } //skip assemblyCall has no attrib .name
-              // all idents in function
-
-              const is_declared_locally =
-                !!ident.extra.inFunction.declarations[ident.name];
-              const is_state_var = !!contract.stateVars[ident.name];
-              const is_inherited = !!(
-                contract.inherited_names[ident.name] &&
-                contract.inherited_names[ident.name] != contract
-              );
-
-              if (is_declared_locally && !is_inherited && !is_state_var) {
-                // local declaration
-                switch (ident.extra.scope) {
-                  case 'argument':
-                  case 'super':
-                    highlightIdentifiers.push(ident);
-                    break;
-                  case 'returns':
-                  case 'body':
-                    break;
-                  case 'storageRef':
-                    decorations.push(
-                      mod_decorator.CreateDecoStyle.stateVarIdent(
-                        ident,
-                        document,
-                        contract,
-                        ident.extra.declaration
-                      )
-                    );
-                    break;
-                  case 'stateVar':
-                    console.log('!!!! shadowed statevar'); // handled in a previous loop already
-                    break;
-                  case 'inheritedName':
-                    console.log('!!!!! shadowed derived var');
-                    decorations.push(
-                      mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                        ident,
-                        document,
-                        contract
-                      )
-                    );
-                    break;
-                  default:
-                    break;
-                }
-              } else if (is_declared_locally && is_inherited) {
-                console.log('!!!!! shadowed derived var');
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              } else if (is_state_var && is_inherited) {
-                // no local declaration -> direct use of stateVar
-                //shadowed inherited var
-                console.log('!!! statevar shadows inherited');
-                console.log('!!!!! shadowed derived var');
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              } else if (is_inherited) {
-                // normal inherited var
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.inheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              }
-              //annotate external calls?
-            });
-            if (settings.extensionConfig().deco.arguments) {
-              decorations = decorations.concat(
-                mod_decorator.semanticHighlightFunctionParameters(
-                  highlightIdentifiers
-                )
-              );
-            }
-
-            if (settings.extensionConfig().deco.warn.reserved) {
-              decorations = decorations.concat(
-                checkReservedIdentifiers(func.identifiers)
-              );
-              decorations = decorations.concat(
-                checkReservedIdentifiers(func.arguments)
-              );
-              decorations = decorations.concat(
-                checkReservedIdentifiers(func.returns)
-              );
-            }
-          }
-          //decorate modifiers (fixme copy pasta)
-          for (let functionName in contract.modifiers) {
-            //all modifiers
-            let highlightIdentifiers = [];
-            contract.modifiers[functionName].identifiers.forEach((ident) => {
-              if (ident.name === undefined) {
-                return;
-              } //skip assemblyCall has no attrib .name
-
-              const is_declared_locally =
-                !!ident.extra.inFunction.declarations[ident.name];
-              const is_state_var = !!contract.stateVars[ident.name];
-              const is_inherited = !!(
-                contract.inherited_names[ident.name] &&
-                contract.inherited_names[ident.name] != contract
-              );
-
-              if (is_declared_locally && !is_inherited && !is_state_var) {
-                // local declaration
-                switch (ident.extra.scope) {
-                  case 'argument':
-                    highlightIdentifiers.push(ident);
-                    break;
-                  case 'returns':
-                  case 'body':
-                    break;
-                  case 'storageRef':
-                    decorations.push(
-                      mod_decorator.CreateDecoStyle.stateVarIdent(
-                        ident,
-                        document,
-                        contract,
-                        ident.extra.declaration
-                      )
-                    );
-                    break;
-                  case 'stateVar':
-                    console.log('!!!! shadowed statevar'); // handled in a previous loop already
-                    break;
-                  case 'inheritedName':
-                    console.log('!!!!! shadowed derived var');
-                    decorations.push(
-                      mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                        ident,
-                        document,
-                        contract
-                      )
-                    );
-                    break;
-                  default:
-                    break;
-                }
-              } else if (is_declared_locally && is_inherited) {
-                console.log('!!!!! shadowed derived var');
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              } else if (is_state_var && is_inherited) {
-                // no local declaration -> direct use of stateVar
-                //shadowed inherited var
-                console.log('!!! statevar shadows inherited');
-                console.log('!!!!! shadowed derived var');
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.shadowedInheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              } else if (is_inherited) {
-                // normal inherited var
-                decorations.push(
-                  mod_decorator.CreateDecoStyle.inheritedStateVar(
-                    ident,
-                    document,
-                    contract
-                  )
-                );
-              }
-
-              //annotate external calls?
-            });
-            if (settings.extensionConfig().deco.arguments) {
-              decorations = decorations.concat(
-                mod_decorator.semanticHighlightFunctionParameters(
-                  highlightIdentifiers
-                )
-              );
-            }
-
-            if (settings.extensionConfig().deco.warn.reserved) {
-              decorations = decorations.concat(
-                checkReservedIdentifiers(
-                  contract.modifiers[functionName].identifiers
-                )
-              );
-              decorations = decorations.concat(
-                checkReservedIdentifiers(
-                  contract.modifiers[functionName].arguments
-                )
-              );
-              decorations = decorations.concat(
-                checkReservedIdentifiers(
-                  contract.modifiers[functionName].returns
-                )
-              );
-            }
-          }
-          //decorate events
-          for (var eventDef of contract.events) {
-            if (settings.extensionConfig().deco.warn.reserved) {
-              decorations = decorations.concat(
-                checkReservedIdentifiers(eventDef.arguments)
-              );
-            }
-          }
-          console.log('✓ decorate scope (new) - identifier ');
-        }
-      }
-      console.log('✓ decorate scope done ');
-      if (cancellationToken.isCancellationRequested) {
-        //abort - new analysis running already
+  g_workspace
+    .withParserReady(document.fileName, initialLoad)
+    .then((finished) => {
+      console.log("✓ workspace ready (linearized, resolved deps, ..)");
+      if (
+        cancellationToken.isCancellationRequested ||
+        !finished.some(
+          (fp) => fp.value && fp.value.filePath === document.fileName,
+        )
+      ) {
+        //abort - new analysis running already OR our finished task is not in the tasklist :/
         return;
       }
 
-      setDecorations(editor, decorations);
-      console.log('✓ apply decorations - scope');
-    }
-    console.log('✓ analyzeSourceUnit - done');
-  });
+      let currentConfig = settings.extensionConfig();
+      let shouldDecorate =
+        currentConfig.deco.statevars ||
+        currentConfig.deco.arguments ||
+        currentConfig.deco.warn.reserved;
+
+      if (shouldDecorate && editor) {
+        let this_sourceUnit = g_workspace.get(document.fileName);
+        mod_decorator.decorateSourceUnit(document, editor, this_sourceUnit);
+        //decorate
+      }
+      console.log("✓ analyzeSourceUnit - done");
+    });
 }
 
 /** events */
@@ -489,7 +145,7 @@ function onDidSave(document) {
   }
 }
 
-function refresh(editor, initialLoad=false) {
+function refresh(editor, initialLoad = false) {
   let document =
     editor && editor.document
       ? editor.document
@@ -497,30 +153,30 @@ function refresh(editor, initialLoad=false) {
       ? vscode.window.activeTextEditor.document
       : undefined;
   if (!document) {
-    console.warn('change event on non-document');
+    console.warn("change event on non-document");
     return;
   }
   if (document.languageId != languageId) {
-    console.log('ondidchange: wrong langid');
+    console.log("ondidchange: wrong langid");
     return;
   }
-  currentCancellationTokens.onDidChange.dispose();
+  currentCancellationTokens.onDidChange.cancel();
   currentCancellationTokens.onDidChange = new CancellationTokenSource();
-  console.log('--- on-did-change');
+  console.log("--- on-did-change");
   try {
     analyzeSourceUnit(
       currentCancellationTokens.onDidChange.token,
       document,
       editor,
-      initialLoad
+      initialLoad,
     );
   } catch (err) {
-    if (typeof err !== 'object') {
+    if (typeof err !== "object") {
       //CancellationToken
       throw err;
     }
   }
-  console.log('✓✓✓ on-did-change - resolved');
+  console.log("✓✓✓ on-did-change - resolved");
 }
 
 function onDidChange(editor) {
@@ -531,7 +187,7 @@ function onDidChange(editor) {
 function onActivate(context) {
   activeEditor = vscode.window.activeTextEditor;
 
-  console.log('onActivate');
+  console.log("onActivate");
 
   registerDocType(languageId, docSelector);
 
@@ -542,7 +198,7 @@ function onActivate(context) {
 
     if (!settings.extensionConfig().mode.active) {
       console.log(
-        'ⓘ activate extension: entering passive mode. not registering any active code augmentation support.'
+        "ⓘ activate extension: entering passive mode. not registering any active code augmentation support.",
       );
       return;
     }
@@ -555,44 +211,44 @@ function onActivate(context) {
 
     /** command setup */
     context.subscriptions.push(
-      vscode.commands.registerCommand('solidity-va.whatsNew.show', function () {
+      vscode.commands.registerCommand("solidity-va.whatsNew.show", function () {
         new WhatsNewHandler().showMessage(context);
-      })
+      }),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.test.createTemplate',
+        "solidity-va.test.createTemplate",
         function (doc, contractName) {
           commands.generateUnittestStubForContract(
             doc || vscode.window.activeTextEditor.document,
-            contractName
+            contractName,
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.mdreport',
+        "solidity-va.surya.mdreport",
         function (doc, multiSelectTreeItems) {
           doc = multiSelectTreeItems || doc;
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'mdreport'
+            "mdreport",
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.graph',
+        "solidity-va.surya.graph",
         function (doc, files) {
           if (
             files &&
-            typeof files[0] === 'object' &&
-            files[0].hasOwnProperty('children')
+            typeof files[0] === "object" &&
+            files[0].hasOwnProperty("children")
           ) {
             //treeItem or fspaths
             doc = files;
@@ -600,31 +256,31 @@ function onActivate(context) {
           }
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'graph',
-            files
+            "graph",
+            files,
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.graphThis',
+        "solidity-va.surya.graphThis",
         function () {
-          commands.surya(vscode.window.activeTextEditor.document, 'graph', [
+          commands.surya(vscode.window.activeTextEditor.document, "graph", [
             vscode.window.activeTextEditor.document.uri.fsPath,
           ]);
-        }
-      )
+        },
+      ),
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.graphSimple',
+        "solidity-va.surya.graphSimple",
         function (doc, files) {
           if (
             files &&
-            typeof files[0] === 'object' &&
-            files[0].hasOwnProperty('children')
+            typeof files[0] === "object" &&
+            files[0].hasOwnProperty("children")
           ) {
             //treeItem or fspaths
             doc = files;
@@ -632,83 +288,83 @@ function onActivate(context) {
           }
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'graphSimple',
-            files
+            "graphSimple",
+            files,
           );
-        }
-      )
+        },
+      ),
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.inheritance',
+        "solidity-va.surya.inheritance",
         function (doc, multiSelectTreeItems) {
           doc = multiSelectTreeItems || doc;
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'inheritance'
+            "inheritance",
           );
-        }
-      )
+        },
+      ),
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.parse',
+        "solidity-va.surya.parse",
         function (doc) {
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'parse'
+            "parse",
           );
-        }
-      )
+        },
+      ),
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.dependencies',
+        "solidity-va.surya.dependencies",
         function (doc, ContractName) {
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'dependencies',
-            [ContractName]
+            "dependencies",
+            [ContractName],
           );
-        }
-      )
+        },
+      ),
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.surya.ftrace',
+        "solidity-va.surya.ftrace",
         function (doc, contractName, functionName, mode) {
           commands.surya(
             doc || vscode.window.activeTextEditor.document,
-            'ftrace',
-            [contractName, functionName, mode]
+            "ftrace",
+            [contractName, functionName, mode],
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.insights.topLevelContracts',
+        "solidity-va.insights.topLevelContracts",
         function () {
           commands.findTopLevelContracts();
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.flaterra',
+        "solidity-va.tools.flaterra",
         function (doc) {
           commands.solidityFlattener([
             (doc && doc.uri) || vscode.window.activeTextEditor.document.uri,
           ]);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.explorer.context.flatten',
+        "solidity-va.cockpit.explorer.context.flatten",
         async function (treeItem, multiSelectTreeItems) {
           multiSelectTreeItems = multiSelectTreeItems || [];
           [...multiSelectTreeItems, treeItem].forEach(async (treeItem) => {
@@ -725,158 +381,157 @@ function onActivate(context) {
                                 });
                         */
           });
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.flattenCandidates',
+        "solidity-va.tools.flattenCandidates",
         function () {
           commands.flattenCandidates();
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.topLevelContracts.flatten',
+        "solidity-va.cockpit.topLevelContracts.flatten",
         function () {
           let sourceFiles =
             cockpit.views.topLevelContracts.dataProvider.data.reduce(function (
               obj,
-              item
+              item,
             ) {
-              obj[path.basename(item.path, '.sol')] = vscode.Uri.file(
-                item.path
+              obj[path.basename(item.path, ".sol")] = vscode.Uri.file(
+                item.path,
               );
               return obj;
-            },
-            {});
+            }, {});
           commands.flattenCandidates(sourceFiles);
           cockpit.views.flatFiles.refresh();
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.function.signatures',
+        "solidity-va.tools.function.signatures",
         function (doc, asJson) {
           commands.listFunctionSignatures(
             doc || vscode.window.activeTextEditor.document,
-            asJson
+            asJson,
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.function.signatures.json',
+        "solidity-va.tools.function.signatures.json",
         function (doc) {
           commands.listFunctionSignatures(
             doc || vscode.window.activeTextEditor.document,
-            true
+            true,
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.function.signatures.forWorkspace',
+        "solidity-va.tools.function.signatures.forWorkspace",
         function (doc) {
           commands.listFunctionSignaturesForWorkspace(false);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.function.signatures.forWorkspace.json',
+        "solidity-va.tools.function.signatures.forWorkspace.json",
         function (doc) {
           commands.listFunctionSignaturesForWorkspace(true);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.function.signatureForAstItem',
+        "solidity-va.tools.function.signatureForAstItem",
         function (item) {
           commands.signatureForAstItem(item);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.tools.remix.openExternal',
+        "solidity-va.tools.remix.openExternal",
         function () {
           vscode.env.openExternal(
-            vscode.Uri.parse('https://remix.ethereum.org')
+            vscode.Uri.parse("https://remix.ethereum.org"),
           );
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.uml.contract.outline',
+        "solidity-va.uml.contract.outline",
         function (doc, contractObjects) {
           commands.umlContractsOutline(contractObjects);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.uml.contract.export.drawio.csv',
+        "solidity-va.uml.contract.export.drawio.csv",
         function (doc, contractObjects) {
           commands.drawioContractsOutlineAsCSV(contractObjects);
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.topLevelContracts.refresh',
+        "solidity-va.cockpit.topLevelContracts.refresh",
         async (treeItem, multiSelectTreeItems) => {
           if (multiSelectTreeItems) {
             cockpit.views.topLevelContracts.refresh(
               multiSelectTreeItems
-                .filter((t) => !t.path.endsWith('.sol'))
-                .map((t) => t.path)
+                .filter((t) => !t.path.endsWith(".sol"))
+                .map((t) => t.path),
             );
           } else {
             cockpit.views.topLevelContracts.refresh(treeItem && treeItem.path);
           }
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.explorer.refresh',
+        "solidity-va.cockpit.explorer.refresh",
         async () => {
           cockpit.views.explorer.refresh();
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.flatFiles.refresh',
+        "solidity-va.cockpit.flatFiles.refresh",
         async () => {
           cockpit.views.flatFiles.refresh();
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.jumpToRange',
+        "solidity-va.cockpit.jumpToRange",
         (documentUri, range) => {
           vscode.workspace.openTextDocument(documentUri).then((doc) => {
             vscode.window.showTextDocument(doc).then((editor) => {
@@ -885,22 +540,22 @@ function onActivate(context) {
               }
             });
           });
-        }
-      )
+        },
+      ),
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'solidity-va.cockpit.settings.toggle',
+        "solidity-va.cockpit.settings.toggle",
         async (treeItem) => {
           let cfg = vscode.workspace.getConfiguration(
-            treeItem.metadata.extension
+            treeItem.metadata.extension,
           );
           let current = cfg.get(treeItem.metadata.section);
           await cfg.update(treeItem.metadata.section, !current);
           cockpit.views.settings.refresh();
-        }
-      )
+        },
+      ),
     );
 
     /** event setup */
@@ -913,7 +568,7 @@ function onActivate(context) {
         }
       },
       null,
-      context.subscriptions
+      context.subscriptions,
     );
     vscode.workspace.onDidChangeTextDocument(
       (event) => {
@@ -926,7 +581,7 @@ function onActivate(context) {
         }
       },
       null,
-      context.subscriptions
+      context.subscriptions,
     );
 
     /***** OnSave */
@@ -935,7 +590,7 @@ function onActivate(context) {
         onDidSave(document);
       },
       null,
-      context.subscriptions
+      context.subscriptions,
     );
 
     /****** OnOpen */
@@ -944,7 +599,7 @@ function onActivate(context) {
         onDidSave(document);
       },
       null,
-      context.subscriptions
+      context.subscriptions,
     );
 
     /****** onDidChangeTextEditorSelection */
@@ -953,7 +608,7 @@ function onActivate(context) {
         cockpit.onDidSelectionChange(event); // let cockpit handle the event
       },
       null,
-      context.subscriptions
+      context.subscriptions,
     );
 
     context.subscriptions.push(
@@ -964,10 +619,10 @@ function onActivate(context) {
             position,
             token,
             type,
-            g_workspace
+            g_workspace,
           );
         },
-      })
+      }),
     );
 
     /** experimental */
@@ -975,8 +630,8 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerDocumentSymbolProvider(
           docSel,
-          new SolidityDocumentSymbolProvider(g_workspace)
-        )
+          new SolidityDocumentSymbolProvider(g_workspace),
+        ),
       );
     }
 
@@ -984,15 +639,15 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerCodeLensProvider(
           docSel,
-          new StaticLensProvider(g_workspace)
-        )
+          new StaticLensProvider(g_workspace),
+        ),
       );
 
       context.subscriptions.push(
         vscode.languages.registerCodeLensProvider(
           docSel,
-          new ParserLensProvider(g_workspace)
-        )
+          new ParserLensProvider(g_workspace),
+        ),
       );
     }
 
@@ -1000,8 +655,8 @@ function onActivate(context) {
       context.subscriptions.push(
         vscode.languages.registerReferenceProvider(
           docSel,
-          new SolidityReferenceProvider()
-        )
+          new SolidityReferenceProvider(),
+        ),
       );
     }
 
