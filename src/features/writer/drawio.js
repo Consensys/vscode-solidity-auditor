@@ -1,13 +1,12 @@
-'use strict';
-/** 
+"use strict";
+/**
  * @author github.com/tintinweb
  * @license GPLv3
- * 
- * 
+ *
+ *
  * */
 
-
-const settings = require('../../settings');
+const settings = require("../../settings");
 
 const HEADER = `######################
 ## draw.io compatible CSV.
@@ -41,173 +40,214 @@ const columns = ["id", "rparent", "label", "type", "fill", "override", "refs"];
 const methodFilterOnlyPublic = ["public", "external", "default"];
 
 const stateMutabilityToIcon = {
-    view: "🔍 ",
-    pure: "🔍 ",
-    constant: "🔍 ",
-    payable: "💰 "
+  view: "🔍 ",
+  pure: "🔍 ",
+  constant: "🔍 ",
+  payable: "💰 ",
 };
 
 const contractNameColorMapping = {
-    "contract": "#e0e0e0", //strokeColor=#000000
-    "interface": "#e0e0e0",
-    "library": "#d5e8d4" //strokeColor=#82b366
+  contract: "#e0e0e0", //strokeColor=#000000
+  interface: "#e0e0e0",
+  library: "#d5e8d4", //strokeColor=#82b366
 };
 
 function _mapAstNodeToFunctionName(node) {
-    if(node.isConstructor){
-        return "<b>__constr__<b>";
-    } else if(node.isReceiveEther){
-        return "<b>__receive__<b>";
-    } else if(node.isFallback){
-        return "<b>__fallback__<b>"; 
-    }
-    switch (node.name) {
-        case null:
-            return "<b>__constr__<b>";
-        case "":
-            return "<b>__fallback__<b>";
-        default:
-            return node.name;
-    }
+  if (node.isConstructor) {
+    return "<b>__constr__<b>";
+  } else if (node.isReceiveEther) {
+    return "<b>__receive__<b>";
+  } else if (node.isFallback) {
+    return "<b>__fallback__<b>";
+  }
+  switch (node.name) {
+    case null:
+      return "<b>__constr__<b>";
+    case "":
+      return "<b>__fallback__<b>";
+    default:
+      return node.name;
+  }
 }
 
 function serializeCsv(o) {
-    let ret = [];
-    for (const k of columns) {
-        ret.push(o[k] || "");
-    }
-    return ret.join(',');
+  let ret = [];
+  for (const k of columns) {
+    ret.push(o[k] || "");
+  }
+  return ret.join(",");
 }
 
 class DrawioContract {
+  constructor(contractObj, id) {
+    this.id = id;
+    this.name = contractObj.name;
+    this.kind = contractObj._node.kind;
+    this.inherits = contractObj.dependencies; //usingFor?
+    this.usingFor = Object.values(contractObj.usingFor);
+    this.methods = contractObj.functions.filter((funcObj) =>
+      methodFilterOnlyPublic.includes(funcObj._node.visibility),
+    );
+    this.actors = this._getActors(contractObj);
+  }
 
-    constructor(contractObj, id) {
-        this.id = id;
-        this.name = contractObj.name;
-        this.kind = contractObj._node.kind;
-        this.inherits = contractObj.dependencies; //usingFor?
-        this.usingFor = Object.values(contractObj.usingFor);
-        this.methods = contractObj.functions
-            .filter(funcObj => methodFilterOnlyPublic.includes(funcObj._node.visibility));
-        this.actors = this._getActors(contractObj);
+  _getActors(contractObj) {
+    if (!settings.extensionConfig().uml.actors.enable) {
+      return [];
+    }
+    let actors = [];
+    //update actors
 
+    actors = actors.concat(
+      Object.values(contractObj.stateVars)
+        .filter(
+          (astNode) =>
+            !astNode.isDeclaredConst && astNode.typeName.name == "address",
+        )
+        .map((astNode) => astNode.name),
+    );
+    for (let functionObj of contractObj.functions) {
+      actors = actors.concat(
+        Object.values(functionObj.arguments)
+          .filter((astNode) => astNode.typeName.name == "address")
+          .map((astNode) => astNode.name),
+      );
     }
 
-    _getActors(contractObj) {
-        if (!settings.extensionConfig().uml.actors.enable) {
-            return [];
-        }
-        let actors = [];
-        //update actors
+    actors = [...new Set(actors)].filter((item) => {
+      if (item === null) {
+        return false;
+      } // no nulls
+      if (item.startsWith("_") && actors.indexOf(item.slice(1))) {
+        return false;
+      } // no _<name> dupes
+      return true;
+    });
+    return actors;
+  }
 
-        actors = actors.concat(Object.values(contractObj.stateVars).filter(astNode => !astNode.isDeclaredConst && astNode.typeName.name == "address").map(astNode => astNode.name));
-        for (let functionObj of contractObj.functions) {
-            actors = actors.concat(Object.values(functionObj.arguments).filter(astNode => astNode.typeName.name == "address").map(astNode => astNode.name));
-        }
-
-        actors = [...new Set(actors)]
-            .filter(item => {
-                if (item === null) {
-                    return false;
-                }  // no nulls
-                if (item.startsWith("_") && actors.indexOf(item.slice(1))) {
-                    return false;
-                }  // no _<name> dupes
-                return true;
-            });
-        return actors;
-
+  toString() {
+    if (this.methods.length == 0) {
+      return ""; //no methods, nothing to do.
     }
-
-    toString() {
-        if (this.methods.length == 0) {
-            return ""; //no methods, nothing to do.
-        }
-        let content = [];
-        // add contract
-        content.push(serializeCsv({
-            "id": `${this.id}`,
-            "rparent": "-",
-            "label": this.name,
-            "type": "",
-            "fill": `${contractNameColorMapping[this.kind]}`,
-            "override": "",
-            "refs": "",
-        }));
-        // add inheritance / usingFor
-        this.inherits.forEach((contract, i) => content.push(serializeCsv({
-            "id": `${this.id}_i${i}`,
-            "rparent": `${this.id}`,
-            "label": contract,
-            "type": "mxgraph.bootstrap.rrect;strokeColor=none",
-            "fill": "#fff2cc;strokeColor=#d6b656;dashed=1",
-            "override": "fontSize=6",
-            "refs": "",
-        })
-        ), this);
-        this.usingFor.forEach((astNode, i) => content.push(serializeCsv({
-            "id": `${this.id}_u${i}`,
-            "rparent": `${this.id}`,
-            "label": astNode.libraryName,
-            "type": "mxgraph.bootstrap.rrect",
-            "fill": "#E3F7E2;strokeColor=#82b366;dashed=1",
-            "override": "fontSize=6",
-            "refs": "",
-        })
-        ), this);
-        // add methods: 2,test,1, 
-        this.methods.forEach((funcObj, i) => {
-            let method = `${stateMutabilityToIcon[funcObj._node.stateMutability] || ""}${_mapAstNodeToFunctionName(funcObj._node)}`;
-            content.push(serializeCsv({
-                "id": `${this.id}_f${i}`,
-                "rparent": `${this.id}`,
-                "label": method,
-                "type": "text;strokeColor=none",
-                "fill": "none",
-                "override": "",
-                "refs": "",
-            })); //push method name
-            /*
+    let content = [];
+    // add contract
+    content.push(
+      serializeCsv({
+        id: `${this.id}`,
+        rparent: "-",
+        label: this.name,
+        type: "",
+        fill: `${contractNameColorMapping[this.kind]}`,
+        override: "",
+        refs: "",
+      }),
+    );
+    // add inheritance / usingFor
+    this.inherits.forEach(
+      (contract, i) =>
+        content.push(
+          serializeCsv({
+            id: `${this.id}_i${i}`,
+            rparent: `${this.id}`,
+            label: contract,
+            type: "mxgraph.bootstrap.rrect;strokeColor=none",
+            fill: "#fff2cc;strokeColor=#d6b656;dashed=1",
+            override: "fontSize=6",
+            refs: "",
+          }),
+        ),
+      this,
+    );
+    this.usingFor.forEach(
+      (astNode, i) =>
+        content.push(
+          serializeCsv({
+            id: `${this.id}_u${i}`,
+            rparent: `${this.id}`,
+            label: astNode.libraryName,
+            type: "mxgraph.bootstrap.rrect",
+            fill: "#E3F7E2;strokeColor=#82b366;dashed=1",
+            override: "fontSize=6",
+            refs: "",
+          }),
+        ),
+      this,
+    );
+    // add methods: 2,test,1,
+    this.methods.forEach((funcObj, i) => {
+      let method = `${
+        stateMutabilityToIcon[funcObj._node.stateMutability] || ""
+      }${_mapAstNodeToFunctionName(funcObj._node)}`;
+      content.push(
+        serializeCsv({
+          id: `${this.id}_f${i}`,
+          rparent: `${this.id}`,
+          label: method,
+          type: "text;strokeColor=none",
+          fill: "none",
+          override: "",
+          refs: "",
+        }),
+      ); //push method name
+      /*
             html=1;shadow=0;dashed=1;shape=mxgraph.bootstrap.rrect;;
             */
-            Object.keys(funcObj.modifiers).forEach((mod, j) => content.push(serializeCsv({
-                "id": `${this.id}_mod${i}_${j}`,
-                "rparent": "-",
-                "label": mod,
-                "type": "mxgraph.bootstrap.rrect",
-                "fill": "#fff2cc",
-                "override": "strokeColor=#d79b00;dashed=1;align=center;rSize=10;fontStyle=0;whiteSpace=wrap;dashPattern=1 1;strokeColor=#d6b656;fontSize=8;fontFamily=Helvetica",
-                "refs": `"${this.id}_f${i}"`,
-            })));
-
-        }, this);
-        this.actors.forEach((actor, i) => content.push(serializeCsv({
-            "id": `${this.id}_a${i}`,
-            "rparent": "-",
-            "label": actor,
-            "type": "umlActor;strokeColor=#000000",
-            "fill": "none",
-            "override": "verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;align=left",
-            "refs": `"${this.id}"`,
-        })), this);
-        return content.join(`\n`);
-    }
+      Object.keys(funcObj.modifiers).forEach((mod, j) =>
+        content.push(
+          serializeCsv({
+            id: `${this.id}_mod${i}_${j}`,
+            rparent: "-",
+            label: mod,
+            type: "mxgraph.bootstrap.rrect",
+            fill: "#fff2cc",
+            override:
+              "strokeColor=#d79b00;dashed=1;align=center;rSize=10;fontStyle=0;whiteSpace=wrap;dashPattern=1 1;strokeColor=#d6b656;fontSize=8;fontFamily=Helvetica",
+            refs: `"${this.id}_f${i}"`,
+          }),
+        ),
+      );
+    }, this);
+    this.actors.forEach(
+      (actor, i) =>
+        content.push(
+          serializeCsv({
+            id: `${this.id}_a${i}`,
+            rparent: "-",
+            label: actor,
+            type: "umlActor;strokeColor=#000000",
+            fill: "none",
+            override:
+              "verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;align=left",
+            refs: `"${this.id}"`,
+          }),
+        ),
+      this,
+    );
+    return content.join(`\n`);
+  }
 }
 
 class DrawIoCsvWriter {
+  constructor() {
+    this.id = 1; //count ids
+  }
 
-    constructor() {
-        this.id = 1; //count ids
-    }
-
-    export(contractObjects) {
-        let contracts = contractObjects
-            .filter(contractObject => contractObject._node.kind != "interface") //ignore interfaces
-            .map((contractObject, i) => new DrawioContract(contractObject, i).toString());
-        return HEADER.replace("%%uniquekey%%", Date.now()) + columns.join(`,`) + `\n` + contracts.join(`\n`);
-    }
+  export(contractObjects) {
+    let contracts = contractObjects
+      .filter((contractObject) => contractObject._node.kind != "interface") //ignore interfaces
+      .map((contractObject, i) =>
+        new DrawioContract(contractObject, i).toString(),
+      );
+    return (
+      HEADER.replace("%%uniquekey%%", Date.now()) +
+      columns.join(`,`) +
+      `\n` +
+      contracts.join(`\n`)
+    );
+  }
 }
 
 module.exports = {
-    DrawIoCsvWriter: DrawIoCsvWriter
+  DrawIoCsvWriter: DrawIoCsvWriter,
 };

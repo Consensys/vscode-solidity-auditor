@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 /**
  * @author github.com/tintinweb
  * @license GPLv3
@@ -9,7 +9,7 @@
 const commentRegex = () =>
   new RegExp(
     `(?:${commentRegex.line().source})|(?:${commentRegex.block().source})`,
-    'gm'
+    "gm",
   );
 commentRegex.line = () => /(?:^|\s)\/\/(.+?)$/gm;
 commentRegex.block = () => /\/\*([\S\s]*?)\*\//gm;
@@ -22,7 +22,7 @@ class CommentMapperRex {
   }
 
   isRangeOffsetInComment(start, end) {
-    if (typeof this.input !== 'undefined' && this.input !== null) {
+    if (typeof this.input !== "undefined" && this.input !== null) {
       this.getComments(this.input);
       this.input = null; //free space
     }
@@ -49,15 +49,17 @@ class CommentMapperRex {
 
 function functionSignatureForASTItem(item) {
   switch (item._node?.type) {
-    case 'FunctionDefinition':
+    case "FunctionDefinition":
       const res = item.getFunctionSignature(); //call getFunctionSignature from Workspace on function node
       return [res];
-    case 'ContractDefinition':
+    case "ContractDefinition":
       return Object.values(item.functions)
-        .filter((fn) => fn.name && ['external', 'public'].includes(fn.visibility))
+        .filter(
+          (fn) => fn.name && ["external", "public"].includes(fn.visibility),
+        )
         .map((fn) => fn.getFunctionSignature());
     default:
-      throw new Error('Unsupported node type');
+      throw new Error("Unsupported node type");
   }
 }
 
