@@ -86,7 +86,7 @@
         },
         {
           "id": "solidity-va-cockpit-publicMethods",
-          "name": "Context: Public StateChanging Methods"
+          "name": "Context: Public State-Changing Methods"
         },
         {
           "id": "solidity-va-cockpit-externalCalls",

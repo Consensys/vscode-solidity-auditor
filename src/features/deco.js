@@ -253,7 +253,9 @@ function getVariableDeclarationType(node) {
     case "UserDefinedTypeName":
       return node.namePath;
     case "Mapping":
-      return `mapping( ${getVariableDeclarationType(node.keyType)} => ${getVariableDeclarationType(node.valueType)} )`;
+      return `mapping( ${getVariableDeclarationType(
+        node.keyType,
+      )} => ${getVariableDeclarationType(node.valueType)} )`;
     default:
       return null;
   }

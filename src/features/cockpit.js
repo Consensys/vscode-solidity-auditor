@@ -67,11 +67,13 @@ class BaseDataProvider {
     ret.resourceUri = element.resource;
     ret.iconPath = element.iconPath;
     ret.children = element.children;
+
     ret.command = element.command || {
       command: "solidity-va.cockpit.jumpToRange",
       arguments: [element.resource],
       title: "JumpTo",
     };
+
     return ret;
   }
 
@@ -525,42 +527,44 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
     }
 
     return Object.keys(this.data).reduce((ret, key) => {
-      let element = this.data[key];
-      let range = elemLocToRange(element._node);
-      let modifiers = Object.keys(element.modifiers);
-      let item = {
-        resource: element.resource,
-        contextValue: element.resource.fsPath,
-        range: range,
-        label: element._node.stateMutability == "payable" ? key + " 💰 " : key,
-        tooltip: key,
-        name: key,
-        iconPath: vscode.ThemeIcon.File,
-        collapsibleState:
-          modifiers.length > 0 ? vscode.TreeItemCollapsibleState.Collapsed : 0,
-        parent: null,
-        children: modifiers.map((name) => {
-          return {
-            //resource: element.resource,
-            label: "Ⓜ  " + name,
-            //iconPath: 0,
-            command: {
-              command: "solidity-va.cockpit.jumpToRange",
-              arguments: [
-                element.resource,
-                elemLocToRange(element.modifiers[name]),
-              ],
-              title: "JumpTo",
-            },
-          };
-        }),
-        command: {
-          command: "solidity-va.cockpit.jumpToRange",
-          arguments: [element.resource, elemLocToFirstLineRange(element._node)],
-          title: "JumpTo",
-        },
-      };
-      ret.push(item);
+      const funcs = this.data[key];
+      const items = funcs.map((f) => {
+        const range = elemLocToRange(f._node);
+        const modifiers = Object.keys(f.modifiers);
+        return {
+          resource: f.resource,
+          contextValue: f.resource.fsPath,
+          range: range,
+          label: `${f._node.stateMutability == "payable" ? "💰" : ""} ${
+            f.name
+          }`,
+          tooltip: f.name,
+          name: f.name,
+          iconPath: vscode.ThemeIcon.File,
+          collapsibleState:
+            modifiers.length > 0
+              ? vscode.TreeItemCollapsibleState.Collapsed
+              : 0,
+          parent: null,
+          children: modifiers.map((name) => {
+            return {
+              label: "Ⓜ  " + name,
+              //iconPath: 0,
+              command: {
+                command: "solidity-va.cockpit.jumpToRange",
+                arguments: [f.resource, elemLocToRange(f.modifiers[name])],
+                title: "JumpTo",
+              },
+            };
+          }),
+          command: {
+            command: "solidity-va.cockpit.jumpToRange",
+            arguments: [f.resource, elemLocToFirstLineRange(f._node)],
+            title: "JumpTo",
+          },
+        };
+      });
+      ret.push(...items);
       return ret;
     }, []);
   }
@@ -600,11 +604,11 @@ class PublicMethodsView extends BaseView {
       return;
     }
 
-    let focusSolidityElement = contractObj.getFunctionAtLocation(
+    let currentContract = contractObj.getContractAtLocation(
       focus.line,
       focus.character,
     );
-    if (!focusSolidityElement) {
+    if (!currentContract) {
       console.warn(
         "cockpit.methods: contract not found: " + documentUri.fsPath,
       );
@@ -614,7 +618,7 @@ class PublicMethodsView extends BaseView {
     let filterNotVisibility = ["private", "internal"];
     let filterNotStateMutability = ["view", "pure", "constant"];
 
-    let publicFunctions = focusSolidityElement.contract.functions
+    let publicFunctions = currentContract.functions
       .filter((f) => {
         let node = f._node;
         //filter only for state changing public functions
@@ -624,15 +628,19 @@ class PublicMethodsView extends BaseView {
         );
       })
       .reduce((obj, func) => {
-        let newKey = func.name;
+        let key = func.name;
 
-        if (newKey === null || func._node.isConstructor) {
-          newKey = "<Constructor>";
-        } else if (newKey === "" || func._node.isFallback) {
-          newKey = "<Fallback>";
+        if (key === null || func._node.isConstructor) {
+          key = "<Constructor>";
+        } else if (key === "" || func._node.isFallback) {
+          key = "<Fallback>";
         }
         func.resource = documentUri;
-        obj[newKey] = func;
+        if (!obj[key]) {
+          obj[key] = [func]; //we use an array to handle function override
+        } else {
+          obj[key].push(func);
+        }
         return obj;
       }, {});
     //  contract::func, all, files
@@ -905,17 +913,17 @@ class ExtCallViewDataProvider extends BaseDataProvider {
       }
 
       let first = this.data[key][0];
+      const inFunction = first.parent;
 
       let item = {
         resource: first.resource,
         contextValue: first.resource.fsPath,
-        range: elemLocToRange(first.parent.function._node),
-        label:
-          first.parent.function._node.stateMutability == "payable"
-            ? key + " 💰 "
-            : key,
-        tooltip: key,
-        name: key,
+        range: elemLocToRange(first.parent._node),
+        label: `${inFunction.name}${
+          inFunction._node.stateMutability === "payable" ? " 💰" : ""
+        }`,
+        tooltip: inFunction.name, //in function name
+        name: inFunction.name,
         iconPath: vscode.ThemeIcon.File,
         collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
         parent: null,
@@ -939,7 +947,7 @@ class ExtCallViewDataProvider extends BaseDataProvider {
           command: "solidity-va.cockpit.jumpToRange",
           arguments: [
             first.resource,
-            elemLocToFirstLineRange(first.parent.function._node),
+            elemLocToFirstLineRange(first.parent._node),
           ],
           title: "JumpTo",
         },
@@ -989,24 +997,23 @@ class ExtCallView extends BaseView {
       focus.character,
     );
     if (!focusSolidityElement) {
-      console.warn("surya.ftrace: contract not found: " + documentUri.fsPath);
+      console.warn(
+        "cockpit.extcall: contract not found: " + documentUri.fsPath,
+      );
       return;
     }
 
     // data format:  obj[contract][function][calls]=[target, target];
     let extcalls = focusSolidityElement.getExternalCalls().reduce((obj, c) => {
-      let result = sourceUnit.getFunctionAtLocation(
-        c._node.loc.start.line,
-        c._node.loc.start.column,
-      );
-      let key = `${result.function.name}`;
-      let data = obj[key];
+      const functionNode = c.declaration.extra.inFunction;
+      const key = functionNode.id;
+      let data = obj[key]; //use function id instead of name to handle overriden functions
 
       if (!data) {
         data = [];
       }
 
-      data.push({ resource: documentUri, call: c, parent: result });
+      data.push({ resource: documentUri, call: c, parent: functionNode });
 
       obj[key] = data;
       return obj;
