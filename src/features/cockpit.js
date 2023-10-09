@@ -1005,7 +1005,7 @@ class ExtCallView extends BaseView {
 
     // data format:  obj[contract][function][calls]=[target, target];
     let extcalls = focusSolidityElement.getExternalCalls().reduce((obj, c) => {
-      const functionNode = c.declaration.extra.inFunction;
+      const functionNode = c.inFunction;
       const key = functionNode.id;
       let data = obj[key]; //use function id instead of name to handle overriden functions
 
