@@ -38,7 +38,6 @@ const g_workspace = new mod_parser.Workspace(
 );
 var activeEditor;
 var g_diagnostics;
-var debounceTimer;
 
 const currentCancellationTokens = {
   onDidChange: new CancellationTokenSource(),
@@ -87,11 +86,10 @@ function analyzeSourceUnit(
     console.error("-BUG- cannot analyze empty document!");
     return;
   }
-
   g_workspace
     .add(document.fileName, { content: document.getText() })
     .then((sourceUnit) => {
-      console.log(`✓ inspect ${sourceUnit.filePath}`);
+      console.log(`✓ inspect ${sourceUnit.filePath} ${sourceUnit.hash}`);
     })
     .catch((e) => {
       console.warn(
@@ -102,14 +100,16 @@ function analyzeSourceUnit(
       }
     });
 
+
   g_workspace
     .withParserReady(document.fileName, initialLoad)
     .then((finished) => {
       console.log("✓ workspace ready (linearized, resolved deps, ..)");
+      const wantHash = mod_parser.SourceUnit.getHash(document.getText());
       if (
         cancellationToken.isCancellationRequested ||
         !finished.some(
-          (fp) => fp.value && fp.value.filePath === document.fileName,
+          (fp) => fp.value && fp.value.filePath === document.fileName && fp.value.hash === wantHash,
         )
       ) {
         //abort - new analysis running already OR our finished task is not in the tasklist :/
@@ -180,8 +180,7 @@ function refresh(editor, initialLoad = false) {
 }
 
 function onDidChange(editor) {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => refresh(editor), 500); //only re-parse every 500ms
+  refresh(editor);
 }
 
 function onActivate(context) {
@@ -564,7 +563,7 @@ function onActivate(context) {
       (editor) => {
         activeEditor = editor;
         if (editor && editor.document && editor.document.languageId == type) {
-          refresh(editor);
+          onDidChange(editor);
         }
       },
       null,
@@ -573,7 +572,8 @@ function onActivate(context) {
     vscode.workspace.onDidChangeTextDocument(
       (event) => {
         if (
-          activeEditor &&
+          activeEditor && 
+          event.contentChanges.length > 0 &&  // only redecorate when there are content changes
           event.document === activeEditor.document &&
           event.document.languageId == type
         ) {
