@@ -13,7 +13,7 @@
     "solidity security",
     "solidity audit"
   ],
-  "version": "0.1.5",
+  "version": "0.2.0-dev1",
   "publisher": "tintinweb",
   "icon": "images/icon.png",
   "engines": {
@@ -548,7 +548,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "solidity-workspace": "^0.1.7",
+    "solidity-workspace": "^0.2.0-dev3",
     "surya": "^0.4.6"
   },
   "devDependencies": {
