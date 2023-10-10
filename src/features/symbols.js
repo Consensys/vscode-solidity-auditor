@@ -276,7 +276,7 @@ class SolidityDocumentSymbolProvider {
 
     return new Promise((resolve, reject) => {
       return this.g_workspace
-        .getSourceUnitByPath(document.fileName)
+        .add(document.fileName, { content: document.getText() })
         .then((insights) => {
           var symbols = [];
 

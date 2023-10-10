@@ -113,7 +113,7 @@ class ParserLensProvider {
     let firstLine = new vscode.Range(0, 0, 0, 0);
     let config = settings.extensionConfig().codelens;
     return this.g_workspace
-      .getSourceUnitByPath(document.fileName)
+      .add(document.fileName, { content: document.getText() })
       .then((parser) => {
         let codeLens = [];
         config.uml.enable &&
@@ -175,6 +175,15 @@ class ParserLensProvider {
           }
         }
         return codeLens;
+      })
+      .catch((e) => {
+        console.warn(
+          `Error parsing file ${document.fileName}`,
+        );
+        if (settings.extensionConfig().debug.parser.showExceptions) {
+          console.error(e);
+        }
+        return undefined;
       });
   }
 
