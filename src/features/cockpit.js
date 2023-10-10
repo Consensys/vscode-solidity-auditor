@@ -536,10 +536,10 @@ class PublicMethodsViewDataProvider extends BaseDataProvider {
           contextValue: f.resource.fsPath,
           range: range,
           label: `${f._node.stateMutability == "payable" ? "💰" : ""} ${
-            f.name
+            f.name || key
           }`,
-          tooltip: f.name,
-          name: f.name,
+          tooltip: f.name || key,
+          name: f.name || key,
           iconPath: vscode.ThemeIcon.File,
           collapsibleState:
             modifiers.length > 0
@@ -915,15 +915,22 @@ class ExtCallViewDataProvider extends BaseDataProvider {
       let first = this.data[key][0];
       const inFunction = first.parent;
 
+      let redableName = inFunction.name;
+      if (redableName === null || inFunction._node.isConstructor) {
+        redableName = "<Constructor>";
+      } else if (key === "" || inFunction._node.isFallback) {
+        redableName = "<Fallback>";
+      }
+
       let item = {
         resource: first.resource,
         contextValue: first.resource.fsPath,
         range: elemLocToRange(first.parent._node),
-        label: `${inFunction.name}${
+        label: `${redableName}${
           inFunction._node.stateMutability === "payable" ? " 💰" : ""
         }`,
-        tooltip: inFunction.name, //in function name
-        name: inFunction.name,
+        tooltip: redableName, //in function name
+        name: redableName,
         iconPath: vscode.ThemeIcon.File,
         collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
         parent: null,
