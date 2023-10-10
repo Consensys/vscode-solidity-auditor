@@ -770,7 +770,7 @@ ${topLevelContractsText}`;
         // markdown
 
         const header =
-          "| Function Name | Sighash | Function Signature | \n | ------------ | ------------ | ------------ |\n";
+          "| Function Name | Sighash    | Function Signature | \n| ------------- | ---------- | ------------------ | \n";
         content =
           header +
           signatures
