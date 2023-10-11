@@ -2,16 +2,22 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
-## v0.2.0 - 💖 Happy Valentine's Days, spread some love! 💖
+## v0.2.0 - 🍂🍁🍃 Atumn Is Here! 🎃👻
 
 - fix: includes parser performance optimizations with [solidity-workspace@v0.2.0](https://github.com/tintinweb/solidity-workspace/releases/tag/v0.2.0) (🙏 @vquelque)
 - update: completely refactored function signature computation - #127
-- fix: performance optimizations (debounce) - #127
+- fix: performance optimizations - #127
 - new: command `solidity-va.tools.function.signatures.forWorkspace` to show all function signatures for files in the workspace - #127
 - fix: `ftrace` error in cockpit view due to non-existent filepath being passed to surya - #127
 - fix: draw.io/plantuml mistakenly named `receive()|fallback()` as `constructor` - #127
 - fix: function signature extraction only returns `public|external` interfaces - #127
 - fix: external function call list in cockpit view faile to resolve one-liner function declarations - #127
+- fix: inheritance hover showing "object" instead of inherited contract name
+- update: dependencies (solidity parser / solidity workspace)
+- fix: constructor/fallback showing up as 'null' in cockpit
+- fix: redecorate editor only if changes were detected (performance)
+- fix: abort decoration if content hash not found in cache (keep current decoration if file is unparseable)
+- fix: cockpit view for overridden functions (#138)
 
 ## v0.1.5 - 🏂
 
