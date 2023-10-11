@@ -476,7 +476,7 @@ class FTraceView extends BaseView {
           });
         });
     } else {
-      files = [documentUri.fsPath, ...knownFiles]; //better only add imported files. need to resolve that somehow
+      files = [... new Set([documentUri.fsPath, ...knownFiles])]; //better only add imported files. need to resolve that somehow
     }
 
     //  contract::func, all, files
@@ -501,6 +501,7 @@ class FTraceView extends BaseView {
         "💣💥 - sorry! we've encountered an unrecoverable error :/ Please file an issue in our github repository and provide (mention codebase). thanks!":
           null,
       };
+      retj[`${e.message}`] = null; //print error to user
     }
     this.dataProvider.documentUri = documentUri;
     this.dataProvider.data = retj;
