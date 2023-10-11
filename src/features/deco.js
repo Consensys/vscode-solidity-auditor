@@ -453,7 +453,7 @@ class CreateDecoStyle {
       let foreignSourceUnit = subcontract._parent;
       let uri = vscode.Uri.file(foreignSourceUnit.filePath);
       declaration = subcontract.names[node.name]._node || node;
-      decl_uri = `([Declaration: ${subcontract}#${declaration.loc.start.line}](${uri}#${declaration.loc.start.line}))`;
+      decl_uri = `([Declaration: ${subcontract.name}#${declaration.loc.start.line}](${uri}#${declaration.loc.start.line}))`;
       knownType = getVariableDeclarationType(declaration);
     }
 
@@ -466,6 +466,7 @@ class CreateDecoStyle {
         ),
       ),
       hoverMessage: `${prefix}(*${knownType}*) **StateVar** *${subcontract.name}*.**${node.name}** ${decl_uri}`,
+      decoStyle: decoStyle
     };
   }
   static inheritedStateVar(node, document, contract, declaration) {
