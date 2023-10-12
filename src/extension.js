@@ -14,7 +14,6 @@ const mod_hover = require("./features/hover");
 const mod_decorator = require("./features/deco");
 const {
   SolidityDocumentSymbolProvider,
-  getAstValueForExpression,
 } = require("./features/symbols");
 const mod_parser = require("solidity-workspace");
 const { DiliDiagnosticCollection } = require("./features/genericDiag");
@@ -38,6 +37,11 @@ const g_workspace = new mod_parser.Workspace(
 );
 var activeEditor;
 var g_diagnostics;
+var g_debounce = {
+  timerId: undefined,
+  armed: false,
+  wait: 500
+};
 
 const currentCancellationTokens = {
   onDidChange: new CancellationTokenSource(),
@@ -79,6 +83,7 @@ function analyzeSourceUnit(
   document,
   editor,
   initialLoad = false,
+  onFinished = () => {},
 ) {
   console.log("inspect ...");
 
@@ -86,8 +91,10 @@ function analyzeSourceUnit(
     console.error("-BUG- cannot analyze empty document!");
     return;
   }
+
   g_workspace
-    .add(document.fileName, { content: document.getText() })
+    .add(document.fileName, 
+      { content: document.getText(), cancellationToken: cancellationToken.token })
     .then((sourceUnit) => {
       console.log(`✓ inspect ${sourceUnit.filePath} ${sourceUnit.hash}`);
     })
@@ -113,6 +120,7 @@ function analyzeSourceUnit(
         )
       ) {
         //abort - new analysis running already OR our finished task is not in the tasklist :/
+        onFinished();
         return;
       }
 
@@ -127,6 +135,7 @@ function analyzeSourceUnit(
         mod_decorator.decorateSourceUnit(document, editor, this_sourceUnit);
         //decorate
       }
+      onFinished();
       console.log("✓ analyzeSourceUnit - done");
     });
 }
@@ -142,6 +151,23 @@ function onDidSave(document) {
     g_diagnostics
   ) {
     g_diagnostics.updateIssues(currentCancellationTokens.onDidSave.token);
+  }
+}
+
+
+function debounce(target){
+  if(!g_debounce.armed){
+    // unarmed: first time use
+    g_debounce.armed = true;  // arm for next run to enable debounce
+    setTimeout(() => {
+      target();
+    }, 0);
+  } else {
+    // armed: debounce next calls
+    clearTimeout(g_debounce.timerId) // clear timer & schedule new
+    g_debounce.timerId = setTimeout(() => {
+      target();
+    }, g_debounce.wait);
   }
 }
 
@@ -162,21 +188,31 @@ function refresh(editor, initialLoad = false) {
   }
   currentCancellationTokens.onDidChange.cancel();
   currentCancellationTokens.onDidChange = new CancellationTokenSource();
-  console.log("--- on-did-change");
-  try {
-    analyzeSourceUnit(
-      currentCancellationTokens.onDidChange.token,
-      document,
-      editor,
-      initialLoad,
-    );
-  } catch (err) {
-    if (typeof err !== "object") {
-      //CancellationToken
-      throw err;
+
+  debounce(() => {
+    console.log("--- on-did-change");
+    try {
+      analyzeSourceUnit(
+        currentCancellationTokens.onDidChange,
+        document,
+        editor,
+        initialLoad,
+        /* onFinished */ () => {
+          // cleanup
+          g_debounce.armed = false;  // unarm debounce
+          g_debounce.timerId = undefined;
+        }
+      );
+    } catch (err) {
+      if (typeof err !== "object") {
+        //CancellationToken
+        throw err;
+      }
     }
-  }
-  console.log("✓✓✓ on-did-change - resolved");
+    console.log("✓✓✓ on-did-change - resolved");
+  });
+
+  
 }
 
 function onDidChange(editor) {
@@ -577,7 +613,7 @@ function onActivate(context) {
           event.document === activeEditor.document &&
           event.document.languageId == type
         ) {
-          onDidChange(activeEditor);
+          onDidChange(activeEditor)
         }
       },
       null,
