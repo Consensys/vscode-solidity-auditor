@@ -38,9 +38,9 @@ ___
 
 The complete changelog can be found [here](https://github.com/ConsenSys/vscode-solidity-auditor/blob/master/CHANGELOG.md). 
 
-## v0.2.0 - 🍂🍁🍃 Atumn Is Here! 🎃👻
+## v0.2.0 - 🍂🍁🍃 Halloween! Booh! 👻🎃🎃🎃🌾👨🏼‍🌾
 
-- fix: includes parser performance optimizations with [solidity-workspace@v0.2.0](https://github.com/tintinweb/solidity-workspace/releases/tag/v0.2.0) (🙏 @vquelque)
+- fix: includes parser performance optimizations with [solidity-workspace@v0.2.1](https://github.com/tintinweb/solidity-workspace/releases/tag/v0.2.1) (🙏 @vquelque)
 - update: completely refactored function signature computation - #127
 - fix: performance optimizations - #127
 - new: command \`solidity-va.tools.function.signatures.forWorkspace\` to show all function signatures for files in the workspace - #127
@@ -54,6 +54,7 @@ The complete changelog can be found [here](https://github.com/ConsenSys/vscode-s
 - fix: redecorate editor only if changes were detected (performance)
 - fix: abort decoration if content hash not found in cache (keep current decoration if file is unparseable)
 - fix: cockpit view for overridden functions (#138)
+- fix: debounce onDidChange events (performance while typing)
 
 
 <sub>

@@ -548,7 +548,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "solidity-workspace": "^0.2.0-dev4",
+    "solidity-workspace": "^0.2.1",
     "surya": "^0.4.6"
   },
   "devDependencies": {
