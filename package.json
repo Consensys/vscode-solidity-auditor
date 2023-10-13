@@ -512,10 +512,11 @@
           "type": "string",
           "enum": [
             "hardhat",
-            "truffle"
+            "truffle",
+            "forge"
           ],
-          "default": "truffle",
-          "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat)"
+          "default": "forge",
+          "description": "Select which default template to use when creating a unitTest stub (e.g. truffle, hardhat, forge)"
         },
         "solidity-va.debug.parser.showExceptions": {
           "type": "boolean",

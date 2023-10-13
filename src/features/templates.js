@@ -7,6 +7,7 @@
  * */
 
 const vscode = require("vscode");
+const { generateForgeTemplate } = require("./templates/forge");
 
 function generateUnittestStubForContract(document, g_workspace, contractName) {
   let contract = {
@@ -213,8 +214,39 @@ describe('${contract.name}', () => {
   return content;
 }
 
+function generateForgeUnittestStubForContract(
+  document,
+  g_parser,
+  contractName,
+) {
+  let contract = {
+    name: contractName,
+    path: document.uri.fsPath,
+  };
+
+  if (!contractName) {
+    //take first
+    let sourceUnit = g_parser.sourceUnits[document.uri.fsPath];
+    if (!sourceUnit || Object.keys(sourceUnit.contracts).length <= 0) {
+      vscode.window.showErrorMessage(
+        `[Solidity VA] unable to create forge unittest stub for current contract. missing analysis for source-unit: ${document.uri.fsPath}`,
+      );
+      return;
+    }
+
+    contract.name = Object.keys(sourceUnit.contracts)[0];
+  }
+
+  const content = generateForgeTemplate(contract)
+  return content;
+}
+
+
+
+
+
 module.exports = {
-  generateUnittestStubForContract: generateUnittestStubForContract,
-  generateHardhatUnittestStubForContract:
+  generateUnittestStubForContract,
     generateHardhatUnittestStubForContract,
+    generateForgeUnittestStubForContract
 };

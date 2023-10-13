@@ -116,22 +116,39 @@ class Commands {
     this._checkIsSolidity(document);
 
     let content;
-    if (settings.extensionConfig().test.defaultUnittestTemplate === "hardhat") {
+    let language;
+    const framework = settings.extensionConfig().test.defaultUnittestTemplate
+    switch (framework) {
+      case "hardhat":
       content = mod_templates.generateHardhatUnittestStubForContract(
         document,
         this.g_parser,
         contractName,
       );
-    } else {
+      language = "javascript";
+      break
+      case "truffle":
       content = mod_templates.generateUnittestStubForContract(
         document,
         this.g_parser,
         contractName,
       );
+      language = "javascript";
+      break
+      case "forge":
+        content = mod_templates.generateForgeUnittestStubForContract(
+          document,
+          this.g_parser,
+          contractName,
+        );
+        language = "solidity";
+        break;
+      default:
+        throw new Error("Unsupported testing framework");
     }
 
     vscode.workspace
-      .openTextDocument({ content: content, language: "javascript" })
+      .openTextDocument({ content: content, language: language })
       .then((doc) =>
         vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
       );
