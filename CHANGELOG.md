@@ -2,11 +2,30 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
+## v0.2.0 - 🍂🍁🍃 Booh! 👻🎃🎃🎃🌾👨🏼‍🌾
+
+- fix: includes parser performance optimizations with [solidity-workspace@v0.2.1](https://github.com/tintinweb/solidity-workspace/releases/tag/v0.2.1) (🙏 @vquelque)
+- update: completely refactored function signature computation - #127
+- fix: performance optimizations - #127
+- new: command `solidity-va.tools.function.signatures.forWorkspace` to show all function signatures for files in the workspace - #127
+- fix: `ftrace` error in cockpit view due to non-existent filepath being passed to surya - #127
+- fix: draw.io/plantuml mistakenly named `receive()|fallback()` as `constructor` - #127
+- fix: function signature extraction only returns `public|external` interfaces - #127
+- fix: external function call list in cockpit view faile to resolve one-liner function declarations - #127
+- fix: inheritance hover showing "object" instead of inherited contract name
+- update: dependencies (solidity parser / solidity workspace)
+- fix: constructor/fallback showing up as 'null' in cockpit
+- fix: redecorate editor only if changes were detected (performance)
+- fix: abort decoration if content hash not found in cache (keep current decoration if file is unparseable)
+- fix: cockpit view for overridden functions (#138)
+- fix: debounce onDidChange events (performance while typing)
 
 ## v0.1.5 - 🏂
+
 - fix: find all references not working - #119
 
 ## v0.1.4 - 🍁
+
 - fix: incompatibility with vscode update v1.72.0 - Extension "[...] has provided an invalid tree item." - #114
 - new: optionally disable highlighting in the overview ruler - #115
 
@@ -15,40 +34,40 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 <img width="185" alt="image" src="https://user-images.githubusercontent.com/2865694/194864195-a1449bb3-9c04-43bb-a011-8d2faf8ffb5a.png"> <img width="181" alt="image" src="https://user-images.githubusercontent.com/2865694/194864429-5d8c42d4-e45b-406d-ad66-e207718aced0.png">
 
 - fix: more consistent highlighting when clicking on an item in the cockpit ExternalCalls/PublicStatechanging views - #110
+
   - clicking on a function name highlights the first line of the function instead of the full function block in the editor
   - clicking on an external call/modifier highlights the invocation in the editor
 
 - fix: semantic highlighting for supercall and modifier arguments - #112 #117
 
 ## v0.1.3 - 🧸
+
 - new: customize semantic highlighting mode #105 #108
   - `color and symbol` - default (decorate + "arrow")
-  - `color only` - only decorate identifiers declared in the function argument scope 
+  - `color only` - only decorate identifiers declared in the function argument scope
   - `symbol only` - only show an "arrow" next to an identifier declared in the function argument scope
 
 <img width="725" alt="image" src="https://user-images.githubusercontent.com/2865694/180291604-f1a3be47-5aaa-41d4-b734-13dfd813d8ff.png">
 
-- fix: uml - fix null-deref when parsing 'using-for *' #106 #107
+- fix: uml - fix null-deref when parsing 'using-for \*' #106 #107
 - update: configurable trailing "arrow" for semantic function argument highlighting #104 #100
-
 
 ## v0.1.2
 
 - new: decorate/highlight immutable state vars (<span style="color:#9932cc">![#9932cc](https://via.placeholder.com/15/9932cc/000000?text=+)</span>) - #97 (thanks @RomiRand)
-<img width="381" alt="image" src="https://user-images.githubusercontent.com/2865694/163415669-7d45d698-2be1-49a3-80b4-c6e2ed861d11.png">
+  <img width="381" alt="image" src="https://user-images.githubusercontent.com/2865694/163415669-7d45d698-2be1-49a3-80b4-c6e2ed861d11.png">
 
 - update: dependencies (surya@0.4.6)
 - new: configuration option to enable the `surya.mdreport` "negative Modifiers" feature, see [surya#162](https://github.com/ConsenSys/surya/pull/162)
-  - enabling `solidity-va.tools.surya.option.negModifiers` will list all modifiers observed in the file with the ones that are not being used with the listed method being  ~~striked-through~~
+  - enabling `solidity-va.tools.surya.option.negModifiers` will list all modifiers observed in the file with the ones that are not being used with the listed method being ~~striked-through~~
 
 ![image](https://user-images.githubusercontent.com/2998191/155733325-7a6187b8-e63e-4410-a312-aa2a1c940e31.png)
 
-  Note that the report can be generated either via the `report` codelense or by selecting files in the `Solidity Visual Developer View → right-click → Surya: generate report`.
+Note that the report can be generated either via the `report` codelense or by selecting files in the `Solidity Visual Developer View → right-click → Surya: generate report`.
 
 <img width="401" alt="image" src="https://user-images.githubusercontent.com/2865694/163411802-49e91a8d-df9e-44ca-8c62-23510d7c9a4a.png">
 
 <img width="398" alt="image" src="https://user-images.githubusercontent.com/2865694/163412288-20e621df-b715-4074-b8f8-033a4b758002.png">
-
 
 - fix: typos & links to placeholder[.]com - #93 #91 (thanks @almndbtr)
 
@@ -56,9 +75,10 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 
 - fix: type resolving and declaration link for inherited statevars
 - update: move language specific logic to a web compatible extension
+
   - https://github.com/tintinweb/vscode-solidity-language (https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-language)
-  - The language ships with three security centered Color Themes that can be selected from the **Solidity Language & Themes (only)** extension page or `Code → Preferences → Color Themes` 
-  
+  - The language ships with three security centered Color Themes that can be selected from the **Solidity Language & Themes (only)** extension page or `Code → Preferences → Color Themes`
+
   ![image](https://user-images.githubusercontent.com/2865694/145625639-a54178d1-5cee-45b6-bf10-44da09875f0e.png)
 
 - update: support for latest solidity parser (extension + surya) #84
@@ -73,7 +93,7 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
   ![image](https://user-images.githubusercontent.com/2865694/122222447-90933880-ceb2-11eb-91c3-c59549d40c8c.png)
 
 - new: we can now resolve inherited names (hover: declaration link)
-  
+
   ![image](https://user-images.githubusercontent.com/2865694/120014274-26d5ec00-bfe2-11eb-99f7-64d4a57277a0.png)
 
 - new: we now decorate identifiers that are storage references (treating them like state-vars)
@@ -88,7 +108,6 @@ Note: Don't forget to check out `preferences → Settings → Solidity Visual De
 - fix: function selector is incorrect if there's a comment in the function signature definition #68
 - update: code cleanup; refactored decoration logic and moved it to its own submodule
 
-
 ## v0.0.32 - v0.0.33
 
 Maintenance release until v0.1.0 is ready.
@@ -102,7 +121,7 @@ Maintenance release until v0.1.0 is ready.
 
 Happy new year 👪🌃🥂🎇!
 
-- new: allow to disable the "find references" provider 
+- new: allow to disable the "find references" provider
   - `preferences → Settings → Solidity Visual Developer: solidity-va.findAllReferences.enable`
   - in case another extension implements a better provider someday :)
 - new: experimental draw.io uml export to support your threat modelling needs (you're going to ❤ this!)
@@ -120,19 +139,21 @@ Happy new year 👪🌃🥂🎇!
   - keccak
 
 ## v0.0.30
+
 - new: We've finally implemented support for `Right Click → Find All References` for solidity source files!
   - Please note that this currently performs a lexical search of all source-code files containing the word under the cursor (including comments). This may be subject to change to return more specific results in the future.
-  <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
-    
+    <br><img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/94445596-eb132a00-01a7-11eb-9098-32958d58ebd6.gif">
 - update: dependencies surya / solidity parser
 
-
 ## v0.0.29
+
 - sort top level contracts list by filename
 - fix: VSCode-Error: Proposed API is only available when running out of dev or with the following command line switch... #59
 
 ## v0.0.28
+
 - new: integration with [tintinweb.vscode-ethover](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-ethover)
+
   - ethereum address hover
   - open address in etherscan, fetch bytecode, verified contract
   - disassemble or decompile bytecode
@@ -140,57 +161,66 @@ Happy new year 👪🌃🥂🎇!
   - customizations/ApiKey: see settings
 
   <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/86650152-bd707780-bfe2-11ea-819d-a9e3dacb2034.gif">
+
 - update: `surya` to `0.4.1-dev.2`
 
 ## v0.0.27
+
 - rebirth: `Solidity Visual Auditor` is now `Solidity Visual Developer` 🎉
 - new: Ethereum Address hover commands. Hover over an ethereum account address to:
-  -  `open` the account on etherscan.io
+  - `open` the account on etherscan.io
   - show the contract `code`
   - show the `VerifiedContract` source code
   - `decompile` the byte-code. requires [vscode-decompiler](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-decompiler)<br>
     <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/85524701-af951c80-b608-11ea-803c-c2587e7732b7.gif">
 
 ## v0.0.26
+
 - new: support for solidity `0.6.x` via #53
 - new: `cockpit → Workspace: Explorer → Surya: Contract interaction graph` aka `surya.graphSimple` #49</br>
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"></br>
-    <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
+  <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83885864-34e28b00-a747-11ea-990d-74410f062153.png"></br>
+  <img width="360" alt="image" src="https://user-images.githubusercontent.com/2865694/83886949-0f09b600-a748-11ea-8cf2-878773e3f0b0.png">
 - updated: surya to 0.4.0 #49
 - updated: `solidity-parser-diligence` to community maintained `@solidity-parser/parser` #53
 
 ## v0.0.25
+
 - updated: breaking interface with `vscode-interactive-graphviz@v0.0.8`: the render command was renamed from `interactive-graphviz.preview.beside` to `graphviz-interactive-preview.preview.beside`
 
 ## v0.0.24
+
 - new: Solidity Visual Auditor Cockpit panel additions
-    - Context: show function call trace when clicking into a contract method in the editor
-    - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
+  - Context: show function call trace when clicking into a contract method in the editor
+  - Flatfiles: List flat files produced by the extension (matches: `**/flat_*.sol`)
 - updated: surya (fixed multiple issues when parsing certain smart contracts with `usingFor` statements)
-  
+
 ## v0.0.23
+
 - new: Update notifications have arrived!
 - updated: solidity parser and surya
 - new: 🔥 Solidity Visual Auditor Cockpit panel
-    - Workspace Explorer
-    - Quick-access to extension settings
-    - Find Top Level Contracts
-    - Keep track of flattened files
-    - List public state-changing methods from the current contract
-    - Show the function call trace for the current method
+  - Workspace Explorer
+  - Quick-access to extension settings
+  - Find Top Level Contracts
+  - Keep track of flattened files
+  - List public state-changing methods from the current contract
+  - Show the function call trace for the current method
 
 ## v0.0.22
+
 - update: solidity parser, surya (#41 [#42](https://github.com/tintinweb/vscode-solidity-auditor/issues/42))
 - fix: linter warnings (#40)
 - fix: configuration changes now take effect immediately (#43)
 
 ## v0.0.21
+
 - fix: Support VSCode for Windows (#38, [#35](https://github.com/tintinweb/vscode-solidity-auditor/issues/35))
 - fix: UML arrows (#34)
 - code cleanup (#39)
 - allow extension to run on unsaved files/editors (some functionality will not work on unsaved files, e.g. `surya` calls)
 
 ## v0.0.20
+
 - new: released `@audit-tags` as a general purpose extension named [Inline Bookmarks](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-inline-bookmarks).
   - obsoletes: `Solidity-va.audit.tags.enable` ... enable/disable audit tags
 - split up extension dependencies in hard and soft requirements
@@ -202,6 +232,7 @@ Happy new year 👪🌃🥂🎇!
     - (required) [Interactive Graphviz](https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview)
 
 ## v0.0.19
+
 - new: constant values that are not symbols are now shown in hover message
 
 <img width="360" alt="Screenshot 2019-11-12 at 15 41 48" src="https://user-images.githubusercontent.com/2865694/68681269-699cb400-0563-11ea-9ba3-1605c3a5e8c6.png">
@@ -210,28 +241,31 @@ Happy new year 👪🌃🥂🎇!
 - fix: function signature output shows 🔥 even though there are no collisions
 
 ## v0.0.18
+
 - new: UML diagrams just arrived 🎉! auto-generate uml for source-units or contracts.
 
 <img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64821850-08cd1b80-d5b4-11e9-9917-4275fc54f56a.png">
 
 - new: codelense next to functions to generate sighash.
-- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes [#27](https://github.com/tintinweb/vscode-solidity-auditor/issues/27). 
+- fix: function signature hashes are now generated for all functions (even internal ones, just ignore them for now :)). Canonicalization of types before calculating hashes [#27](https://github.com/tintinweb/vscode-solidity-auditor/issues/27).
 - new: alert on function sighash collision within the same contract.
 
-<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">  
+<img width="360" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/64822139-a3c5f580-d5b4-11e9-8ecd-6554f79265d8.png">
 
-- new: AST parser now keeps track of `usingFor`'s 
+- new: AST parser now keeps track of `usingFor`'s
 
 ## v0.0.17
+
 - new: audit-tags: new `@audit-issue` and `@audit-info` to add informational notes or references to files issues (#23)
 - update: contract flattener changed from `flaterra` to `truffle-flattener` ([vscode-solidity-flattener](https://marketplace.visualstudio.com/items?itemName=tintinweb.vscode-solidity-flattener))
-- new: theme - Solidity Visual auditor light  - the vscode standard light theme with visual auditor highlighting (#25)  
+- new: theme - Solidity Visual auditor light - the vscode standard light theme with visual auditor highlighting (#25)
 
 <img width="722" alt="sva_light_vscode" src="https://user-images.githubusercontent.com/2865694/61187446-71aa1d00-a671-11e9-9303-6f3169669b17.png">  
 <img width="1364" alt="theme_light_vs" src="https://user-images.githubusercontent.com/2865694/61187576-6b1ca500-a673-11e9-8770-ff8b47d716ee.png">
 - update: updated theme `solarized-light`, split up color-scheme definitions into multiple files. Changed 'light-theme' natspec color highlighting to be less dramatic (black->greyish). (#24)
 
 ## v0.0.16
+
 - fix: enable graph rendering by default
 - fix: codelenses are sometimes missing (graph)
 
@@ -243,37 +277,40 @@ Happy new year 👪🌃🥂🎇!
   - ![vscode-solidity-auditor-interactive-graph](https://user-images.githubusercontent.com/2865694/57710279-e27e8a00-766c-11e9-9ca9-8cde50aa31fc.gif)
 
 ## v0.0.14 - aka big surya wedding
+
 - feature: 💒🤵👰 [vscode-solidity-auditor](https://github.com/tintinweb/vscode-solidity-auditor) ⚭ [surya](https://github.com/ConsenSys/surya) by [Gonçalo Sá](https://github.com/gnsps)
 - feature: codelens (inline code actions)
+
   - file
     - surya - graph  
-    ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
+      ![vscode-auditor-surya-graph](https://user-images.githubusercontent.com/2865694/55647206-65decd00-57dd-11e9-856a-1cceed31d18e.gif)
     - surya - generate report
     - surya - inheritance
-    - surya - parse file (show AST) 
-    ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)  
-    - flatten sourceUnit using [flaterra](https://github.com/cleanunicorn/flaterra) 
+    - surya - parse file (show AST)
+      ![vscode-auditor-surya-report](https://user-images.githubusercontent.com/2865694/55647025-e5b86780-57dc-11e9-9cc0-b5197eb075b8.gif)
+    - flatten sourceUnit using [flaterra](https://github.com/cleanunicorn/flaterra)
   - contracts
-    - create unittest stub for contract (e.g. for verifying vulnerabilities)  
-     ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
 
-    - surya - dependencies 
+    - create unittest stub for contract (e.g. for verifying vulnerabilities)  
+      ![vscode-auditor-unittest](https://user-images.githubusercontent.com/2865694/55646826-72aef100-57dc-11e9-800b-fc649b41b4a9.gif)
+
+    - surya - dependencies
+
   - functions
     - surya - ftrace  
-    ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+      ![vscode-auditor-ftrace](https://user-images.githubusercontent.com/2865694/55646883-983bfa80-57dc-11e9-8e40-6194d1429dac.gif)
+
 - feature: command - suggest top level contracts aka "entrypoint contracts" (most derived)
 - feature: command - flatten current (codelens) or all suggested top level contracts (command)
-![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
+  ![vscode-auditor-flaterra](https://user-images.githubusercontent.com/2865694/55907553-5db8d000-5bd7-11e9-8a11-8cef3964e284.gif)
 - feature: command - list all function signatures (human readable or json format)  
-![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
+  ![vscode-auditor-funcsigs](https://user-images.githubusercontent.com/2865694/55907153-3f9ea000-5bd6-11e9-8a47-e69a762963e9.gif)
 - feature: command - open remix in external browser
-
 
 - Note: to enable graphviz dot previews install one of the following vscode extensions: [graphviz-preview](https://marketplace.visualstudio.com/items?itemName=EFanZh.graphviz-preview) or [vscode-graphviz](https://marketplace.visualstudio.com/items?itemName=joaompinto.vscode-graphviz)
 - Note: to enable markdown previews install the following extension [markdown-preview-enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
 - outline - added assembly functions  
   <img width="360" alt="assembly" src="https://user-images.githubusercontent.com/2865694/55646137-b56fc980-57da-11e9-8fab-e24b5ef5e46b.png">
-
 
 ## v0.0.13
 
@@ -300,6 +337,7 @@ Happy new year 👪🌃🥂🎇!
 - async functions
 
 ## v0.0.12
+
 - refactored folder structure
 - bug: check if source-file is actually a solidity file on-change
 - feature: semantic function argument highlighting
