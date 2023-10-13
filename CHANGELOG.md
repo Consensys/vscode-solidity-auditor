@@ -2,7 +2,7 @@
 
 Note: Don't forget to check out `preferences → Settings → Solidity Visual Developer` to customize features, look and feel.
 
-## v0.2.0 - 🍂🍁🍃 Halloween! Booh! 👻🎃🎃🎃🌾👨🏼‍🌾
+## v0.2.0 - 🍂🍁🍃 Booh! 👻🎃🎃🎃🌾👨🏼‍🌾
 
 - fix: includes parser performance optimizations with [solidity-workspace@v0.2.1](https://github.com/tintinweb/solidity-workspace/releases/tag/v0.2.1) (🙏 @vquelque)
 - update: completely refactored function signature computation - #127
