@@ -254,10 +254,10 @@ function onActivate(context) {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         "solidity-va.test.createTemplate",
-        function (doc, contractName) {
+        function (doc, contract) {
           commands.generateUnittestStubForContract(
             doc || vscode.window.activeTextEditor.document,
-            contractName,
+            contract,
           );
         },
       ),

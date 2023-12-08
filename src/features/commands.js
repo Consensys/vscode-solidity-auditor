@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @author github.com/tintinweb
  * @license GPLv3
@@ -6,66 +6,66 @@
  *
  * */
 
-const vscode = require("vscode");
-const fs = require("fs");
-const child_process = require("child_process");
-const path = require("path");
+const vscode = require('vscode');
+const fs = require('fs');
+const child_process = require('child_process');
+const path = require('path');
 
-const settings = require("../settings");
+const settings = require('../settings');
 
-const mod_templates = require("./templates");
-const mod_utils = require("./utils");
+const mod_templates = require('./templates');
+const mod_utils = require('./utils');
 
-const { DrawIoCsvWriter } = require("./writer/drawio");
-const { PlantumlWriter } = require("./writer/plantuml");
+const { DrawIoCsvWriter } = require('./writer/drawio');
+const { PlantumlWriter } = require('./writer/plantuml');
 
-const surya = require("surya");
+const surya = require('surya');
 
 const suryaDefaultColorSchemeDark = {
   digraph: {
-    bgcolor: "#2e3e56",
+    bgcolor: '#2e3e56',
     nodeAttribs: {
-      style: "filled",
-      fillcolor: "#edad56",
-      color: "#edad56",
-      penwidth: "3",
+      style: 'filled',
+      fillcolor: '#edad56',
+      color: '#edad56',
+      penwidth: '3',
     },
     edgeAttribs: {
-      color: "#fcfcfc",
-      penwidth: "2",
-      fontname: "helvetica Neue Ultra Light",
+      color: '#fcfcfc',
+      penwidth: '2',
+      fontname: 'helvetica Neue Ultra Light',
     },
   },
   visibility: {
     isFilled: true,
-    public: "#FF9797",
-    external: "#ffbdb9",
-    private: "#edad56",
-    internal: "#f2c383",
+    public: '#FF9797',
+    external: '#ffbdb9',
+    private: '#edad56',
+    internal: '#f2c383',
   },
   nodeType: {
     isFilled: false,
-    shape: "doubleoctagon",
-    modifier: "#1bc6a6",
-    payable: "brown",
+    shape: 'doubleoctagon',
+    modifier: '#1bc6a6',
+    payable: 'brown',
   },
   call: {
-    default: "white",
-    regular: "#1bc6a6",
-    this: "#80e097",
+    default: 'white',
+    regular: '#1bc6a6',
+    this: '#80e097',
   },
   contract: {
     defined: {
-      bgcolor: "#445773",
-      color: "#445773",
-      fontcolor: "#f0f0f0",
-      style: "rounded",
+      bgcolor: '#445773',
+      color: '#445773',
+      fontcolor: '#f0f0f0',
+      style: 'rounded',
     },
     undefined: {
-      bgcolor: "#3b4b63",
-      color: "#e8726d",
-      fontcolor: "#f0f0f0",
-      style: "rounded,dashed",
+      bgcolor: '#3b4b63',
+      color: '#e8726d',
+      fontcolor: '#f0f0f0',
+      style: 'rounded,dashed',
     },
   },
 };
@@ -74,26 +74,26 @@ function runCommand(cmd, args, env, cwd, stdin) {
   cwd = cwd || vscode.workspace.rootPath;
 
   return new Promise((resolve, reject) => {
-    console.log(`running command: ${cmd} ${args.join(" ")}`);
+    console.log(`running command: ${cmd} ${args.join(' ')}`);
     let p = child_process.execFile(
       cmd,
       args,
       { env: env, cwd: cwd },
       (err, stdout, stderr) => {
-        p.stdout.on("data", function (data) {
+        p.stdout.on('data', function (data) {
           if (stdin) {
-            p.stdin.setEncoding("utf-8");
+            p.stdin.setEncoding('utf-8');
             p.stdin.write(stdin);
             p.stdin.end();
           }
         });
         if (err === null || err.code === 0) {
-          console.log("success");
+          console.log('success');
           return resolve(err);
         }
         err.stderr = stderr;
         return reject(err);
-      },
+      }
     );
   });
 }
@@ -106,71 +106,83 @@ class Commands {
   _checkIsSolidity(document) {
     if (!document || document.languageId != settings.languageId) {
       vscode.window.showErrorMessage(
-        `[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.fsPath}`,
+        `[Solidity VA] not a solidity source file ${vscode.window.activeTextEditor.document.uri.fsPath}`
       );
-      throw new Error("not a solidity file");
+      throw new Error('not a solidity file');
     }
   }
 
-  async generateUnittestStubForContract(document, contractName) {
+  async generateUnittestStubForContract(document, contract) {
     this._checkIsSolidity(document);
 
     let content;
     let language;
-    const framework = settings.extensionConfig().test.defaultUnittestTemplate
+    const framework = settings.extensionConfig().test.defaultUnittestTemplate;
     switch (framework) {
-      case "hardhat":
-      content = mod_templates.generateHardhatUnittestStubForContract(
-        document,
-        this.g_parser,
-        contractName,
-      );
-      language = "javascript";
-      break
-      case "truffle":
-      content = mod_templates.generateUnittestStubForContract(
-        document,
-        this.g_parser,
-        contractName,
-      );
-      language = "javascript";
-      break
-      case "forge":
+      case 'hardhat':
+        content = mod_templates.generateHardhatUnittestStubForContract(
+          document,
+          this.g_workspace,
+          contract
+        );
+        language = 'javascript';
+        break;
+      case 'truffle':
+        content = mod_templates.generateTruffleUnittestStubForContract(
+          document,
+          this.g_workspace,
+          contract
+        );
+        language = 'javascript';
+        break;
+      case 'forge':
+        let generateForkStub = false;
+        await vscode.window
+          .showInformationMessage(
+            'Do you want to add fork testing stub?',
+            'Yes',
+            'No'
+          )
+          .then((answer) => {
+            if (answer === 'Yes') {
+              generateForkStub = true;
+            }
+          });
         content = mod_templates.generateForgeUnittestStubForContract(
           document,
-          this.g_parser,
-          contractName,
+          this.g_workspace,
+          contract,
+          generateForkStub
         );
-        language = "solidity";
+        language = 'solidity';
         break;
       default:
-        throw new Error("Unsupported testing framework");
+        throw new Error('Unsupported testing framework');
     }
-
     vscode.workspace
       .openTextDocument({ content: content, language: language })
       .then((doc) =>
-        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
       );
   }
 
   async surya(documentOrListItems, command, args) {
     //check if input was document or listItem
     if (!documentOrListItems) {
-      throw new Error("not a file or list item");
+      throw new Error('not a file or list item');
     }
 
     let ret;
     let files = [];
 
-    if (documentOrListItems.hasOwnProperty("children")) {
+    if (documentOrListItems.hasOwnProperty('children')) {
       //hack ;)
       documentOrListItems = [documentOrListItems]; //allow non array calls
     }
 
     if (Array.isArray(documentOrListItems)) {
       for (let documentOrListItem of documentOrListItems) {
-        if (documentOrListItem.hasOwnProperty("children")) {
+        if (documentOrListItem.hasOwnProperty('children')) {
           // is a list item -> item.resource.fsPath
           if (!!path.extname(documentOrListItem.resource.fsPath)) {
             //file
@@ -181,13 +193,13 @@ class Commands {
               .findFiles(
                 `${documentOrListItem.path}/**/*.sol`,
                 settings.DEFAULT_FINDFILES_EXCLUDES,
-                500,
+                500
               )
               .then((uris) => {
                 files = files.concat(
                   uris.map(function (uri) {
                     return uri.fsPath;
-                  }),
+                  })
                 );
               });
           }
@@ -198,10 +210,10 @@ class Commands {
       this._checkIsSolidity(documentOrListItems); // throws
 
       if (
-        settings.extensionConfig().tools.surya.input.contracts == "workspace"
+        settings.extensionConfig().tools.surya.input.contracts == 'workspace'
       ) {
         await vscode.workspace
-          .findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
+          .findFiles('**/*.sol', settings.DEFAULT_FINDFILES_EXCLUDES, 500)
           .then((uris) => {
             files = uris.map(function (uri) {
               return uri.fsPath;
@@ -217,17 +229,17 @@ class Commands {
     }
 
     switch (command) {
-      case "describe":
+      case 'describe':
         ret = surya.describe(files, {}, true);
         vscode.workspace
-          .openTextDocument({ content: ret, language: "markdown" })
+          .openTextDocument({ content: ret, language: 'markdown' })
           .then((doc) =>
-            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
           );
         break;
-      case "graphSimple":
-      case "graph":
-        if (command == "graphSimple") {
+      case 'graphSimple':
+      case 'graph':
+        if (command == 'graphSimple') {
           ret = surya.graphSimple(args || files, {
             colorScheme: suryaDefaultColorSchemeDark,
           });
@@ -238,11 +250,11 @@ class Commands {
         }
         //solidity-va.preview.render.markdown
         vscode.workspace
-          .openTextDocument({ content: ret, language: "dot" })
+          .openTextDocument({ content: ret, language: 'dot' })
           .then((doc) => {
             if (settings.extensionConfig().preview.dot) {
               vscode.commands
-                .executeCommand("graphviz-interactive-preview.preview.beside", {
+                .executeCommand('graphviz-interactive-preview.preview.beside', {
                   document: doc,
                   content: ret,
                   callback: null,
@@ -250,7 +262,7 @@ class Commands {
                 })
                 .catch((error) => {
                   vscode.commands
-                    .executeCommand("interactive-graphviz.preview.beside", {
+                    .executeCommand('interactive-graphviz.preview.beside', {
                       document: doc,
                       content: ret,
                       callback: null,
@@ -258,14 +270,14 @@ class Commands {
                     }) //TODO: remove this in future version. only for transition to new command
                     .catch((error) => {
                       vscode.commands
-                        .executeCommand("graphviz.previewToSide", doc.uri)
+                        .executeCommand('graphviz.previewToSide', doc.uri)
                         .catch((error) => {
                           //command not available. fallback open as text and try graphviz.showPreview
                           vscode.window
                             .showTextDocument(doc, vscode.ViewColumn.Beside)
                             .then((editor) => {
                               vscode.commands
-                                .executeCommand("graphviz.showPreview", editor) // creates new pane
+                                .executeCommand('graphviz.showPreview', editor) // creates new pane
                                 .catch((error) => {
                                   //command not available - do nothing
                                 });
@@ -282,14 +294,14 @@ class Commands {
                     .then(doc => vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside))
                     */
         break;
-      case "inheritance":
+      case 'inheritance':
         ret = surya.inheritance(files, { draggable: false });
         vscode.workspace
-          .openTextDocument({ content: ret, language: "dot" })
+          .openTextDocument({ content: ret, language: 'dot' })
           .then((doc) => {
             if (settings.extensionConfig().preview.dot) {
               vscode.commands
-                .executeCommand("graphviz-interactive-preview.preview.beside", {
+                .executeCommand('graphviz-interactive-preview.preview.beside', {
                   document: doc,
                   content: ret,
                   callback: null,
@@ -297,7 +309,7 @@ class Commands {
                 })
                 .catch((error) => {
                   vscode.commands
-                    .executeCommand("interactive-graphviz.preview.beside", {
+                    .executeCommand('interactive-graphviz.preview.beside', {
                       document: doc,
                       content: ret,
                       callback: null,
@@ -305,14 +317,14 @@ class Commands {
                     }) //TODO: remove this in future version. only for transition to new command
                     .catch((error) => {
                       vscode.commands
-                        .executeCommand("graphviz.previewToSide", doc.uri)
+                        .executeCommand('graphviz.previewToSide', doc.uri)
                         .catch((error) => {
                           //command not available. fallback open as text and try graphviz.showPreview
                           vscode.window
                             .showTextDocument(doc, vscode.ViewColumn.Beside)
                             .then((editor) => {
                               vscode.commands
-                                .executeCommand("graphviz.showPreview", editor) // creates new pane
+                                .executeCommand('graphviz.showPreview', editor) // creates new pane
                                 .catch((error) => {
                                   //command not available - do nothing
                                 });
@@ -330,15 +342,15 @@ class Commands {
                 createWebViewBesides('imgPreview','imgPreview',draggable)
                 */
         break;
-      case "parse":
+      case 'parse':
         ret = surya.parse(documentOrListItems.uri.fsPath);
         vscode.workspace
-          .openTextDocument({ content: ret, language: "markdown" })
+          .openTextDocument({ content: ret, language: 'markdown' })
           .then((doc) =>
-            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
           );
         break;
-      case "dependencies":
+      case 'dependencies':
         ret = surya.dependencies(files, args[0]);
 
         let outTxt = [];
@@ -347,7 +359,7 @@ class Commands {
           outTxt.push(ret[0]);
 
           if (ret.length < 2) {
-            outTxt = ["No Dependencies Found"];
+            outTxt = ['No Dependencies Found'];
           } else {
             ret.shift();
             const reducer = (accumulator, currentValue) =>
@@ -357,40 +369,40 @@ class Commands {
 
           vscode.workspace
             .openTextDocument({
-              content: outTxt.join("\n"),
-              language: "markdown",
+              content: outTxt.join('\n'),
+              language: 'markdown',
             })
             .then((doc) =>
-              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
             );
         }
         break;
-      case "ftrace":
+      case 'ftrace':
         //  contract::func, all, files
         if (args[1] === null) {
-          args[1] = "<Constructor>";
-        } else if (args[1] === "") {
-          args[1] = "<Fallback>";
+          args[1] = '<Constructor>';
+        } else if (args[1] === '') {
+          args[1] = '<Fallback>';
         }
         try {
           ret = surya.ftrace(
-            args[0] + "::" + args[1],
-            args[2] || "all",
+            args[0] + '::' + args[1],
+            args[2] || 'all',
             files,
             {},
-            true,
+            true
           );
           vscode.workspace
-            .openTextDocument({ content: ret, language: "markdown" })
+            .openTextDocument({ content: ret, language: 'markdown' })
             .then((doc) =>
-              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
             );
         } catch (e) {
           console.error(e);
         }
 
         break;
-      case "mdreport":
+      case 'mdreport':
         ret = surya.mdreport(files, {
           negModifiers:
             settings.extensionConfig().tools.surya.option.negModifiers,
@@ -399,13 +411,13 @@ class Commands {
           return;
         }
         vscode.workspace
-          .openTextDocument({ content: ret, language: "markdown" })
+          .openTextDocument({ content: ret, language: 'markdown' })
           .then((doc) => {
             if (settings.extensionConfig().preview.markdown) {
               vscode.commands
                 .executeCommand(
-                  "markdown-preview-enhanced.openPreview",
-                  doc.uri,
+                  'markdown-preview-enhanced.openPreview',
+                  doc.uri
                 )
                 .catch((error) => {
                   //command does not exist
@@ -413,7 +425,7 @@ class Commands {
                     .showTextDocument(doc, vscode.ViewColumn.Beside)
                     .then((editor) => {
                       vscode.commands
-                        .executeCommand("markdown.extension.togglePreview")
+                        .executeCommand('markdown.extension.togglePreview')
                         .catch((error) => {
                           //command does not exist
                         });
@@ -440,13 +452,13 @@ class Commands {
         : [workspaceRelativeBaseDirs];
 
       let searchFileString =
-        "{" +
+        '{' +
         workspaceRelativeBaseDirs
           .map((d) =>
-            d === undefined ? "**/*.sol" : d + path.sep + "**/*.sol",
+            d === undefined ? '**/*.sol' : d + path.sep + '**/*.sol'
           )
-          .join(",") +
-        "}";
+          .join(',') +
+        '}';
 
       await vscode.workspace
         .findFiles(searchFileString, settings.DEFAULT_FINDFILES_EXCLUDES, 500)
@@ -460,7 +472,7 @@ class Commands {
 
               for (let contractName in sourceUnit.contracts) {
                 if (
-                  sourceUnit.contracts[contractName]._node.kind == "interface"
+                  sourceUnit.contracts[contractName]._node.kind == 'interface'
                 ) {
                   //ignore interface contracts
                   continue;
@@ -477,7 +489,7 @@ class Commands {
       //files set: only take these sourceUnits
       await this.g_workspace
         .getAllContracts()
-        .filter((c) => c._node.kind != "interface" && c._node.kind != "library")
+        .filter((c) => c._node.kind != 'interface' && c._node.kind != 'library')
         .forEach((c) => {
           dependencies[c.name] = c.dependencies;
         });
@@ -499,7 +511,7 @@ class Commands {
   async findTopLevelContracts(files, scanfiles) {
     let topLevelContracts = await this._findTopLevelContracts(files, scanfiles);
 
-    let topLevelContractsText = Object.keys(topLevelContracts).join("\n");
+    let topLevelContractsText = Object.keys(topLevelContracts).join('\n');
     /*
         for (var name in topLevelContracts) {
             topLevelContractsText += name + ' (' + topLevelContracts[name]+')\n';
@@ -512,22 +524,22 @@ Top Level Contracts
 
 ${topLevelContractsText}`;
     vscode.workspace
-      .openTextDocument({ content: content, language: "markdown" })
+      .openTextDocument({ content: content, language: 'markdown' })
       .then((doc) =>
-        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
       );
   }
 
   async solidityFlattener(files, callback, showErrors) {
     switch (settings.extensionConfig().flatten.mode) {
-      case "truffle":
+      case 'truffle':
         vscode.extensions
-          .getExtension("tintinweb.vscode-solidity-flattener")
+          .getExtension('tintinweb.vscode-solidity-flattener')
           .activate()
           .then(
             (active) => {
               vscode.commands
-                .executeCommand("vscode-solidity-flattener.flatten", {
+                .executeCommand('vscode-solidity-flattener.flatten', {
                   files: files,
                   callback: callback,
                   showErrors: showErrors,
@@ -535,16 +547,16 @@ ${topLevelContractsText}`;
                 .catch((error) => {
                   // command not available
                   vscode.window.showWarningMessage(
-                    "Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n" +
-                      error,
+                    'Error running `tintinweb.vscode-solidity-flattener`. Please make sure the extension is installed.\n' +
+                      error
                   );
                 });
             },
             (err) => {
               throw new Error(
-                `Solidity Auditor: Failed to activate "tintinweb.vscode-solidity-flattener". Make sure the extension is installed from the marketplace. Details: ${err}`,
+                `Solidity Auditor: Failed to activate "tintinweb.vscode-solidity-flattener". Make sure the extension is installed from the marketplace. Details: ${err}`
               );
-            },
+            }
           );
         break;
       default:
@@ -566,9 +578,9 @@ ${topLevelContractsText}`;
           callback(uri.fsPath, undefined, flat);
         } else {
           vscode.workspace
-            .openTextDocument({ content: flat, language: "solidity" })
+            .openTextDocument({ content: flat, language: 'solidity' })
             .then((doc) =>
-              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+              vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
             );
         }
       } catch (e) {
@@ -580,16 +592,16 @@ ${topLevelContractsText}`;
 
   async flaterra(documentOrUri, noTryInstall) {
     let docUri = documentOrUri;
-    if (documentOrUri.hasOwnProperty("uri")) {
+    if (documentOrUri.hasOwnProperty('uri')) {
       this._checkIsSolidity(documentOrUri);
       docUri = documentOrUri.uri;
     }
 
-    let cmd = "python3";
+    let cmd = 'python3';
     let args = [
-      "-m",
-      "flaterra",
-      "--contract",
+      '-m',
+      'flaterra',
+      '--contract',
       vscode.workspace.asRelativePath(docUri),
     ];
 
@@ -599,47 +611,47 @@ ${topLevelContractsText}`;
           vscode.window.showInformationMessage(
             `Contract flattened: ${path.basename(
               docUri.fsPath,
-              ".sol",
-            )}_flat.sol`,
+              '.sol'
+            )}_flat.sol`
           );
         },
         (err) => {
-          if (err.code === "ENOENT") {
+          if (err.code === 'ENOENT') {
             vscode.window.showErrorMessage(
-              "'`flaterra` failed with error: unable to execute python3",
+              "'`flaterra` failed with error: unable to execute python3"
             );
-          } else if (err.stderr.indexOf(": No module named flaterra") >= 0) {
+          } else if (err.stderr.indexOf(': No module named flaterra') >= 0) {
             if (!noTryInstall) {
               vscode.window
                 .showWarningMessage(
-                  "Contract Flattener `flaterra` is not installed.\n run `pip3 install flaterra --user` to install? ",
-                  "Install",
+                  'Contract Flattener `flaterra` is not installed.\n run `pip3 install flaterra --user` to install? ',
+                  'Install'
                 )
                 .then((selection) => {
-                  if (selection == "Install") {
+                  if (selection == 'Install') {
                     runCommand(
-                      "pip3",
-                      ["install", "flaterra", "--user"],
+                      'pip3',
+                      ['install', 'flaterra', '--user'],
                       undefined,
                       undefined,
-                      "y\n",
+                      'y\n'
                     )
                       .then(
                         (success) => {
                           vscode.window.showInformationMessage(
-                            "Successfully installed flaterra.",
+                            'Successfully installed flaterra.'
                           );
                           this.flaterra(documentOrUri, true);
                         },
                         (error) => {
                           vscode.window.showErrorMessage(
-                            "Failed to install flaterra.",
+                            'Failed to install flaterra.'
                           );
-                        },
+                        }
                       )
                       .catch((err) => {
                         vscode.window.showErrorMessage(
-                          "Failed to install flaterra. " + err,
+                          'Failed to install flaterra. ' + err
                         );
                       });
                   } else {
@@ -649,22 +661,22 @@ ${topLevelContractsText}`;
             }
           } else {
             vscode.window
-              .showErrorMessage("`flaterra` failed with: " + err)
+              .showErrorMessage('`flaterra` failed with: ' + err)
               .then((selection) => {
                 console.log(selection);
               });
           }
-        },
+        }
       )
       .catch((err) => {
-        console.log("runcommand threw exception: " + err);
+        console.log('runcommand threw exception: ' + err);
       });
   }
 
   async flattenCandidates(candidates) {
     // takes object key=contractName value=fsPath
     let topLevelContracts = candidates || (await this._findTopLevelContracts());
-    let content = "";
+    let content = '';
 
     this.solidityFlattener(
       Object.values(topLevelContracts),
@@ -672,40 +684,40 @@ ${topLevelContractsText}`;
         let outpath = path.parse(filepath);
 
         fs.writeFile(
-          path.join(outpath.dir, "flat_" + outpath.base),
+          path.join(outpath.dir, 'flat_' + outpath.base),
           content,
           function (err) {
             if (err) {
               return console.log(err);
             }
-          },
+          }
         );
-      },
+      }
     );
 
     for (let name in topLevelContracts) {
       //this.flaterra(new vscode.Uri(topLevelContracts[name]))
       let outpath = path.parse(topLevelContracts[name].fsPath);
       let outpath_flat = vscode.Uri.file(
-        path.join(outpath.dir, "flat_" + outpath.base),
+        path.join(outpath.dir, 'flat_' + outpath.base)
       );
       content += `${
-        !fs.existsSync(outpath_flat.fsPath) ? "[ERR]   " : ""
+        !fs.existsSync(outpath_flat.fsPath) ? '[ERR]   ' : ''
       }${name}  =>  ${outpath_flat} \n`;
     }
     vscode.workspace
-      .openTextDocument({ content: content, language: "markdown" })
+      .openTextDocument({ content: content, language: 'markdown' })
       .then((doc) =>
-        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
       );
   }
 
   async listFunctionSignatures(document, asJson) {
     this.g_workspace.add(document.fileName).then(async (sourceUnit) => {
       const signatures = await this._signatureForAstItem(
-        Object.values(sourceUnit.contracts),
+        Object.values(sourceUnit.contracts)
       );
-      await this.revealSignatures(signatures, asJson ? "json" : undefined);
+      await this.revealSignatures(signatures, asJson ? 'json' : undefined);
     });
   }
 
@@ -716,18 +728,18 @@ ${topLevelContractsText}`;
     // 4) get all function signatures
     // -- this is kinda resource intensive 🤷‍♂️
     await vscode.workspace
-      .findFiles("**/*.sol", settings.DEFAULT_FINDFILES_EXCLUDES, 500)
+      .findFiles('**/*.sol', settings.DEFAULT_FINDFILES_EXCLUDES, 500)
       .then((uris) => {
         uris.forEach((uri) => {
           this.g_workspace.add(uri.fsPath);
         });
       });
     await this.g_workspace.withParserReady(undefined, true);
-    console.log("done");
+    console.log('done');
     const signatures = await this._signatureForAstItem(
-      this.g_workspace.getAllContracts(),
+      this.g_workspace.getAllContracts()
     );
-    await this.revealSignatures(signatures, asJson ? "json" : undefined);
+    await this.revealSignatures(signatures, asJson ? 'json' : undefined);
   }
 
   async signatureForAstItem(items) {
@@ -752,13 +764,13 @@ ${topLevelContractsText}`;
   }
 
   async revealSignatures(signatures, format) {
-    format = format || "markdown";
+    format = format || 'markdown';
     let errs = [];
 
     const res = {};
 
     for (const sig of signatures) {
-      if (sig.hasOwnProperty("err")) {
+      if (sig.hasOwnProperty('err')) {
         errs.push(sig.err);
         continue; //skip errors
       }
@@ -772,14 +784,14 @@ ${topLevelContractsText}`;
     let content;
 
     switch (format) {
-      case "json":
+      case 'json':
         content = JSON.stringify(
           {
             signatures: res,
             errors: [...new Set(errs)],
             collisions: Object.values(res).filter((v) => v.size > 1),
           },
-          (_key, value) => (value instanceof Set ? [...value] : value),
+          (_key, value) => (value instanceof Set ? [...value] : value)
         );
         break;
 
@@ -787,25 +799,25 @@ ${topLevelContractsText}`;
         // markdown
 
         const header =
-          "| Function Name | Sighash    | Function Signature | \n| ------------- | ---------- | ------------------ | \n";
+          '| Function Name | Sighash    | Function Signature | \n| ------------- | ---------- | ------------------ | \n';
         content =
           header +
           signatures
             .map((r) => `| ${r.name} | ${r.sighash} | ${r.signature} |`)
-            .join("\n");
+            .join('\n');
 
         const collisions = Object.values(res).filter((v) => v.size > 1);
         if (collisions.length) {
-          content += "\n\n";
+          content += '\n\n';
           content +=
-            "🔥 Collisions                  \n========================\n";
-          content += collisions.map((s) => [...s]).join("\n");
+            '🔥 Collisions                  \n========================\n';
+          content += collisions.map((s) => [...s]).join('\n');
         }
 
         if (errs.length) {
-          content += "\n\n";
-          content += "🐞 Errors                 \n========================\n";
-          content += [...new Set(errs)].join("\n");
+          content += '\n\n';
+          content += '🐞 Errors                 \n========================\n';
+          content += [...new Set(errs)].join('\n');
         }
     }
 
@@ -815,7 +827,7 @@ ${topLevelContractsText}`;
         vscode.window.showTextDocument(doc, {
           viewColumn: vscode.ViewColumn.Beside,
           preview: true,
-        }),
+        })
       );
   }
 
@@ -824,9 +836,9 @@ ${topLevelContractsText}`;
     const content = writer.export(contractObj);
 
     vscode.workspace
-      .openTextDocument({ content: content, language: "csv" })
+      .openTextDocument({ content: content, language: 'csv' })
       .then((doc) =>
-        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside),
+        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside)
       );
   }
 
@@ -835,29 +847,29 @@ ${topLevelContractsText}`;
     const content = writer.export(contractObjects);
 
     vscode.workspace
-      .openTextDocument({ content: content, language: "plantuml" })
+      .openTextDocument({ content: content, language: 'plantuml' })
       .then((doc) =>
         vscode.window
           .showTextDocument(doc, vscode.ViewColumn.Beside)
           .then((editor) => {
             vscode.extensions
-              .getExtension("jebbs.plantuml")
+              .getExtension('jebbs.plantuml')
               .activate()
               .then(
                 (active) => {
                   vscode.commands
-                    .executeCommand("plantuml.preview")
+                    .executeCommand('plantuml.preview')
                     .catch((error) => {
                       //command does not exist
                     });
                 },
                 (err) => {
                   console.warn(
-                    `Solidity Auditor: Failed to activate "jebbs.plantuml". Make sure the extension is installed from the marketplace. Details: ${err}`,
+                    `Solidity Auditor: Failed to activate "jebbs.plantuml". Make sure the extension is installed from the marketplace. Details: ${err}`
                   );
-                },
+                }
               );
-          }),
+          })
       );
   }
 }
