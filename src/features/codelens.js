@@ -198,7 +198,7 @@ class ParserLensProvider {
         new vscode.CodeLens(range, {
           command: "solidity-va.test.createTemplate",
           title: "UnitTest stub",
-          arguments: [document, item.name],
+          arguments: [document, item],
         }),
       );
 
